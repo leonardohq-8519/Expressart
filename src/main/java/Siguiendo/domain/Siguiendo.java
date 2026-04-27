@@ -1,1 +1,11 @@
 package Siguiendo.domain;
+
+import lombok.Getter;
+import lombok.Setter;
+
+
+@Getter
+@Setter
+public class Siguiendo {
+
+}
