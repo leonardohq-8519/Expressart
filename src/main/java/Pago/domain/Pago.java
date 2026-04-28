@@ -7,5 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Pago {
-
+    /*
+    cantidad
+    tipo moneda
+    id comision
+     */
 }

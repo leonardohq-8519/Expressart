@@ -7,5 +7,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class OpcionesComision {
+    /*
+    titulo
+    descripcion
+    imagenes_ref
 
+     */
 }

@@ -7,5 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Post{
-
+    /*
+    titulo
+    cuerpo
+    archivos
+     */
 }
