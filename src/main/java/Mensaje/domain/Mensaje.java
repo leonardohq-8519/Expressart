@@ -9,6 +9,7 @@ import lombok.Setter;
 public class Mensaje {
     /*
     id del mensaje
+    id del chat
     id del que envia
     id del receptor
     string texto

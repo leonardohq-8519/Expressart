@@ -8,8 +8,13 @@ import lombok.Setter;
 @Setter
 public class Post{
     /*
+    id post?
+    id artista
     titulo
     cuerpo
     archivos
+    fecha publicacion
+    likes
+    tags usados
      */
 }

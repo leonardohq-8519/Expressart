@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 public class Tags {
     /*
+    id del tag?
     string nombre
      */
 }

@@ -8,12 +8,16 @@ import lombok.Setter;
 @Setter
 public class Comision {
     /*
+    id de la comision
     id cliente
     id artista
+    estado (completado, en proceso, etc)
     usernames cliente
     usernames artista
     precio
     el tipo de comision
+    cant_revisiones_permitidas
+    fecha_creacion
     plazo
      */
 }

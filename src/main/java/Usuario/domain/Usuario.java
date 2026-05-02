@@ -19,5 +19,6 @@ public class Usuario{
     ____ foto_perfil
     ____ banner
     daComisiones?/Estado
+    lista seguidos
      */
 }
