@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.project.expressart.Chat.domain.Chat;
 import org.project.expressart.Devolucion.domain.Devolucion;
 import org.project.expressart.OpcionesComision.domain.OpcionesComision;
 import org.project.expressart.Pago.domain.Pago;
@@ -61,19 +62,19 @@ public class Orden {
     @Column(name = "fecha_completada", nullable = false, updatable = false)
     private ZonedDateTime fechaCompletada;
 
-    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "orden", cascade = CascadeType.ALL)
     private Pago pago;
 
-    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "orden", cascade = CascadeType.ALL)
     private Devolucion devolucion;
 
-    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "orden", cascade = CascadeType.ALL)
     private Chat chat;
 
-    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "orden", cascade = CascadeType.ALL)
     private ResenaArtista resenaArtista;
 
-    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "orden", cascade = CascadeType.ALL)
     private ResenaCliente resenaCliente;
 
     @PrePersist
