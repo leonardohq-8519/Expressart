@@ -5,7 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.project.expressart.Devolucion.domain.Devolucion;
 import org.project.expressart.OpcionesComision.domain.OpcionesComision;
+import org.project.expressart.Pago.domain.Pago;
+import org.project.expressart.ResenaArtista.domain.ResenaArtista;
+import org.project.expressart.ResenaCliente.domain.ResenaCliente;
 import org.project.expressart.Usuario.domain.Usuario;
 
 import java.math.BigDecimal;
@@ -65,6 +69,12 @@ public class Orden {
 
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
     private Chat chat;
+
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    private ResenaArtista resenaArtista;
+
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    private ResenaCliente resenaCliente;
 
     @PrePersist
     protected void onCreate(){

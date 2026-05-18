@@ -46,6 +46,12 @@ public class PerfilArtista {
     @Column(nullable = false)
     private ZonedDateTime fechaCreacion;
 
+    @Column(name = "stripe_id")
+    private String stripeId;
+
+    @Column(name = "stripe_onboarding", nullable = false)
+    private Boolean stripeVerificado = false;
+
     @ManyToMany
     @JoinTable(
             name = "perfil_artista_categoria",
