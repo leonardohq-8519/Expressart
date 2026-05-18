@@ -1,26 +1,36 @@
 package org.project.expressart.Usuario.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.project.expressart.CuentaOAuth.domain.CuentaOAuth;
+import org.project.expressart.PerfilCliente.domain.PerfilCliente;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
+@Entity
+@Table(name = "usuarios")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Usuario{
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 30)
     private String nombre_usuario;
 
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String nombre;
 
     //Hay que ver como adaptarlo para OAuth
@@ -28,13 +38,28 @@ public class Usuario{
 
     private String avatar_url;
 
+    @Column(columnDefinition = "TEXT")
     private String biografia;
 
     @Column(nullable = false)
-    private ZonedDateTime fecha_registro;
-
+    private ZonedDateTime fechaRegistro;
 
     private Long token;
+
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private PerfilCliente perfilArtista;
+
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private PerfilCliente perfilCliente;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private List<CuentaOAuth> cuentasOAuth = new ArrayList<>();
+
+    @PrePersist
+    protected void onCreate(){
+        this.fecha_registro = ZonedDateTime.now();
+    }
+
     /*
     stringnombre
     string nombre_usuario
