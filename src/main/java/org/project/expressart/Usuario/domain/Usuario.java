@@ -58,7 +58,7 @@ public class Usuario{
 
     @PrePersist
     protected void onCreate(){
-        this.fecha_registro = ZonedDateTime.now();
+        this.fechaRegistro = ZonedDateTime.now();
     }
 
     /*

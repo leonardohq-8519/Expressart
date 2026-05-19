@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.project.expressart.Categoria.domain.Categoria;
+import org.project.expressart.ImagenPost.domain.ImagenPost;
 import org.project.expressart.Portafolio.domain.Portafolio;
 import org.project.expressart.Tags.domain.Tags;
 
