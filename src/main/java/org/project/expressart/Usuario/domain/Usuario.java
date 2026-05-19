@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.project.expressart.CuentaOAuth.domain.CuentaOAuth;
+import org.project.expressart.Notificacion.domain.Notificacion;
 import org.project.expressart.PerfilCliente.domain.PerfilCliente;
 
 import java.time.ZonedDateTime;
@@ -56,9 +57,20 @@ public class Usuario{
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<CuentaOAuth> cuentasOAuth = new ArrayList<>();
 
+    @ManyToMany
+    @JoinTable(
+            name = "usuario_favoritos",
+            joinColumns = @JoinColumn(name = "usuario_id"),
+            inverseJoinColumns = @JoinColumn(name = "artista_id")
+    )
+    private List<Usuario> favoritos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Notificacion> notificaciones = new ArrayList<>();
+
     @PrePersist
     protected void onCreate(){
-        this.fecha_registro = ZonedDateTime.now();
+        this.fechaRegistro = ZonedDateTime.now();
     }
 
     /*

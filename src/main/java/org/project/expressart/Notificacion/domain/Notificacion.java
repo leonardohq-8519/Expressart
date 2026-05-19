@@ -1,22 +1,21 @@
-package org.project.expressart.TicketSoporte.domain;
+package org.project.expressart.Notificacion.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.project.expressart.Orden.domain.Orden;
 import org.project.expressart.Usuario.domain.Usuario;
 
 import java.time.ZonedDateTime;
 
 @Entity
-@Table(name = "tickets_soporte")
+@Table(name = "notificaciones")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TicketSoporte {
+public class Notificacion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,32 +25,27 @@ public class TicketSoporte {
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "orden_id")
-    private Orden orden; //Puede ser NULL
-
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    private EstadoTicket estado = EstadoTicket.ABIERTO;
+    @Column(nullable = false, length = 30)
+    private TipoNotificacion tipo;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    private CategoriaTicket categoria;
-
-    @Column(nullable = false, length = 255)
-    private String asunto;
+    @Column(nullable = false, length = 100)
+    private String titulo;
 
     @Column(nullable = false, columnDefinition = "TEXT")
-    private String descripcion;
+    private String mensaje;
 
-    @Column(columnDefinition = "TEXT")
-    private String respuesta;
+    @Column(nullable = false)
+    private Boolean leida = false;
+
+    @Column(name = "url_destino", length = 500)
+    private String urlDestino;
 
     @Column(name = "fecha_creacion", nullable = false, updatable = false)
     private ZonedDateTime fechaCreacion;
 
-    @Column(name = "fecha_resolucion")
-    private ZonedDateTime fechaResolucion;
+    @Column(name = "fecha_lectura")
+    private ZonedDateTime fechaLectura;
 
     @PrePersist
     protected void onCreate(){
