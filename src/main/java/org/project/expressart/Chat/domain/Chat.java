@@ -28,10 +28,10 @@ public class Chat implements Serializable {
     @Column(name = "chat_id")
     private Long id;
 
-    @OneToOne(mappedBy = "chats", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "chat", cascade = CascadeType.ALL)
     private Orden orden;
 
-    @OneToMany(mappedBy = "chats",cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "chat",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Mensaje> mensajes = new ArrayList<>();
 
 }

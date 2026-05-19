@@ -39,6 +39,7 @@ public class Mensaje implements Serializable {
     @Column(name = "fecha_creacion", nullable = false, updatable = false)
     private ZonedDateTime fechaEnvio;
 
+    @PrePersist
     protected void onCreate(){
         this.fechaEnvio = ZonedDateTime.now();
     }
