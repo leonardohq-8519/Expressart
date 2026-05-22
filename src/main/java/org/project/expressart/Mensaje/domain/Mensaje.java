@@ -8,7 +8,6 @@ import lombok.Setter;
 import org.project.expressart.Chat.domain.Chat;
 import org.project.expressart.Usuario.domain.Usuario;
 
-import java.io.Serializable;
 import java.time.ZonedDateTime;
 
 

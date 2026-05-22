@@ -2,13 +2,13 @@ CREATE TABLE usuarios (
     id BIGSERIAL PRIMARY KEY,
     username VARCHAR(30) NOT NULL UNIQUE,
     email VARCHAR(255)    NOT NULL UNIQUE,
-    password_hash VARCHAR(255),
-    nombre_completo VARCHAR(100) NOT NULL,
+    password VARCHAR(255),
+    fullname VARCHAR(100) NOT NULL,
     avatar_url VARCHAR(500),
-    biografia TEXT,
-    fecha_registro TIMESTAMP NOT NULL DEFAULT NOW(),
-    esta_activo BOOLEAN NOT NULL DEFAULT TRUE,
-    email_verificado BOOLEAN NOT NULL DEFAULT FALSE,
+    biography TEXT,
+    register_date TIMESTAMP NOT NULL DEFAULT NOW(),
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    is_email_verified BOOLEAN NOT NULL DEFAULT FALSE,
     token_version INTEGER NOT NULL DEFAULT 1
 );
 
