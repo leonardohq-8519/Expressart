@@ -31,10 +31,10 @@ public class Post{
     @JoinColumn(name = "portafolio_id", nullable = false)
     private Portafolio portafolio;
 
-    @Column(nullable = false, length = 150)
+    @Column(name = "titulo", nullable = false, length = 150)
     private String titulo;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "descripcion", columnDefinition = "TEXT")
     private String descripcion;
 
     @Column(name = "es_publico", nullable = false)

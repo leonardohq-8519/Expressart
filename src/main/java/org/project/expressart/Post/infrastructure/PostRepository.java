@@ -1,1 +1,33 @@
 package org.project.expressart.Post.infrastructure;
+
+import org.project.expressart.Post.domain.Post;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
+
+public interface PostRepository extends JpaRepository<Post,Long> {
+
+    List<Post> findByPortafolioId(Long portafolioId);
+
+    List<Post> findByPortafolioIdAndEsPublico(Long portafolioId, Boolean esPublico);
+
+    @Query("""
+        SELECT p FROM Post p
+        JOIN p.categorias c
+        WHERE c.id = :categoriaId
+        AND p.esPublico = true
+        ORDER BY p.fechaPublicacion DESC
+    """)
+    List<Post> findByCategoriaId(@Param("categoriaId") Long categoriaId);
+
+    @Query("""
+        SELECT p FROM Post p
+        JOIN p.tags t
+        WHERE t.id = :tagId
+        AND p.esPublico = true
+        ORDER BY p.fechaPublicacion DESC
+    """)
+    List<Post> findByTagId(@Param("tagId") Long tagId);
+}

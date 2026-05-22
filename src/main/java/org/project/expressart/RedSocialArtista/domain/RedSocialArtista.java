@@ -28,9 +28,9 @@ public class RedSocialArtista {
     @JoinColumn(name = "perfil_artista_id", nullable = false)
     private PerfilCliente perfilArtista;
 
-    @Column(nullable = false, length = 50)
+    @Column(name = "plataforma", nullable = false, length = 50)
     private String plataforma;
 
-    @Column(nullable = false, length = 500)
+    @Column(name = "url", nullable = false, length = 500)
     private String url;
 }
