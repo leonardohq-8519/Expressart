@@ -1,4 +1,4 @@
-package org.project.expressart.TicketSoporte.application.dto;
+package org.project.expressart.TicketSoporte.dto;
 
 import lombok.Getter;
 import lombok.Setter;

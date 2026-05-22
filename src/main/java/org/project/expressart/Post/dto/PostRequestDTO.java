@@ -1,4 +1,4 @@
-package org.project.expressart.Post.application.dto;
+package org.project.expressart.Post.dto;
 
 import lombok.Getter;
 import lombok.Setter;

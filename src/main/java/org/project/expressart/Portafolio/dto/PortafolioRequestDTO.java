@@ -1,4 +1,4 @@
-package org.project.expressart.Portafolio.application.dto;
+package org.project.expressart.Portafolio.dto;
 
 import lombok.Getter;
 import lombok.Setter;

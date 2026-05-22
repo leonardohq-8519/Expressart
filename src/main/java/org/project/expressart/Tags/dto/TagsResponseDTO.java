@@ -1,4 +1,4 @@
-package org.project.expressart.Tags.application.dto;
+package org.project.expressart.Tags.dto;
 
 import lombok.Getter;
 import lombok.Setter;
