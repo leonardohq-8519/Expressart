@@ -11,7 +11,7 @@ import org.project.expressart.Usuario.domain.Usuario;
 import java.time.ZonedDateTime;
 
 @Entity
-@Table(name = "resenas_artista")
+@Table(name = "resenas_cliente")
 @Getter
 @Setter
 @NoArgsConstructor

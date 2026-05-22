@@ -1,6 +1,6 @@
 package org.project.expressart.Orden.domain;
 
-public enum EstadoOrden {
+public enum  EstadoOrden {
     PENDIENTE,
     ACEPTADA,
     RECHAZADA,
