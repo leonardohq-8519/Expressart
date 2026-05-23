@@ -8,10 +8,10 @@ import java.time.ZonedDateTime;
 @Setter
 public class UsuarioResponseDTO {
     private Long id;
-    private String nombre_usuario;
+    private String username;
     private String email;
-    private String nombre;
+    private String name;
     private String avatar_url;
-    private String biografia;
-    private ZonedDateTime fechaRegistro;
+    private String biography;
+    private ZonedDateTime registerDate;
 }

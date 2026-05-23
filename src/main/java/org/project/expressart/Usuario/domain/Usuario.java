@@ -54,39 +54,28 @@ public class Usuario {
     private Long token;
 
     @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
-    private PerfilCliente perfilArtista;
+    private PerfilCliente ArtistProfile;
 
     @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
-    private PerfilCliente perfilCliente;
+    private PerfilCliente ClientProfile;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
-    private List<CuentaOAuth> cuentasOAuth = new ArrayList<>();
+    private List<CuentaOAuth> OAuthAccounts = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(
-            name = "usuario_favoritos",
-            joinColumns = @JoinColumn(name = "usuario_id"),
-            inverseJoinColumns = @JoinColumn(name = "artista_id")
+            name = "favorite_users",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "artist_id")
     )
-    private List<Usuario> favoritos = new ArrayList<>();
+    private List<Usuario> favorites = new ArrayList<>();
 
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Notificacion> notificaciones = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Notificacion> notifications = new ArrayList<>();
 
     @PrePersist
     protected void onCreate(){
         this.registerDate = ZonedDateTime.now();
     }
 
-    /*
-    stringnombre
-    string nombre_usuario
-    string biografia
-    string correo
-    string contraseña
-    ____ foto_perfil
-    ____ banner
-    daComisiones?/Estado
-    lista seguidos
-     */
 }

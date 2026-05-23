@@ -2,6 +2,8 @@ package org.project.expressart.Usuario.domain;
 
 
 import jakarta.transaction.Transactional;
+import org.apache.coyote.BadRequestException;
+import org.project.expressart.PerfilArtista.domain.PerfilArtista;
 import org.project.expressart.Usuario.dto.UsuarioRequestDTO;
 import org.project.expressart.Usuario.dto.UsuarioResponseDTO;
 import org.project.expressart.Usuario.infrastructure.UsuarioRepository;
@@ -15,6 +17,7 @@ public class UserService{
     @Autowired
     private final UsuarioRepository userRepository;
 
+
     public UserService(UsuarioRepository userRepo){
         this.userRepository = userRepo;
     }
@@ -23,7 +26,19 @@ public class UserService{
         return userRepository.findAll(pageable);
     }
 
-    public void createUser(UsuarioRequestDTO user){
+    public void createUser(UsuarioRequestDTO userdto) throws BadRequestException {
+        if (userRepository.existsByEmail(userdto.getEmail()))
+            throw new BadRequestException("El email ya está en uso");
+        if (userRepository.existsByUsername(userdto.getUsername()))
+            throw new BadRequestException("El username ya está en uso");
+        Usuario user = new Usuario();
+        user.setUsername(userdto.getUsername());
+        user.setEmail(userdto.getEmail());
+        user.setName(userdto.getName());
+        user.setPassword(userdto.getPassword());
+        user.setAvatar_url(userdto.getAvatar_url());
+        user.setBiography(userdto.getBiography());
+        user.setIsActive(true);
         userRepository.save(user);
     }
 

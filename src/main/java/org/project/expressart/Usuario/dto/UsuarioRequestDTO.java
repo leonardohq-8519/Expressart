@@ -6,10 +6,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UsuarioRequestDTO {
-    private String nombre_usuario;
+    private String username;
     private String email;
-    private String nombre;
-    private String contraseña;
+    private String name;
+    private String password;
     private String avatar_url;
-    private String biografia;
+    private String biography;
 }
