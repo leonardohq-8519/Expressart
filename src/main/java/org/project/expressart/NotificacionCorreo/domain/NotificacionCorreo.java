@@ -1,4 +1,4 @@
-package org.project.expressart.NotifiacionCorreo.domain;
+package org.project.expressart.NotificacionCorreo.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
