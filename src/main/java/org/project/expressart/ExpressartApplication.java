@@ -1,7 +1,9 @@
 package org.project.expressart;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class ExpressartApplication {
@@ -10,4 +12,8 @@ public class ExpressartApplication {
         SpringApplication.run(ExpressartApplication.class, args);
     }
 
+    @Bean
+    public ModelMapper modelMapper(){
+        return new ModelMapper();
+    }
 }
