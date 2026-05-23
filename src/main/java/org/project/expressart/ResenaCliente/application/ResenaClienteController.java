@@ -1,6 +1,6 @@
 package org.project.expressart.ResenaCliente.application;
 
-import org.project.expressart.ResenaCliente.application.ResenaClienteService;
+import org.project.expressart.ResenaCliente.domain.ResenaClienteService;
 import org.project.expressart.ResenaCliente.dto.ResenaClienteRequestDTO;
 import org.project.expressart.ResenaCliente.dto.ResenaClienteResponseDTO;
 import org.springframework.http.HttpStatus;

@@ -1,6 +1,6 @@
 package org.project.expressart.Chat.application;
 
-import org.project.expressart.Chat.application.ChatService;
+import org.project.expressart.Chat.domain.ChatService;
 import org.project.expressart.Chat.dto.ChatRequestDTO;
 import org.project.expressart.Chat.dto.ChatResponseDTO;
 import org.springframework.http.HttpStatus;

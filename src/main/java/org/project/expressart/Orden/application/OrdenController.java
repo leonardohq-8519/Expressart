@@ -1,6 +1,6 @@
 package org.project.expressart.Orden.application;
 
-import org.project.expressart.Orden.application.OrdenService;
+import org.project.expressart.Orden.domain.OrdenService;
 import org.project.expressart.Orden.dto.OrdenRequestDTO;
 import org.project.expressart.Orden.dto.OrdenResponseDTO;
 import org.project.expressart.Orden.domain.EstadoOrden;

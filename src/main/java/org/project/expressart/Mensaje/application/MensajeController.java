@@ -1,6 +1,6 @@
 package org.project.expressart.Mensaje.application;
 
-import org.project.expressart.Mensaje.application.MensajeService;
+import org.project.expressart.Mensaje.domain.MensajeService;
 import org.project.expressart.Mensaje.dto.MensajeRequestDTO;
 import org.project.expressart.Mensaje.dto.MensajeResponseDTO;
 import org.springframework.http.HttpStatus;

@@ -1,6 +1,6 @@
 package org.project.expressart.Pago.application;
 
-import org.project.expressart.Pago.application.PagoService;
+import org.project.expressart.Pago.domain.PagoService;
 import org.project.expressart.Pago.dto.PagoRequestDTO;
 import org.project.expressart.Pago.dto.PagoResponseDTO;
 import org.project.expressart.Pago.domain.EstadoPago;

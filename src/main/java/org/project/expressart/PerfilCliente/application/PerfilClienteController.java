@@ -1,6 +1,6 @@
 package org.project.expressart.PerfilCliente.application;
 
-import org.project.expressart.PerfilCliente.application.PerfilClienteService;
+import org.project.expressart.PerfilCliente.domain.PerfilClienteService;
 import org.project.expressart.PerfilCliente.dto.PerfilClienteResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

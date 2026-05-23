@@ -1,6 +1,6 @@
 package org.project.expressart.PerfilArtista.application;
 
-import org.project.expressart.PerfilArtista.application.PerfilArtistaService;
+import org.project.expressart.PerfilArtista.domain.PerfilArtistaService;
 import org.project.expressart.PerfilArtista.dto.PerfilArtistaRequestDTO;
 import org.project.expressart.PerfilArtista.dto.PerfilArtistaResponseDTO;
 import org.springframework.http.HttpStatus;

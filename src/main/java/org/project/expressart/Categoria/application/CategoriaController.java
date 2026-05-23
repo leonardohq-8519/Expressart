@@ -1,6 +1,6 @@
 package org.project.expressart.Categoria.application;
 
-import org.project.expressart.Categoria.application.CategoriaService;
+import org.project.expressart.Categoria.domain.CategoryService;
 import org.project.expressart.Categoria.dto.CategoriaRequestDTO;
 import org.project.expressart.Categoria.dto.CategoriaResponseDTO;
 import org.springframework.http.HttpStatus;
@@ -13,9 +13,9 @@ import java.util.List;
 @RequestMapping("/categories")
 public class CategoriaController {
 
-    private final CategoriaService categoriaService;
+    private final CategoryService categoriaService;
 
-    public CategoriaController(CategoriaService categoriaService) {
+    public CategoriaController(CategoryService categoriaService) {
         this.categoriaService = categoriaService;
     }
 

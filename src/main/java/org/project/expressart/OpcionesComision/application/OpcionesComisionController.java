@@ -1,6 +1,6 @@
 package org.project.expressart.OpcionesComision.application;
 
-import org.project.expressart.OpcionesComision.application.OpcionesComisionService;
+import org.project.expressart.OpcionesComision.domain.OpcionesComisionService;
 import org.project.expressart.OpcionesComision.dto.OpcionesComisionRequestDTO;
 import org.project.expressart.OpcionesComision.dto.OpcionesComisionResponseDTO;
 import org.springframework.http.HttpStatus;

@@ -1,6 +1,6 @@
 package org.project.expressart.Devolucion.application;
 
-import org.project.expressart.Devolucion.application.DevolucionService;
+import org.project.expressart.Devolucion.domain.DevolucionService;
 import org.project.expressart.Devolucion.dto.DevolucionRequestDTO;
 import org.project.expressart.Devolucion.dto.DevolucionResponseDTO;
 import org.project.expressart.Devolucion.domain.EstadoDevolucion;

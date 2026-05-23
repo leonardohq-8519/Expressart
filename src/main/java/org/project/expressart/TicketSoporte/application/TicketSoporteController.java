@@ -1,8 +1,8 @@
 package org.project.expressart.TicketSoporte.application;
 
-import org.project.expressart.TicketSoporte.application.TicketSoporteService;
-import org.project.expressart.TicketSoporte.application.dto.TicketSoporteRequestDTO;
-import org.project.expressart.TicketSoporte.application.dto.TicketSoporteResponseDTO;
+import org.project.expressart.TicketSoporte.domain.TicketSoporteService;
+import org.project.expressart.TicketSoporte.dto.TicketSoporteRequestDTO;
+import org.project.expressart.TicketSoporte.dto.TicketSoporteResponseDTO;
 import org.project.expressart.TicketSoporte.domain.CategoriaTicket;
 import org.project.expressart.TicketSoporte.domain.EstadoTicket;
 import org.springframework.http.HttpStatus;
