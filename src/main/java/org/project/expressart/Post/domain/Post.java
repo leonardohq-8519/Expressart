@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.project.expressart.Categoria.domain.Categoria;
+import org.project.expressart.ImagenPost.domain.ImagenPost;
 import org.project.expressart.Portafolio.domain.Portafolio;
 import org.project.expressart.Tags.domain.Tags;
 
@@ -30,10 +31,10 @@ public class Post{
     @JoinColumn(name = "portafolio_id", nullable = false)
     private Portafolio portafolio;
 
-    @Column(nullable = false, length = 150)
+    @Column(name = "titulo", nullable = false, length = 150)
     private String titulo;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "descripcion", columnDefinition = "TEXT")
     private String descripcion;
 
     @Column(name = "es_publico", nullable = false)
