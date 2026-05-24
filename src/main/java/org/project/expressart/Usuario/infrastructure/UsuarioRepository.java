@@ -28,4 +28,15 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
         AND u.isActive = true
     """)
     List<Usuario> findSeguidoresByArtistaId(@Param("artistaId") Long artistaId);
+
+    @Query("""
+    SELECT u FROM Usuario u
+    JOIN u.cuentasOAuth c
+    WHERE c.proveedor = :proveedor
+    AND c.proveedorId = :proveedorId
+""")
+    Optional<Usuario> findByOAuthProveedorAndProveedorId(
+            @Param("proveedor") String proveedor,
+            @Param("proveedorId") String proveedorId
+    );
 }
