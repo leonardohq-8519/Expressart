@@ -33,7 +33,7 @@ public class ResenaCliente {
     @JoinColumn(name = "artista_id", nullable = false)
     private Usuario artista;
 
-    @Column(nullable = false)
+    @Column(name = "puntuacion",nullable = false)
     private Short puntuacion;
 
     @Column(columnDefinition = "TEXT")
