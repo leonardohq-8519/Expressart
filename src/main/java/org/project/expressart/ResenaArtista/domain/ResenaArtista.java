@@ -23,29 +23,29 @@ public class ResenaArtista {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "orden_id", nullable = false, unique = true)
-    private Orden orden;
+    private Orden order;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente_id", nullable = false)
-    private Usuario cliente;
+    private Usuario client;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "artista_id", nullable = false)
-    private Usuario artista;
+    private Usuario artist;
 
     @Column(nullable = false)
-    private Short puntuacion;
+    private Short score;
 
     @Column(columnDefinition = "TEXT")
-    private String comentario;
+    private String comment;
 
     @Column(name = "fecha_creacion", nullable = false, updatable = false)
-    private ZonedDateTime fechaCreacion;
+    private ZonedDateTime creationDate;
 
     @PrePersist
     protected void onCreate(){
-        this.fechaCreacion = ZonedDateTime.now();
-        if (this.puntuacion < 1 || this.puntuacion > 5) {
+        this.creationDate = ZonedDateTime.now();
+        if (this.score < 1 || this.score > 5) {
             throw new IllegalArgumentException(
                     "La puntuación debe estar entre 1 y 5"
             );

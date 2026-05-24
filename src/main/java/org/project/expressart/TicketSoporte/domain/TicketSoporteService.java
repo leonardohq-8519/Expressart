@@ -1,1 +1,0 @@
-package org.project.expressart.TicketSoporte.domain;

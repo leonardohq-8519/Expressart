@@ -71,7 +71,7 @@ public class UserService{
         if (userRepository.existsById(id))
             userRepository.deleteById(id);
          else
-            throw new EntityNotFoundException("User with ID " + id + " doesn't exist");
+             throw new EntityNotFoundException("User with ID " + id + " doesn't exist");
     }
 
     @Transactional
