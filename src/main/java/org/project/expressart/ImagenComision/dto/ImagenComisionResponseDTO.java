@@ -1,4 +1,4 @@
-package org.project.expressart.ImagenPost.application.dto;
+package org.project.expressart.ImagenComision.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ImagenPostUpdateDTO {
+public class ImagenComisionResponseDTO {
+    private Long id;
     private String url;
     private Integer orden;
 }

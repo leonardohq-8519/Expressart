@@ -1,9 +1,10 @@
-package org.project.expressart.CuentaOAuth.infrastructure;
+package org.project.expressart.CuentaOAuth.application;
 
 import lombok.RequiredArgsConstructor;
-import org.project.expressart.CuentaOAuth.application.dto.CuentaOAuthCreateDTO;
-import org.project.expressart.CuentaOAuth.application.dto.CuentaOAuthResponseDTO;
-import org.project.expressart.CuentaOAuth.application.dto.CuentaOAuthUpdateDTO;
+import org.project.expressart.CuentaOAuth.domain.OAuthAccountService;
+import org.project.expressart.CuentaOAuth.dto.CuentaOAuthCreateDTO;
+import org.project.expressart.CuentaOAuth.dto.CuentaOAuthResponseDTO;
+import org.project.expressart.CuentaOAuth.dto.CuentaOAuthUpdateDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,43 +16,43 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CuentaOAuthController {
 
-    private final CuentaOAuthService cuentaOAuthService;
+    private final OAuthAccountService OAuthAccountService;
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<CuentaOAuthResponseDTO>> getByUser(
             @PathVariable Long userId) {
-        return ResponseEntity.ok(cuentaOAuthService.getByUser(userId));
+        return ResponseEntity.ok(OAuthAccountService.getByUser(userId));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CuentaOAuthResponseDTO> getById(
             @PathVariable Long id) {
-        return ResponseEntity.ok(cuentaOAuthService.getById(id));
+        return ResponseEntity.ok(OAuthAccountService.getById(id));
     }
 
     @PostMapping
     public ResponseEntity<CuentaOAuthResponseDTO> create(
             @RequestBody CuentaOAuthCreateDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(cuentaOAuthService.create(dto));
+                .body(OAuthAccountService.create(dto));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<CuentaOAuthResponseDTO> update(
             @PathVariable Long id,
             @RequestBody CuentaOAuthUpdateDTO dto) {
-        return ResponseEntity.ok(cuentaOAuthService.update(id, dto));
+        return ResponseEntity.ok(OAuthAccountService.update(id, dto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        cuentaOAuthService.delete(id);
+        OAuthAccountService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/user/{userId}")
     public ResponseEntity<Void> deleteByUser(@PathVariable Long userId) {
-        cuentaOAuthService.deleteByUser(userId);
+        OAuthAccountService.deleteByUser(userId);
         return ResponseEntity.noContent().build();
     }
 }

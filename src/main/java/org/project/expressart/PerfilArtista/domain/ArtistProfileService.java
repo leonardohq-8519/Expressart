@@ -51,15 +51,15 @@ public class ArtistProfileService {
         artistProfileRepository.save(artistProfile);
         return modelMapper.map(artistProfile, ArtistProfileResponseDTO.class);
     }
-    public ArtistProfileResponseDTO  update (Long id, ArtistProfileRequestDTO request)throws ResourceNotFoundException{
-        PerfilArtista updArtistProfile = artistProfileRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Artist profile not found"));
+    public ArtistProfileResponseDTO  update (Long profId, ArtistProfileRequestDTO request)throws ResourceNotFoundException{
+        PerfilArtista updArtistProfile = artistProfileRepository.findById(profId).orElseThrow(() -> new ResourceNotFoundException("Artist profile not found"));
         updArtistProfile.setComsDisponibles(request.getComsDisponibles());
         updArtistProfile.setTiempoEntregaPromedio(request.getTiempoEntregaPromedio());
         Usuario user = userRepository.findByUsername(request.getNombreUsuario())
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
         updArtistProfile.setUsuario(user);
         List<Long> categoriaIds = request.getCategoriaIds();
-        List<Categoria> categories = categoryRepository.findAllById(id);
+        List<Categoria> categories = categoryRepository.findAllByArtistProfileId(profId);
         if (categories.size() != categoriaIds.size())
             throw new EntityNotFoundException("Not all categories were found");
         updArtistProfile.setCategorias(categories);

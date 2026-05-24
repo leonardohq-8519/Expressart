@@ -1,4 +1,4 @@
-package org.project.expressart.CuentaOAuth.application.dto;
+package org.project.expressart.CuentaOAuth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +9,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CuentaOAuthUpdateDTO {
+public class CuentaOAuthCreateDTO {
+    private Long usuarioId;
+    private String proveedor;
+    private String proveedorId;
     private String emailOauth;
 }

@@ -1,4 +1,4 @@
-package org.project.expressart.ImagenComision.application.dto;
+package org.project.expressart.ImagenComision.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ImagenComisionCreateDTO {
-    private Long comisionId;
+public class ImagenComisionUpdateDTO {
     private String url;
     private Integer orden;
 }

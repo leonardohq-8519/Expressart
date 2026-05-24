@@ -1,5 +1,4 @@
-package org.project.expressart.Notificacion.application.dto;
-
+package org.project.expressart.CuentaOAuth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,7 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class NotificacionCountDTO {
-    private Long usuarioId;
-    private long noLeidas;
+public class CuentaOAuthUpdateDTO {
+    private String emailOauth;
 }

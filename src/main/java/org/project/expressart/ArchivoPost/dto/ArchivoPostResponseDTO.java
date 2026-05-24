@@ -1,4 +1,4 @@
-package org.project.expressart.ArchivoPost.application.dto;
+package org.project.expressart.ArchivoPost.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,9 +1,11 @@
-package org.project.expressart.ImagenComision.infrastructure;
+package org.project.expressart.ImagenComision.application;
 
 import lombok.RequiredArgsConstructor;
-import org.project.expressart.ImagenComision.application.dto.ImagenComisionCreateDTO;
-import org.project.expressart.ImagenComision.application.dto.ImagenComisionResponseDTO;
-import org.project.expressart.ImagenComision.application.dto.ImagenComisionUpdateDTO;
+import org.project.expressart.ImagenComision.domain.CommissionPictureService;
+import org.project.expressart.ImagenComision.dto.ImagenComisionCreateDTO;
+import org.project.expressart.ImagenComision.dto.ImagenComisionResponseDTO;
+import org.project.expressart.ImagenComision.dto.ImagenComisionUpdateDTO;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,43 +17,43 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ImagenComisionController {
 
-    private final ImagenComisionService imagenComisionService;
+    private final CommissionPictureService commissionPictureService;
 
     @GetMapping("/commission/{comisionId}")
     public ResponseEntity<List<ImagenComisionResponseDTO>> getByCommission(
-            @PathVariable Long comisionId) {
-        return ResponseEntity.ok(imagenComisionService.getByCommission(comisionId));
+            @PathVariable Long comisionId) throws ResourceNotFoundException{
+        return ResponseEntity.ok(commissionPictureService.getByCommission(comisionId));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ImagenComisionResponseDTO> getById(
-            @PathVariable Long id) {
-        return ResponseEntity.ok(imagenComisionService.getById(id));
+            @PathVariable Long id) throws ResourceNotFoundException{
+        return ResponseEntity.ok(commissionPictureService.getById(id));
     }
 
     @PostMapping
     public ResponseEntity<ImagenComisionResponseDTO> create(
             @RequestBody ImagenComisionCreateDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(imagenComisionService.create(dto));
+                .body(commissionPictureService.create(dto));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<ImagenComisionResponseDTO> update(
             @PathVariable Long id,
-            @RequestBody ImagenComisionUpdateDTO dto) {
-        return ResponseEntity.ok(imagenComisionService.update(id, dto));
+            @RequestBody ImagenComisionUpdateDTO dto) throws ResourceNotFoundException {
+        return ResponseEntity.ok(commissionPictureService.update(id, dto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        imagenComisionService.delete(id);
+        commissionPictureService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/commission/{comisionId}")
     public ResponseEntity<Void> deleteByCommission(@PathVariable Long comisionId) {
-        imagenComisionService.deleteByCommission(comisionId);
+        commissionPictureService.deleteByCommission(comisionId);
         return ResponseEntity.noContent().build();
     }
 }

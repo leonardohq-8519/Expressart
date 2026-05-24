@@ -1,4 +1,4 @@
-package org.project.expressart.ArchivoPost.application.dto;
+package org.project.expressart.ImagenPost.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArchivoPostUpdateDTO {
+public class ImagenPostUpdateDTO {
     private String url;
-    private Integer ordenVisualizacion;
+    private Integer orden;
 }

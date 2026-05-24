@@ -13,4 +13,5 @@ public interface RedSocialArtistaRepository extends JpaRepository<RedSocialArtis
     Optional<RedSocialArtista> findByPerfilArtistaIdAndPlataforma(Long perfilArtistaId, String plataforma);
 
     void deleteByPerfilArtistaId(Long perfilArtistaId);
+    Boolean existsByPerfilArtista(Long perfilArtistaId);
 }

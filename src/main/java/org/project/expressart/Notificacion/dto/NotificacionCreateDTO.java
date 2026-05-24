@@ -1,4 +1,4 @@
-package org.project.expressart.Notificacion.application.dto;
+package org.project.expressart.Notificacion.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

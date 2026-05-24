@@ -1,4 +1,4 @@
-package org.project.expressart.ImagenComision.application.dto;
+package org.project.expressart.CuentaOAuth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ImagenComisionResponseDTO {
+public class CuentaOAuthResponseDTO {
     private Long id;
-    private String url;
-    private Integer orden;
+    private String proveedor;
+    private String proveedorId;
+    private String emailOauth;
 }

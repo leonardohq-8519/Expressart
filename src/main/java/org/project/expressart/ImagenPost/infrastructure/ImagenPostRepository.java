@@ -14,4 +14,5 @@ public interface ImagenPostRepository extends JpaRepository<ImagenPost, Long> {
     void deleteByPostId(Long postId);
 
     long countByPostId(Long postId);
+    Boolean existsByPostId(Long postId);
 }
