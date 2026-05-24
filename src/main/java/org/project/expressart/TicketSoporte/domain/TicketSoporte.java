@@ -24,37 +24,37 @@ public class TicketSoporte {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id", nullable = false)
-    private Usuario usuario;
+    private Usuario user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "orden_id")
-    private Orden orden; //Puede ser NULL
+    private Orden order; //Puede ser NULL
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private EstadoTicket estado = EstadoTicket.ABIERTO;
+    private EstadoTicket status = EstadoTicket.ABIERTO;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private CategoriaTicket categoria;
+    private CategoriaTicket category;
 
     @Column(nullable = false, length = 255)
-    private String asunto;
+    private String subject;
 
     @Column(nullable = false, columnDefinition = "TEXT")
-    private String descripcion;
+    private String description;
 
     @Column(columnDefinition = "TEXT")
-    private String respuesta;
+    private String answer;
 
     @Column(name = "fecha_creacion", nullable = false, updatable = false)
-    private ZonedDateTime fechaCreacion;
+    private ZonedDateTime creationDate;
 
     @Column(name = "fecha_resolucion")
-    private ZonedDateTime fechaResolucion;
+    private ZonedDateTime resolutionDate;
 
     @PrePersist
     protected void onCreate(){
-        this.fechaCreacion = ZonedDateTime.now();
+        this.creationDate = ZonedDateTime.now();
     }
 }
