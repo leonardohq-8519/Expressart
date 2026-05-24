@@ -5,12 +5,16 @@ import org.modelmapper.ModelMapper;
 import org.project.expressart.Portafolio.dto.PortafolioRequestDTO;
 import org.project.expressart.Portafolio.dto.PortafolioResponseDTO;
 import org.project.expressart.Portafolio.infrastructure.PortafolioRepository;
+import org.project.expressart.Post.domain.Post;
+import org.project.expressart.Post.dto.PostResponseDTO;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,17 +27,27 @@ public class PortafolioService{
         Pageable pageable = PageRequest.of(0, 10);
         return portafolioRepository.findAllBy(pageable);
     }
-    public PortafolioResponseDTO  findById (Long id){
-        Portafolio portafolio = portafolioRepository.findById(id).orElseThrow(()-> new ResourceNotFoundEXception("Portafolio not found"));
+    public PortafolioResponseDTO  findById (Long id)throws ResourceNotFoundException{
+        Portafolio portafolio = portafolioRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Portafolio not found"));
         return modelMapper.map(portafolio, PortafolioResponseDTO.class);
     }
-    public PortafolioResponseDTO findByPerfilArtistaId (Long perfilArtistaId){
-        Portafolio portafolio = portafolioRepository.findByPerfilArtistaId(perfilArtistaId).orElseThrow(()-> new ResourceNotFoundEXception("Portafolio not found"));
-        return modelMapper.map(portafolio, PortafolioResponseDTO.class);
+    public List<PortafolioResponseDTO> findByPerfilArtistaId (Long perfilArtistaId) throws ResourceNotFoundException {
+        List<Portafolio> portafolio = portafolioRepository.findByPerfilArtistaId(perfilArtistaId);
+        if (portafolio.isEmpty()) {
+            throw new ResourceNotFoundException("No portafolios found for artist id: " + perfilArtistaId);
+        }
+        return portafolio.stream()
+                .map(ticket -> modelMapper.map(portafolio, PortafolioResponseDTO.class))
+                .collect(Collectors.toList());
     }
-    public PortafolioResponseDTO findByPerfilArtistaIdAndEsPublico (Long perfilArtistaId, Boolean status){
-        Portafolio portafolio = portafolioRepository.findByPerfilArtistaIdAndEsPublico(perfilArtistaId, status).orElseThrow(()-> new ResourceNotFoundEXception("Portafolio not found"));
-        return modelMapper.map(portafolio, PortafolioResponseDTO.class);
+    public List<PortafolioResponseDTO> findByPerfilArtistaIdAndEsPublico (Long perfilArtistaId, Boolean status) throws ResourceNotFoundException {
+        List<Portafolio> portafolio = portafolioRepository.findByPerfilArtistaIdAndEsPublico(perfilArtistaId, status);
+        if (portafolio.isEmpty()) {
+            throw new ResourceNotFoundException("No public portafolios found for artist id: " + perfilArtistaId);
+        }
+        return portafolio.stream()
+                .map(ticket -> modelMapper.map(portafolio, PortafolioResponseDTO.class))
+                .collect(Collectors.toList());
     }
 
 
@@ -45,7 +59,7 @@ public class PortafolioService{
         portafolioRepository.save(portafolio);
         return modelMapper.map(portafolio, PortafolioResponseDTO.class);
     }
-    public PortafolioResponseDTO  update (Long id, PortafolioRequestDTO request){
+    public PortafolioResponseDTO  update (Long id, PortafolioRequestDTO request)throws ResourceNotFoundException{
         Portafolio updPortafolio = portafolioRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Portafolio not found"));
         if (request.getTitulo()!= null && !request.getTitulo().isEmpty())
             updPortafolio.setTitulo(request.getTitulo());

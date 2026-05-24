@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.project.expressart.Tags.dto.TagsRequestDTO;
 import org.project.expressart.Tags.dto.TagsResponseDTO;
 import org.project.expressart.Tags.infrastructure.TagsRepository;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,12 +25,12 @@ public class TagsService {
         Pageable pageable = PageRequest.of(0, 10);
         return tagsRepository.findAllBy(pageable);
     }
-    public TagsResponseDTO  findById (Long id){
-        Tags tags = tagsRepository.findById(id).orElseThrow(()-> new ResourceNotFoundEXception("Tag not found"));
+    public TagsResponseDTO  findById (Long id)throws ResourceNotFoundException{
+        Tags tags = tagsRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Tag not found"));
         return modelMapper.map(tags, TagsResponseDTO.class);
     }
-    public TagsResponseDTO findByNombre (String name){
-        Tags tags = tagsRepository.findByNombre(name).orElseThrow(()-> new ResourceNotFoundEXception("Tag not found"));
+    public TagsResponseDTO findByNombre (String name)throws ResourceNotFoundException{
+        Tags tags = tagsRepository.findByNombre(name).orElseThrow(()-> new ResourceNotFoundException("Tag not found"));
         return modelMapper.map(tags, TagsResponseDTO.class);
     }
     public TagsResponseDTO create(TagsRequestDTO request){
@@ -38,7 +39,7 @@ public class TagsService {
         tagsRepository.save(tag);
         return modelMapper.map(tag, TagsResponseDTO.class);
     }
-    public TagsResponseDTO update(Long id, TagsRequestDTO request){
+    public TagsResponseDTO update(Long id, TagsRequestDTO request) throws ResourceNotFoundException {
         Tags updatedtag = tagsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Tag not found"));
 
         if (request.getNombre()!= null && !request.getNombre().isEmpty())

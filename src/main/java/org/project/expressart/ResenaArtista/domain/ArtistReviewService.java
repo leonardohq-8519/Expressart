@@ -9,12 +9,14 @@ import org.project.expressart.ResenaArtista.dto.ArtistReviewResponseDTO;
 import org.project.expressart.ResenaArtista.infrastructure.ResenaArtistaRepository;
 import org.project.expressart.Usuario.domain.Usuario;
 import org.project.expressart.Usuario.infrastructure.UsuarioRepository;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,17 +33,27 @@ public class ArtistReviewService {
         Pageable pageable = PageRequest.of(0, 10);
         return artistReviewRepository.findAllBy(pageable);
     }
-    public ArtistReviewResponseDTO  findById (Long id){
-        ResenaArtista artistReview = artistReviewRepository.findById(id).orElseThrow(()-> new ResourceNotFoundEXception("Artist review not found"));
+    public ArtistReviewResponseDTO  findById (Long id) throws ResourceNotFoundException {
+        ResenaArtista artistReview = artistReviewRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Artist review not found"));
         return modelMapper.map(artistReview, ArtistReviewResponseDTO.class);
     }
-    public ArtistReviewResponseDTO findByArtistaId (Long artistId){
-        ResenaArtista artistReview = artistReviewRepository.findByArtistaId(artistId).orElseThrow(()-> new ResourceNotFoundEXception("Artist review not found"));
-        return modelMapper.map(artistReview, ArtistReviewResponseDTO.class);
+    public List<ArtistReviewResponseDTO> findByArtistaId (Long artistId) throws ResourceNotFoundException {
+        List<ResenaArtista> artistReview = artistReviewRepository.findByArtistaId(artistId);
+        if (artistReview.isEmpty()) {
+            throw new ResourceNotFoundException("No artists reviews found for artist id: " + artistId);
+        }
+        return artistReview.stream()
+                .map(ticket -> modelMapper.map(artistReview, ArtistReviewResponseDTO.class))
+                .collect(Collectors.toList());
     }
-    public ArtistReviewResponseDTO findByClienteId (Long clientId){
-        ResenaArtista artistReview = artistReviewRepository.findByClienteId(clientId).orElseThrow(()-> new ResourceNotFoundEXception("Artist review not found"));
-        return modelMapper.map(artistReview, ArtistReviewResponseDTO.class);
+    public List<ArtistReviewResponseDTO> findByClienteId (Long clientId) throws ResourceNotFoundException {
+        List<ResenaArtista> artistReview = artistReviewRepository.findByClienteId(clientId);
+        if (artistReview.isEmpty()) {
+            throw new ResourceNotFoundException("No artists reviews found for client id: " + clientId);
+        }
+        return artistReview.stream()
+                .map(ticket -> modelMapper.map(artistReview, ArtistReviewResponseDTO.class))
+                .collect(Collectors.toList());
     }
 
     public ArtistReviewResponseDTO create(ArtistReviewRequestDTO request){

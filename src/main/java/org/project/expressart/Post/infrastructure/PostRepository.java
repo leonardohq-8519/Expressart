@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post,Long> {
@@ -24,7 +25,7 @@ public interface PostRepository extends JpaRepository<Post,Long> {
         AND p.esPublico = true
         ORDER BY p.fechaPublicacion DESC
     """)
-    List<Post> findByCategoriaId(@Param("categoriaId") Long categoriaId);
+   List<Post> findByCategoriaId(@Param("categoriaId") Long categoriaId);
 
     @Query("""
         SELECT p FROM Post p

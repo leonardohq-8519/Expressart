@@ -10,6 +10,7 @@ import org.project.expressart.Portafolio.domain.Portafolio;
 import org.project.expressart.Portafolio.dto.PortafolioResponseDTO;
 import org.project.expressart.Usuario.domain.Usuario;
 import org.project.expressart.Usuario.infrastructure.UsuarioRepository;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,12 +31,12 @@ public class ClientProfileService {
         Pageable pageable = PageRequest.of(0, 10);
         return clientProfileRepository.findAllBy(pageable);
     }
-    public ClientProfileResponseDTO  findById (Long id){
-        PerfilCliente clientProfile = clientProfileRepository.findById(id).orElseThrow(()-> new ResourceNotFoundEXception("Client profile not found"));
+    public ClientProfileResponseDTO  findById (Long id) throws ResourceNotFoundException {
+        PerfilCliente clientProfile = clientProfileRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Client profile not found"));
         return modelMapper.map(clientProfile, ClientProfileResponseDTO.class);
     }
-    public ClientProfileResponseDTO findByUsuarioId (Long userId){
-        PerfilCliente clientProfile = clientProfileRepository.findByUsuarioId(userId).orElseThrow(()-> new ResourceNotFoundEXception("Client profile not found"));
+    public ClientProfileResponseDTO findByUsuarioId (Long userId)throws ResourceNotFoundException{
+        PerfilCliente clientProfile = clientProfileRepository.findByUsuarioId(userId).orElseThrow(()-> new ResourceNotFoundException("Client profile not found"));
         return modelMapper.map(clientProfile, ClientProfileResponseDTO.class);
     }
     public ClientProfileResponseDTO create(Long userId){
@@ -46,13 +47,16 @@ public class ClientProfileService {
         clientProfileRepository.save(clientProfile);
         return modelMapper.map(clientProfile, ClientProfileResponseDTO.class);
     }
-    public ClientProfileResponseDTO  update (Long id, ClientProfileRequestDTO request){
+    public ClientProfileResponseDTO  update (Long id, ClientProfileRequestDTO request)throws ResourceNotFoundException{
         PerfilCliente updClientProfile = clientProfileRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Artist profile not found"));
         Usuario user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
         updClientProfile.setUsuario(user);
+        updClientProfile.setRatingPromedio(request.getRatingPromedio());
+        updClientProfile.setTotalResenas(request.getTotalResenas());
+        updClientProfile.setOrdenesRealizadas(request.getOrdenesRealizadas());
         clientProfileRepository.save(updClientProfile);
-        return modelMapper.map(updClientProfile, ArtistProfileResponseDTO.class);
+        return modelMapper.map(updClientProfile, ClientProfileResponseDTO.class);
     }
     public void delete (Long id){
         if (clientProfileRepository.existsById(id))

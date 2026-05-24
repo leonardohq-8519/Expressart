@@ -11,12 +11,14 @@ import org.project.expressart.TicketSoporte.dto.SupportTicketResponseDTO;
 import org.project.expressart.TicketSoporte.infrastructure.TicketSoporteRepository;
 import org.project.expressart.Usuario.domain.Usuario;
 import org.project.expressart.Usuario.infrastructure.UsuarioRepository;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,21 +36,43 @@ public class SupportTicketService {
         Pageable pageable = PageRequest.of(0, 10);
         return supportTicketRepository.findAllBy(pageable);
     }
-    public SupportTicketResponseDTO  findById (Long id){
-        TicketSoporte ticket = supportTicketRepository.findById(id).orElseThrow(()-> new ResourceNotFoundEXception("Ticket not found"));
+    public SupportTicketResponseDTO  findById (Long id)throws ResourceNotFoundException{
+        TicketSoporte ticket = supportTicketRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Ticket not found"));
         return modelMapper.map(ticket, SupportTicketResponseDTO.class);
     }
-    public SupportTicketResponseDTO findByUsuarioId (Long userId){
-        TicketSoporte ticket = supportTicketRepository.findByUsuarioId(userId).orElseThrow(()-> new ResourceNotFoundEXception("Ticket not found"));
-        return modelMapper.map(ticket, SupportTicketResponseDTO.class);
+    public List<SupportTicketResponseDTO> findByUsuarioId (Long userId) throws ResourceNotFoundException {
+        if (!userRepository.existsById(userId)) {
+            throw new ResourceNotFoundException("User not found with ID: " + userId);
+        }
+
+        List<TicketSoporte> tickets = supportTicketRepository.findByUsuarioId(userId);
+
+        if (tickets.isEmpty()) {
+            throw new ResourceNotFoundException("No tickets found for user ID: " + userId);
+        }
+
+        return tickets.stream()
+                .map(ticket -> modelMapper.map(ticket, SupportTicketResponseDTO.class))
+                .collect(Collectors.toList());
     }
-    public SupportTicketResponseDTO findByEstado (EstadoTicket status){
-        TicketSoporte ticket = supportTicketRepository.findByEstado(status).orElseThrow(()-> new ResourceNotFoundEXception("Ticket not found"));
-        return modelMapper.map(ticket, SupportTicketResponseDTO.class);
+    public List<SupportTicketResponseDTO> findByEstado (EstadoTicket status) throws ResourceNotFoundException {
+        List<TicketSoporte> tickets = supportTicketRepository.findByEstado(status);
+        if (tickets.isEmpty()) {
+            throw new ResourceNotFoundException("No tickets found for status: " + status);
+        }
+        return tickets.stream()
+                .map(ticket -> modelMapper.map(ticket, SupportTicketResponseDTO.class))
+                .collect(Collectors.toList());
     }
-    public SupportTicketResponseDTO findByEstadoAndCategoria (EstadoTicket status, CategoriaTicket category){
-        TicketSoporte ticket = supportTicketRepository.findByEstadoAndCategoria(status, category).orElseThrow(()-> new ResourceNotFoundEXception("Ticket not found"));
-        return modelMapper.map(ticket, SupportTicketResponseDTO.class);
+
+    public List<SupportTicketResponseDTO> findByEstadoAndCategoria (EstadoTicket status, CategoriaTicket category) throws ResourceNotFoundException {
+        List<TicketSoporte> tickets = supportTicketRepository.findByEstadoAndCategoria(status, category);
+        if (tickets.isEmpty()) {
+            throw new ResourceNotFoundException("No tickets found for status: " + status + "or category: " + category);
+        }
+        return tickets.stream()
+                .map(ticket -> modelMapper.map(ticket, SupportTicketResponseDTO.class))
+                .collect(Collectors.toList());
     }
     public SupportTicketResponseDTO create(SupportTicketRequestDTO request)throws BadRequestException {
         TicketSoporte ticket = new TicketSoporte();
@@ -62,13 +86,13 @@ public class SupportTicketService {
         supportTicketRepository.save(ticket);
         return modelMapper.map(ticket, SupportTicketResponseDTO.class);
     }
-    public SupportTicketResponseDTO updateStatus(Long id, EstadoTicket status){
+    public SupportTicketResponseDTO updateStatus(Long id, EstadoTicket status)throws ResourceNotFoundException{
         TicketSoporte ticketSoporte = supportTicketRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Ticket not found"));
         ticketSoporte.setStatus(status);
         supportTicketRepository.save(ticketSoporte);
         return modelMapper.map(ticketSoporte, SupportTicketResponseDTO.class);
     }
-    public SupportTicketResponseDTO addResponse (Long id, String answer){
+    public SupportTicketResponseDTO addResponse (Long id, String answer)throws ResourceNotFoundException{
         TicketSoporte ticketSoporte = supportTicketRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Ticket not found"));
         ticketSoporte.setAnswer(answer);
         supportTicketRepository.save(ticketSoporte);

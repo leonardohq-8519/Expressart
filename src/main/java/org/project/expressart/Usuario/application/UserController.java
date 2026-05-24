@@ -4,6 +4,7 @@ import org.apache.coyote.BadRequestException;
 import org.project.expressart.Usuario.domain.UserService;
 import org.project.expressart.Usuario.dto.UserRequestDTO;
 import org.project.expressart.Usuario.dto.UserResponseDTO;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,13 +28,13 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> getById(@PathVariable Long id) {
+    public ResponseEntity<UserResponseDTO> getById(@PathVariable Long id) throws ResourceNotFoundException {
         UserResponseDTO usuario = userService.findById(id);
         return ResponseEntity.ok(usuario);
     }
 
     @GetMapping("/email/{email}")
-    public ResponseEntity<UserResponseDTO> getByEmail(@PathVariable String email) {
+    public ResponseEntity<UserResponseDTO> getByEmail(@PathVariable String email)throws ResourceNotFoundException {
         UserResponseDTO usuario = userService.findByEmail(email);
         return ResponseEntity.ok(usuario);
     }
@@ -47,7 +48,7 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<UserResponseDTO> update(
             @PathVariable Long id,
-            @RequestBody UserRequestDTO request) {
+            @RequestBody UserRequestDTO request)throws ResourceNotFoundException {
         UserResponseDTO updated = userService.update(id, request);
         return ResponseEntity.ok(updated);
     }

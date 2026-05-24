@@ -3,6 +3,7 @@ package org.project.expressart.ResenaCliente.application;
 import org.project.expressart.ResenaCliente.domain.ClientReviewService;
 import org.project.expressart.ResenaCliente.dto.ClientReviewRequestDTO;
 import org.project.expressart.ResenaCliente.dto.ClientReviewResponseDTO;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,17 +26,17 @@ public class ResenaClienteController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ClientReviewResponseDTO> getById(@PathVariable Long id) {
+    public ResponseEntity<ClientReviewResponseDTO> getById(@PathVariable Long id)throws ResourceNotFoundException {
         return ResponseEntity.ok(clientReviewService.findById(id));
     }
 
     @GetMapping("/client/{clienteId}")
-    public ResponseEntity<List<ClientReviewResponseDTO>> getByCliente(@PathVariable Long clienteId) {
+    public ResponseEntity<List<ClientReviewResponseDTO>> getByCliente(@PathVariable Long clienteId)throws ResourceNotFoundException {
         return ResponseEntity.ok(clientReviewService.findByClienteId(clienteId));
     }
 
     @GetMapping("/artist/{artistaId}")
-    public ResponseEntity<List<ClientReviewResponseDTO>> getByArtista(@PathVariable Long artistaId) {
+    public ResponseEntity<List<ClientReviewResponseDTO>> getByArtista(@PathVariable Long artistaId)throws ResourceNotFoundException {
         return ResponseEntity.ok(clientReviewService.findByArtistaId(artistaId));
     }
 

@@ -4,6 +4,7 @@ import org.project.expressart.Orden.domain.OrderService;
 import org.project.expressart.Orden.dto.OrderRequestDTO;
 import org.project.expressart.Orden.dto.OrderResponseDTO;
 import org.project.expressart.Orden.domain.EstadoOrden;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,31 +27,31 @@ public class OrdenController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderResponseDTO> getById(@PathVariable Long id) {
+    public ResponseEntity<OrderResponseDTO> getById(@PathVariable Long id)throws ResourceNotFoundException {
         return ResponseEntity.ok(orderService.findById(id));
     }
 
     @GetMapping("/client/{clienteId}")
-    public ResponseEntity<List<OrderResponseDTO>> getByCliente(@PathVariable Long clienteId) {
+    public ResponseEntity<List<OrderResponseDTO>> getByCliente(@PathVariable Long clienteId) throws ResourceNotFoundException{
         return ResponseEntity.ok(orderService.findByClienteId(clienteId));
     }
 
     @GetMapping("/artist/{artistaId}")
-    public ResponseEntity<List<OrderResponseDTO>> getByArtista(@PathVariable Long artistaId) {
+    public ResponseEntity<List<OrderResponseDTO>> getByArtista(@PathVariable Long artistaId)throws ResourceNotFoundException {
         return ResponseEntity.ok(orderService.findByArtistaId(artistaId));
     }
 
     @GetMapping("/client/{clienteId}/status/{estado}")
     public ResponseEntity<List<OrderResponseDTO>> getByClienteAndEstado(
             @PathVariable Long clienteId,
-            @PathVariable EstadoOrden estado) {
+            @PathVariable EstadoOrden estado) throws ResourceNotFoundException{
         return ResponseEntity.ok(orderService.findByClienteIdAndEstado(clienteId, estado));
     }
 
     @GetMapping("/artist/{artistaId}/status/{estado}")
     public ResponseEntity<List<OrderResponseDTO>> getByArtistaAndEstado(
             @PathVariable Long artistaId,
-            @PathVariable EstadoOrden estado) {
+            @PathVariable EstadoOrden estado) throws ResourceNotFoundException{
         return ResponseEntity.ok(orderService.findByArtistaIdAndEstado(artistaId, estado));
     }
 
@@ -62,14 +63,14 @@ public class OrdenController {
     @PutMapping("/{id}")
     public ResponseEntity<OrderResponseDTO> update(
             @PathVariable Long id,
-            @RequestBody OrderRequestDTO request) {
+            @RequestBody OrderRequestDTO request)throws ResourceNotFoundException {
         return ResponseEntity.ok(orderService.update(id, request));
     }
 
     @PatchMapping("/{id}/status")
     public ResponseEntity<OrderResponseDTO> updateEstado(
             @PathVariable Long id,
-            @RequestParam EstadoOrden estado) {
+            @RequestParam EstadoOrden estado)throws ResourceNotFoundException {
         return ResponseEntity.ok(orderService.updateEstado(id, estado));
     }
 

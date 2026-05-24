@@ -13,9 +13,9 @@ import java.util.Optional;
 @Repository
 public interface ResenaArtistaRepository extends JpaRepository<ResenaArtista, Long> {
 
-    Optional<List<ArtistReviewResponseDTO>> findByArtistaId(Long artistaId);
+    List<ResenaArtista> findByArtistaId(Long artistaId);
 
-    Optional<List<ArtistReviewResponseDTO>> findByClienteId(Long clienteId);
+    List<ResenaArtista> findByClienteId(Long clienteId);
     List<ArtistReviewResponseDTO> findAllBy(Pageable pageable);
 
     boolean existsByOrderId(Long orderId);

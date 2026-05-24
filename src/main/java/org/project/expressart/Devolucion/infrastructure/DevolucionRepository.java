@@ -16,5 +16,5 @@ public interface DevolucionRepository extends JpaRepository<Devolucion, Long> {
     Optional<Pago> findByOrderId(Long orderId);
     List<DevolutionResponseDTO> findAllBy(Pageable pageable);
 
-    List<Devolucion> findByEstado(EstadoDevolucion estado);
+    Optional<List<Devolucion>> findByEstado(EstadoDevolucion estado);
 }

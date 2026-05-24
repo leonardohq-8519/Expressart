@@ -9,14 +9,18 @@ import org.project.expressart.Comision.dto.CommissionResponseDTO;
 import org.project.expressart.Comision.infrastructure.ComisionRepository;
 import org.project.expressart.PerfilArtista.domain.PerfilArtista;
 import org.project.expressart.PerfilArtista.infrastructure.PerfilArtistaRepository;
+import org.project.expressart.Post.domain.Post;
+import org.project.expressart.Post.dto.PostResponseDTO;
 import org.project.expressart.Tags.domain.Tags;
 import org.project.expressart.Tags.infrastructure.TagsRepository;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,23 +39,52 @@ public class CommissionService{
         Pageable pageable = PageRequest.of(0, 10);
         return commissionRepository.findAllBy(pageable);
     }
-    public CommissionResponseDTO  findById (Long id){
-        Comision commission = commissionRepository.findById(id).orElseThrow(()-> new ResourceNotFoundEXception("Commission not found"));
+    public CommissionResponseDTO  findById (Long id) throws ResourceNotFoundException {
+        Comision commission = commissionRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Commission not found"));
         return modelMapper.map(commission, CommissionResponseDTO.class);
     }
-    public CommissionResponseDTO findByPerfilArtistaId (Long artistaId){
-        Comision commission = commissionRepository.findByPerfilArtistaId(artistaId).orElseThrow(()-> new ResourceNotFoundEXception("Commission not found"));
-        return modelMapper.map(commission, CommissionResponseDTO.class);
+
+
+    public List<CommissionResponseDTO>  findByCategoriaId (Long categoryId)throws ResourceNotFoundException{
+        List<Comision> commission = commissionRepository.findByCategoriaId(categoryId);
+        if (commission.isEmpty()) {
+            throw new ResourceNotFoundException("No commissions found for category id: " + categoryId);
+        }
+        return commission.stream()
+                .map(ticket -> modelMapper.map(commission, CommissionResponseDTO.class))
+                .collect(Collectors.toList());
     }
-    public CommissionResponseDTO findByPerfilArtistaIdAndEstaActiva (Long artistaId, Boolean status){
-        Comision commission = commissionRepository.findByPerfilArtistaIdAndEstaActiva(artistaId, status).orElseThrow(()-> new ResourceNotFoundEXception("Commission not found"));
-        return modelMapper.map(commission, CommissionResponseDTO.class);
+
+    public List<CommissionResponseDTO> findByPerfilArtistaId (Long artistaId)throws ResourceNotFoundException{
+        List<Comision> commission = commissionRepository.findByPerfilArtistaId(artistaId);
+        if (commission.isEmpty()) {
+            throw new ResourceNotFoundException("No commissions found for artist id: " + artistaId);
+        }
+        return commission.stream()
+                .map(ticket -> modelMapper.map(commission, CommissionResponseDTO.class))
+                .collect(Collectors.toList());
     }
-    public CommissionResponseDTO findByTagsId (Long tagId){
-        Comision commission = commissionRepository.findByTagsId(tagId).orElseThrow(()-> new ResourceNotFoundEXception("Commission not found"));
-        return modelMapper.map(commission, CommissionResponseDTO.class);
+    public List<CommissionResponseDTO> findByPerfilArtistaIdAndEstaActiva (Long artistaId, Boolean status)throws ResourceNotFoundException{
+        List<Comision> commission = commissionRepository.findByPerfilArtistaIdAndEstaActiva(artistaId, status);
+        if (commission.isEmpty()) {
+            throw new ResourceNotFoundException("No active commissions found for artist id: " + artistaId);
+        }
+        return commission.stream()
+                .map(ticket -> modelMapper.map(commission, CommissionResponseDTO.class))
+                .collect(Collectors.toList());
     }
-    public CommissionResponseDTO create(CommissionRequestDTO request){
+    public List<CommissionResponseDTO> findByTagsId (Long tagId)throws ResourceNotFoundException{
+        List<Comision> commission = commissionRepository.findByTagsId(tagId);
+        if (commission.isEmpty()) {
+            throw new ResourceNotFoundException("No commissions found for tag id: " + tagId);
+        }
+        return commission.stream()
+                .map(ticket -> modelMapper.map(commission, CommissionResponseDTO.class))
+                .collect(Collectors.toList());
+    }
+
+
+    public CommissionResponseDTO create(CommissionRequestDTO request)throws ResourceNotFoundException{
         Comision commission = new Comision();
         PerfilArtista artistProfile = artistProfileRepository.findById(request.getPerfilArtistaId()).orElseThrow(() -> new EntityNotFoundException("Artist profile not found"));
         commission.setPerfilArtista(artistProfile);
@@ -74,7 +107,7 @@ public class CommissionService{
         commissionRepository.save(commission);
         return modelMapper.map(commission, CommissionResponseDTO.class);
     }
-    public CommissionResponseDTO  update (Long id, CommissionRequestDTO request){
+    public CommissionResponseDTO  update (Long id, CommissionRequestDTO request)throws ResourceNotFoundException{
         Comision updatedCommission = commissionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Commission not found"));
         PerfilArtista artistProfile = artistProfileRepository.findById(request.getPerfilArtistaId()).orElseThrow(() -> new EntityNotFoundException("Artist profile not found"));
         if (request.getPerfilArtistaId() != null)

@@ -8,9 +8,7 @@ import org.project.expressart.Orden.infrastructure.OrdenRepository;
 import org.project.expressart.Pago.dto.PaymentRequestDTO;
 import org.project.expressart.Pago.dto.PaymentResponseDTO;
 import org.project.expressart.Pago.infrastructure.PagoRepository;
-import org.project.expressart.Portafolio.domain.Portafolio;
-import org.project.expressart.Portafolio.dto.PortafolioResponseDTO;
-import org.project.expressart.Usuario.domain.Usuario;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,16 +30,19 @@ public class PaymentService{
         Pageable pageable = PageRequest.of(0, 10);
         return paymentRepository.findAllBy(pageable);
     }
-    public PaymentResponseDTO findById (Long id){
-        Pago payment = paymentRepository.findById(id).orElseThrow(()-> new ResourceNotFoundEXception("Payment not found"));
+    public PaymentResponseDTO findById (Long id)throws ResourceNotFoundException{
+        Pago payment = paymentRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Payment not found"));
         return modelMapper.map(payment, PaymentResponseDTO.class);
     }
-    public PaymentResponseDTO findByOrderId (Long orderId){
-        Pago payment = paymentRepository.findByOrderId(orderId).orElseThrow(()-> new ResourceNotFoundEXception("Payment not found"));
+    public PaymentResponseDTO findByOrderId (Long orderId)throws ResourceNotFoundException{
+        Pago payment = paymentRepository.findByOrderId(orderId).orElseThrow(()-> new ResourceNotFoundException("Payment not found"));
         return modelMapper.map(payment, PaymentResponseDTO.class);
     }
-    public PaymentResponseDTO findByStripePaymentIntentId (String stripePaymentIntentId){
+    public PaymentResponseDTO findByStripePaymentIntentId (String stripePaymentIntentId)throws ResourceNotFoundException{
+        Pago payment = paymentRepository.findByStripePaymentIntentId(stripePaymentIntentId).orElseThrow(()-> new ResourceNotFoundException("Payment not found"));
+        return modelMapper.map(payment, PaymentResponseDTO.class);
     }
+
     public PaymentResponseDTO create(PaymentRequestDTO request){
         Pago payment = new Pago();
         Orden order = orderRepository.findById(request.getOrdenId())
@@ -55,7 +56,7 @@ public class PaymentService{
         return modelMapper.map(payment, PaymentResponseDTO.class);
 
     }
-    public PaymentResponseDTO  updateEstado (Long id, EstadoPago status){
+    public PaymentResponseDTO updateStatus(Long id, EstadoPago status) throws ResourceNotFoundException {
         Pago updatedPayment = paymentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Payment not found"));
         updatedPayment.setEstado(status);
         paymentRepository.save(updatedPayment);

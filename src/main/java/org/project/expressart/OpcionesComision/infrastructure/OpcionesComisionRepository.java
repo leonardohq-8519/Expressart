@@ -6,8 +6,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface OpcionesComisionRepository extends JpaRepository<OpcionesComision, Long> {
     List<CommissionOptionsResponseDTO> findAllBy(Pageable pageable);
+    Optional<OpcionesComision> findByComisionId(Long commissionId);
 
 }

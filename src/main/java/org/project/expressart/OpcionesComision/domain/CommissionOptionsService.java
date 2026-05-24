@@ -32,7 +32,7 @@ public class CommissionOptionsService{
         return modelMapper.map(commOptions, CommissionOptionsResponseDTO.class);
     }
     public CommissionOptionsResponseDTO findByComisionId (Long commissionId){
-        OpcionesComision commOptions = commissionOptionsRepository.findByComision(commissionId).orElseThrow(()-> new ResourceNotFoundEXception("Commission option not found"));
+        OpcionesComision commOptions = commissionOptionsRepository.findByComisionId(commissionId).orElseThrow(()-> new ResourceNotFoundEXception("Commission option not found"));
         return modelMapper.map(commOptions, CommissionOptionsResponseDTO.class);
     }
     public CommissionOptionsResponseDTO create(CommissionOptionsRequestDTO request){

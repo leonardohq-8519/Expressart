@@ -3,6 +3,7 @@ package org.project.expressart.PerfilArtista.application;
 import org.project.expressart.PerfilArtista.domain.ArtistProfileService;
 import org.project.expressart.PerfilArtista.dto.ArtistProfileRequestDTO;
 import org.project.expressart.PerfilArtista.dto.ArtistProfileResponseDTO;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,12 +26,12 @@ public class PerfilArtistaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ArtistProfileResponseDTO> getById(@PathVariable Long id) {
+    public ResponseEntity<ArtistProfileResponseDTO> getById(@PathVariable Long id)throws ResourceNotFoundException {
         return ResponseEntity.ok(artistProfileService.findById(id));
     }
 
     @GetMapping("/user/{usuarioId}")
-    public ResponseEntity<ArtistProfileResponseDTO> getByUsuario(@PathVariable Long usuarioId) {
+    public ResponseEntity<ArtistProfileResponseDTO> getByUsuario(@PathVariable Long usuarioId) throws ResourceNotFoundException {
         return ResponseEntity.ok(artistProfileService.findByUsuarioId(usuarioId));
     }
 
@@ -44,7 +45,7 @@ public class PerfilArtistaController {
     @PutMapping("/{id}")
     public ResponseEntity<ArtistProfileResponseDTO> update(
             @PathVariable Long id,
-            @RequestBody ArtistProfileRequestDTO request) {
+            @RequestBody ArtistProfileRequestDTO request) throws ResourceNotFoundException{
         return ResponseEntity.ok(artistProfileService.update(id, request));
     }
 

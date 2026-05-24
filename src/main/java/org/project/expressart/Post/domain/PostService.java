@@ -9,14 +9,18 @@ import org.project.expressart.Portafolio.infrastructure.PortafolioRepository;
 import org.project.expressart.Post.dto.PostRequestDTO;
 import org.project.expressart.Post.dto.PostResponseDTO;
 import org.project.expressart.Post.infrastructure.PostRepository;
+import org.project.expressart.ResenaArtista.domain.ResenaArtista;
+import org.project.expressart.ResenaArtista.dto.ArtistReviewResponseDTO;
 import org.project.expressart.Tags.domain.Tags;
 import org.project.expressart.Tags.infrastructure.TagsRepository;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,26 +39,46 @@ public class PostService{
         Pageable pageable = PageRequest.of(0, 10);
         return postRepository.findAllBy(pageable);
     }
-    public PostResponseDTO  findById (Long id){
+    public PostResponseDTO  findById (Long id) throws ResourceNotFoundException {
         Post post = postRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Post not found"));
         return modelMapper.map(post, PostResponseDTO.class);
     }
-    public PostResponseDTO findByPortafolioId (Long portafolioId){
-        Post post = postRepository.findByPortafolioId(portafolioId).orElseThrow(()-> new ResourceNotFoundException("Post not found"));
-        return modelMapper.map(post, PostResponseDTO.class);
+    public List<PostResponseDTO> findByPortafolioId (Long portafolioId) throws ResourceNotFoundException {
+        List<Post> post = postRepository.findByPortafolioId(portafolioId);
+        if (post.isEmpty()) {
+            throw new ResourceNotFoundException("No posts found for portafolio id: " + portafolioId);
+        }
+        return post.stream()
+                .map(ticket -> modelMapper.map(post, PostResponseDTO.class))
+                .collect(Collectors.toList());
     }
-    public PostResponseDTO findByPortafolioIdAndEsPublico (Long portafolioId, Boolean publicStatus){
-        Post post = postRepository.findByPortafolioIdAndEsPublico(portafolioId, publicStatus).orElseThrow(()-> new ResourceNotFoundException("Post not found"));
-        return modelMapper.map(post, PostResponseDTO.class);
+    public List<PostResponseDTO> findByPortafolioIdAndEsPublico (Long portafolioId, Boolean publicStatus) throws ResourceNotFoundException {
+        List<Post> post = postRepository.findByPortafolioIdAndEsPublico(portafolioId, publicStatus);
+        if (post.isEmpty()) {
+            throw new ResourceNotFoundException("No public posts found for portafolio id: " + portafolioId);
+        }
+        return post.stream()
+                .map(ticket -> modelMapper.map(post, PostResponseDTO.class))
+                .collect(Collectors.toList());
 
     }
-    public PostResponseDTO findByCategoriaId (Long categoriaId){
-        Post post = postRepository.findByCategoriaId(categoriaId).orElseThrow(()-> new ResourceNotFoundException("Post not found"));
-        return modelMapper.map(post, PostResponseDTO.class);
+    public List<PostResponseDTO> findByCategoriaId (Long categoriaId) throws ResourceNotFoundException {
+        List<Post> post = postRepository.findByCategoriaId(categoriaId);
+        if (post.isEmpty()) {
+            throw new ResourceNotFoundException("No posts found for category id: " + categoriaId);
+        }
+        return post.stream()
+                .map(ticket -> modelMapper.map(post, PostResponseDTO.class))
+                .collect(Collectors.toList());
     }
-    public PostResponseDTO findByTagId (Long tagId){
-        Post post = postRepository.findByTagId(tagId).orElseThrow(()-> new ResourceNotFoundException("Post not found"));
-        return modelMapper.map(post, PostResponseDTO.class);
+    public List<PostResponseDTO> findByTagId (Long tagId) throws ResourceNotFoundException {
+        List<Post> post = postRepository.findByTagId(tagId);
+        if (post.isEmpty()) {
+            throw new ResourceNotFoundException("No posts found for tag id: " + tagId);
+        }
+        return post.stream()
+                .map(ticket -> modelMapper.map(post, PostResponseDTO.class))
+                .collect(Collectors.toList());
     }
 
     public PostResponseDTO create(PostRequestDTO request){
@@ -79,7 +103,7 @@ public class PostService{
         postRepository.save(post);
         return modelMapper.map(post, PostResponseDTO.class);
     }
-    public PostResponseDTO  update (Long id, PostRequestDTO request){
+    public PostResponseDTO  update (Long id, PostRequestDTO request)throws ResourceNotFoundException{
         Post updatedPost = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post not found"));
         Portafolio portafolio = portafolioRepository.findById(request.getPortafolioId()).orElseThrow(() -> new EntityNotFoundException("Portafolio not found"));
         updatedPost.setPortafolio(portafolio);

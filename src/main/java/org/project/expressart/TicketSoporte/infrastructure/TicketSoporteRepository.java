@@ -14,11 +14,11 @@ import java.util.Optional;
 @Repository
 public interface TicketSoporteRepository extends JpaRepository<TicketSoporte, Long> {
 
-    Optional<List<TicketSoporte>> findByUsuarioId(Long usuarioId);
+    List<TicketSoporte> findByUsuarioId(Long usuarioId);
     List<SupportTicketResponseDTO> findAllBy(Pageable pageable);
-    Optional<List<TicketSoporte>> findByEstado(EstadoTicket estado);
+    List<TicketSoporte> findByEstado(EstadoTicket estado);
 
-    Optional<List<TicketSoporte>> findByEstadoAndCategoria(
+    List<TicketSoporte> findByEstadoAndCategoria(
             EstadoTicket estado,
             CategoriaTicket categoria
     );
