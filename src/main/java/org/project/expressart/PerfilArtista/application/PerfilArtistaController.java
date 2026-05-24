@@ -1,6 +1,6 @@
 package org.project.expressart.PerfilArtista.application;
 
-import org.project.expressart.PerfilArtista.application.PerfilArtistaService;
+import org.project.expressart.PerfilArtista.domain.ArtistProfileService;
 import org.project.expressart.PerfilArtista.dto.ArtistProfileRequestDTO;
 import org.project.expressart.PerfilArtista.dto.ArtistProfileResponseDTO;
 import org.springframework.http.HttpStatus;
@@ -13,44 +13,44 @@ import java.util.List;
 @RequestMapping("/artist-profiles")
 public class PerfilArtistaController {
 
-    private final PerfilArtistaService perfilArtistaService;
+    private final ArtistProfileService artistProfileService;
 
-    public PerfilArtistaController(PerfilArtistaService perfilArtistaService) {
-        this.perfilArtistaService = perfilArtistaService;
+    public PerfilArtistaController(ArtistProfileService artistProfileService) {
+        this.artistProfileService = artistProfileService;
     }
 
     @GetMapping
     public ResponseEntity<List<ArtistProfileResponseDTO>> getAll() {
-        return ResponseEntity.ok(perfilArtistaService.findAll());
+        return ResponseEntity.ok(artistProfileService.findAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ArtistProfileResponseDTO> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(perfilArtistaService.findById(id));
+        return ResponseEntity.ok(artistProfileService.findById(id));
     }
 
     @GetMapping("/user/{usuarioId}")
     public ResponseEntity<ArtistProfileResponseDTO> getByUsuario(@PathVariable Long usuarioId) {
-        return ResponseEntity.ok(perfilArtistaService.findByUsuarioId(usuarioId));
+        return ResponseEntity.ok(artistProfileService.findByUsuarioId(usuarioId));
     }
 
     @PostMapping("/user/{usuarioId}")
     public ResponseEntity<ArtistProfileResponseDTO> create(
             @PathVariable Long usuarioId,
             @RequestBody ArtistProfileRequestDTO request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(perfilArtistaService.create(usuarioId, request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(artistProfileService.create(usuarioId, request));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ArtistProfileResponseDTO> update(
             @PathVariable Long id,
             @RequestBody ArtistProfileRequestDTO request) {
-        return ResponseEntity.ok(perfilArtistaService.update(id, request));
+        return ResponseEntity.ok(artistProfileService.update(id, request));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        perfilArtistaService.delete(id);
+        artistProfileService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

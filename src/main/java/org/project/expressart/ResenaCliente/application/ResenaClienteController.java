@@ -1,6 +1,6 @@
 package org.project.expressart.ResenaCliente.application;
 
-import org.project.expressart.ResenaCliente.application.ResenaClienteService;
+import org.project.expressart.ResenaCliente.domain.ClientReviewService;
 import org.project.expressart.ResenaCliente.dto.ClientReviewRequestDTO;
 import org.project.expressart.ResenaCliente.dto.ClientReviewResponseDTO;
 import org.springframework.http.HttpStatus;
@@ -13,40 +13,40 @@ import java.util.List;
 @RequestMapping("/client-reviews")
 public class ResenaClienteController {
 
-    private final ResenaClienteService resenaClienteService;
+    private final ClientReviewService clientReviewService;
 
-    public ResenaClienteController(ResenaClienteService resenaClienteService) {
-        this.resenaClienteService = resenaClienteService;
+    public ResenaClienteController(ClientReviewService clientReviewService) {
+        this.clientReviewService = clientReviewService;
     }
 
     @GetMapping
     public ResponseEntity<List<ClientReviewResponseDTO>> getAll() {
-        return ResponseEntity.ok(resenaClienteService.findAll());
+        return ResponseEntity.ok(clientReviewService.findAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ClientReviewResponseDTO> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(resenaClienteService.findById(id));
+        return ResponseEntity.ok(clientReviewService.findById(id));
     }
 
     @GetMapping("/client/{clienteId}")
     public ResponseEntity<List<ClientReviewResponseDTO>> getByCliente(@PathVariable Long clienteId) {
-        return ResponseEntity.ok(resenaClienteService.findByClienteId(clienteId));
+        return ResponseEntity.ok(clientReviewService.findByClienteId(clienteId));
     }
 
     @GetMapping("/artist/{artistaId}")
     public ResponseEntity<List<ClientReviewResponseDTO>> getByArtista(@PathVariable Long artistaId) {
-        return ResponseEntity.ok(resenaClienteService.findByArtistaId(artistaId));
+        return ResponseEntity.ok(clientReviewService.findByArtistaId(artistaId));
     }
 
     @PostMapping
     public ResponseEntity<ClientReviewResponseDTO> create(@RequestBody ClientReviewRequestDTO request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(resenaClienteService.create(request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(clientReviewService.create(request));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        resenaClienteService.delete(id);
+        clientReviewService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

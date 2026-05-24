@@ -1,8 +1,8 @@
 package org.project.expressart.Post.application;
 
-import org.project.expressart.Post.application.PostService;
-import org.project.expressart.Post.application.dto.PostRequestDTO;
-import org.project.expressart.Post.application.dto.PostResponseDTO;
+import org.project.expressart.Post.domain.PostService;
+import org.project.expressart.Post.dto.PostRequestDTO;
+import org.project.expressart.Post.dto.PostResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

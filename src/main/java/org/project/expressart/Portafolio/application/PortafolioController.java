@@ -1,8 +1,8 @@
 package org.project.expressart.Portafolio.application;
 
-import org.project.expressart.Portafolio.application.PortafolioService;
-import org.project.expressart.Portafolio.application.dto.PortafolioRequestDTO;
-import org.project.expressart.Portafolio.application.dto.PortafolioResponseDTO;
+import org.project.expressart.Portafolio.domain.PortafolioService;
+import org.project.expressart.Portafolio.dto.PortafolioRequestDTO;
+import org.project.expressart.Portafolio.dto.PortafolioResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

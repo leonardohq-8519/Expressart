@@ -1,6 +1,6 @@
 package org.project.expressart.Pago.application;
 
-import org.project.expressart.Pago.application.PagoService;
+import org.project.expressart.Pago.domain.PaymentService;
 import org.project.expressart.Pago.dto.PaymentRequestDTO;
 import org.project.expressart.Pago.dto.PaymentResponseDTO;
 import org.project.expressart.Pago.domain.EstadoPago;
@@ -14,47 +14,47 @@ import java.util.List;
 @RequestMapping("/payments")
 public class PagoController {
 
-    private final PagoService pagoService;
+    private final PaymentService paymentService;
 
-    public PagoController(PagoService pagoService) {
-        this.pagoService = pagoService;
+    public PagoController(PaymentService paymentService) {
+        this.paymentService = paymentService;
     }
 
     @GetMapping
     public ResponseEntity<List<PaymentResponseDTO>> getAll() {
-        return ResponseEntity.ok(pagoService.findAll());
+        return ResponseEntity.ok(paymentService.findAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PaymentResponseDTO> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(pagoService.findById(id));
+        return ResponseEntity.ok(paymentService.findById(id));
     }
 
     @GetMapping("/order/{orderId}")
     public ResponseEntity<PaymentResponseDTO> getByOrder(@PathVariable Long orderId) {
-        return ResponseEntity.ok(pagoService.findByOrderId(orderId));
+        return ResponseEntity.ok(paymentService.findByOrderId(orderId));
     }
 
     @GetMapping("/stripe/{stripePaymentIntentId}")
     public ResponseEntity<PaymentResponseDTO> getByStripeIntent(@PathVariable String stripePaymentIntentId) {
-        return ResponseEntity.ok(pagoService.findByStripePaymentIntentId(stripePaymentIntentId));
+        return ResponseEntity.ok(paymentService.findByStripePaymentIntentId(stripePaymentIntentId));
     }
 
     @PostMapping
     public ResponseEntity<PaymentResponseDTO> create(@RequestBody PaymentRequestDTO request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(pagoService.create(request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(paymentService.create(request));
     }
 
     @PatchMapping("/{id}/status")
     public ResponseEntity<PaymentResponseDTO> updateStatus(
             @PathVariable Long id,
             @RequestParam EstadoPago estado) {
-        return ResponseEntity.ok(pagoService.updateStatus(id, estado));
+        return ResponseEntity.ok(paymentService.updateStatus(id, estado));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        pagoService.delete(id);
+        paymentService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }
