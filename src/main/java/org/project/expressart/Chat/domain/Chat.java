@@ -27,10 +27,11 @@ public class Chat {
     @Column(name = "chat_id")
     private Long id;
 
-    @OneToOne(mappedBy = "chats", cascade = CascadeType.ALL)
+    @OneToOne
+    @JoinColumn(name = "orden_id", nullable = false)
     private Orden orden;
 
-    @OneToMany(mappedBy = "chats",cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "chat",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Mensaje> mensajes = new ArrayList<>();
 
     @Column(name = "canal_redis", nullable = false, unique = true, length = 100)

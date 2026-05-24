@@ -1,8 +1,8 @@
 package org.project.expressart.Devolucion.application;
 
-import org.project.expressart.Devolucion.domain.DevolucionService;
-import org.project.expressart.Devolucion.dto.DevolucionRequestDTO;
-import org.project.expressart.Devolucion.dto.DevolucionResponseDTO;
+import org.project.expressart.Devolucion.domain.DevolutionService;
+import org.project.expressart.Devolucion.dto.DevolutionRequestDTO;
+import org.project.expressart.Devolucion.dto.DevolutionResponseDTO;
 import org.project.expressart.Devolucion.domain.EstadoDevolucion;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,39 +14,39 @@ import java.util.List;
 @RequestMapping("/refunds")
 public class DevolucionController {
 
-    private final DevolucionService devolucionService;
+    private final DevolutionService devolucionService;
 
-    public DevolucionController(DevolucionService devolucionService) {
+    public DevolucionController(DevolutionService devolucionService) {
         this.devolucionService = devolucionService;
     }
 
     @GetMapping
-    public ResponseEntity<List<DevolucionResponseDTO>> getAll() {
+    public ResponseEntity<List<DevolutionResponseDTO>> getAll() {
         return ResponseEntity.ok(devolucionService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DevolucionResponseDTO> getById(@PathVariable Long id) {
+    public ResponseEntity<DevolutionResponseDTO> getById(@PathVariable Long id) {
         return ResponseEntity.ok(devolucionService.findById(id));
     }
 
     @GetMapping("/order/{orderId}")
-    public ResponseEntity<DevolucionResponseDTO> getByOrder(@PathVariable Long orderId) {
+    public ResponseEntity<DevolutionResponseDTO> getByOrder(@PathVariable Long orderId) {
         return ResponseEntity.ok(devolucionService.findByOrderId(orderId));
     }
 
     @GetMapping("/status/{estado}")
-    public ResponseEntity<List<DevolucionResponseDTO>> getByEstado(@PathVariable EstadoDevolucion estado) {
+    public ResponseEntity<List<DevolutionResponseDTO>> getByEstado(@PathVariable EstadoDevolucion estado) {
         return ResponseEntity.ok(devolucionService.findByEstado(estado));
     }
 
     @PostMapping
-    public ResponseEntity<DevolucionResponseDTO> create(@RequestBody DevolucionRequestDTO request) {
+    public ResponseEntity<DevolutionResponseDTO> create(@RequestBody DevolutionRequestDTO request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(devolucionService.create(request));
     }
 
     @PatchMapping("/{id}/status")
-    public ResponseEntity<DevolucionResponseDTO> updateStatus(
+    public ResponseEntity<DevolutionResponseDTO> updateStatus(
             @PathVariable Long id,
             @RequestParam EstadoDevolucion estado) {
         return ResponseEntity.ok(devolucionService.updateStatus(id, estado));

@@ -8,8 +8,9 @@ import org.project.expressart.Usuario.dto.UserRequestDTO;
 import org.project.expressart.Usuario.dto.UserResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -17,16 +18,18 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(UserController.class)
+@WithMockUser
 class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @MockitoBean
     private UserService userService;
 
     @Autowired
@@ -84,6 +87,7 @@ class UserControllerTest {
         when(userService.create(any(UserRequestDTO.class))).thenReturn(responseDTO);
 
         mockMvc.perform(post("/usuarios")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDTO)))
                 .andExpect(status().isCreated())
@@ -96,6 +100,7 @@ class UserControllerTest {
         when(userService.update(eq(1L), any(UserRequestDTO.class))).thenReturn(responseDTO);
 
         mockMvc.perform(put("/usuarios/1")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDTO)))
                 .andExpect(status().isOk())
@@ -106,7 +111,8 @@ class UserControllerTest {
     void delete_debeRetornar204_cuandoEliminaCorrectamente() throws Exception {
         doNothing().when(userService).delete(1L);
 
-        mockMvc.perform(delete("/usuarios/1"))
+        mockMvc.perform(delete("/usuarios/1")
+                        .with(csrf()))
                 .andExpect(status().isNoContent());
 
         verify(userService, times(1)).delete(1L);

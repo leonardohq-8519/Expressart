@@ -4,8 +4,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.project.expressart.Usuario.domain.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +17,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 class UsuarioRepositoryTest {
+
+    @SpringBootApplication
+    @EnableJpaAuditing
+    @EntityScan(basePackages = "org.project.expressart") // <- Cambiado aquí
+    static class TestContextConfiguration {}
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -30,7 +38,7 @@ class UsuarioRepositoryTest {
         usuario.setName("Test User");
         usuario.setPassword("password123");
         usuario.setIsActive(true);
-        usuarioRepository.save(usuario);
+        usuario = usuarioRepository.save(usuario);
     }
 
     @Test
@@ -87,9 +95,9 @@ class UsuarioRepositoryTest {
         usuario2.setIsActive(true);
         usuarioRepository.save(usuario2);
 
-        var result = usuarioRepository.findAllBy(PageRequest.of(0, 10));
+        Object result = usuarioRepository.findAllBy(PageRequest.of(0, 10));
 
-        assertThat(result).hasSize(2);
+        assertThat((List<?>) result).hasSize(2);
     }
 
     @Test

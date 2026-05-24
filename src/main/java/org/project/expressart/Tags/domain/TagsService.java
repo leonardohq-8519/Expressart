@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.project.expressart.Tags.dto.TagsRequestDTO;
 import org.project.expressart.Tags.dto.TagsResponseDTO;
 import org.project.expressart.Tags.infrastructure.TagsRepository;
+import org.project.expressart.exception.ResourceNotFoundEXception;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -39,7 +40,7 @@ public class TagsService {
         return modelMapper.map(tag, TagsResponseDTO.class);
     }
     public TagsResponseDTO update(Long id, TagsRequestDTO request){
-        Tags updatedtag = tagsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Tag not found"));
+        Tags updatedtag = tagsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundEXception("Tag not found"));
 
         if (request.getNombre()!= null && !request.getNombre().isEmpty())
             updatedtag.setNombre(request.getNombre());

@@ -1,8 +1,8 @@
 package org.project.expressart.Orden.application;
 
-import org.project.expressart.Orden.domain.OrdenService;
-import org.project.expressart.Orden.dto.OrdenRequestDTO;
-import org.project.expressart.Orden.dto.OrdenResponseDTO;
+import org.project.expressart.Orden.domain.OrderService;
+import org.project.expressart.Orden.dto.OrderRequestDTO;
+import org.project.expressart.Orden.dto.OrderResponseDTO;
 import org.project.expressart.Orden.domain.EstadoOrden;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,60 +14,60 @@ import java.util.List;
 @RequestMapping("/orders")
 public class OrdenController {
 
-    private final OrdenService ordenService;
+    private final OrderService ordenService;
 
-    public OrdenController(OrdenService ordenService) {
+    public OrdenController(OrderService ordenService) {
         this.ordenService = ordenService;
     }
 
     @GetMapping
-    public ResponseEntity<List<OrdenResponseDTO>> getAll() {
+    public ResponseEntity<List<OrderResponseDTO>> getAll() {
         return ResponseEntity.ok(ordenService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrdenResponseDTO> getById(@PathVariable Long id) {
+    public ResponseEntity<OrderResponseDTO> getById(@PathVariable Long id) {
         return ResponseEntity.ok(ordenService.findById(id));
     }
 
     @GetMapping("/client/{clienteId}")
-    public ResponseEntity<List<OrdenResponseDTO>> getByCliente(@PathVariable Long clienteId) {
+    public ResponseEntity<List<OrderResponseDTO>> getByCliente(@PathVariable Long clienteId) {
         return ResponseEntity.ok(ordenService.findByClienteId(clienteId));
     }
 
     @GetMapping("/artist/{artistaId}")
-    public ResponseEntity<List<OrdenResponseDTO>> getByArtista(@PathVariable Long artistaId) {
+    public ResponseEntity<List<OrderResponseDTO>> getByArtista(@PathVariable Long artistaId) {
         return ResponseEntity.ok(ordenService.findByArtistaId(artistaId));
     }
 
     @GetMapping("/client/{clienteId}/status/{estado}")
-    public ResponseEntity<List<OrdenResponseDTO>> getByClienteAndEstado(
+    public ResponseEntity<List<OrderResponseDTO>> getByClienteAndEstado(
             @PathVariable Long clienteId,
             @PathVariable EstadoOrden estado) {
         return ResponseEntity.ok(ordenService.findByClienteIdAndEstado(clienteId, estado));
     }
 
     @GetMapping("/artist/{artistaId}/status/{estado}")
-    public ResponseEntity<List<OrdenResponseDTO>> getByArtistaAndEstado(
+    public ResponseEntity<List<OrderResponseDTO>> getByArtistaAndEstado(
             @PathVariable Long artistaId,
             @PathVariable EstadoOrden estado) {
         return ResponseEntity.ok(ordenService.findByArtistaIdAndEstado(artistaId, estado));
     }
 
     @PostMapping
-    public ResponseEntity<OrdenResponseDTO> create(@RequestBody OrdenRequestDTO request) {
+    public ResponseEntity<OrderResponseDTO> create(@RequestBody OrderRequestDTO request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(ordenService.create(request));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<OrdenResponseDTO> update(
+    public ResponseEntity<OrderResponseDTO> update(
             @PathVariable Long id,
-            @RequestBody OrdenRequestDTO request) {
+            @RequestBody OrderRequestDTO request) {
         return ResponseEntity.ok(ordenService.update(id, request));
     }
 
     @PatchMapping("/{id}/status")
-    public ResponseEntity<OrdenResponseDTO> updateEstado(
+    public ResponseEntity<OrderResponseDTO> updateEstado(
             @PathVariable Long id,
             @RequestParam EstadoOrden estado) {
         return ResponseEntity.ok(ordenService.updateEstado(id, estado));

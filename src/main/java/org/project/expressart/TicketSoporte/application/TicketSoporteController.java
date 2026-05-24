@@ -1,8 +1,8 @@
 package org.project.expressart.TicketSoporte.application;
 
-import org.project.expressart.TicketSoporte.domain.TicketSoporteService;
-import org.project.expressart.TicketSoporte.dto.TicketSoporteRequestDTO;
-import org.project.expressart.TicketSoporte.dto.TicketSoporteResponseDTO;
+import org.project.expressart.TicketSoporte.domain.SupportTicketService;
+import org.project.expressart.TicketSoporte.dto.SupportTicketRequestDTO;
+import org.project.expressart.TicketSoporte.dto.SupportTicketResponseDTO;
 import org.project.expressart.TicketSoporte.domain.CategoriaTicket;
 import org.project.expressart.TicketSoporte.domain.EstadoTicket;
 import org.springframework.http.HttpStatus;
@@ -15,53 +15,53 @@ import java.util.List;
 @RequestMapping("/support-tickets")
 public class TicketSoporteController {
 
-    private final TicketSoporteService ticketSoporteService;
+    private final SupportTicketService ticketSoporteService;
 
-    public TicketSoporteController(TicketSoporteService ticketSoporteService) {
+    public TicketSoporteController(SupportTicketService ticketSoporteService) {
         this.ticketSoporteService = ticketSoporteService;
     }
 
     @GetMapping
-    public ResponseEntity<List<TicketSoporteResponseDTO>> getAll() {
+    public ResponseEntity<List<SupportTicketResponseDTO>> getAll() {
         return ResponseEntity.ok(ticketSoporteService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TicketSoporteResponseDTO> getById(@PathVariable Long id) {
+    public ResponseEntity<SupportTicketResponseDTO> getById(@PathVariable Long id) {
         return ResponseEntity.ok(ticketSoporteService.findById(id));
     }
 
     @GetMapping("/user/{usuarioId}")
-    public ResponseEntity<List<TicketSoporteResponseDTO>> getByUsuario(@PathVariable Long usuarioId) {
+    public ResponseEntity<List<SupportTicketResponseDTO>> getByUsuario(@PathVariable Long usuarioId) {
         return ResponseEntity.ok(ticketSoporteService.findByUsuarioId(usuarioId));
     }
 
     @GetMapping("/status/{estado}")
-    public ResponseEntity<List<TicketSoporteResponseDTO>> getByEstado(@PathVariable EstadoTicket estado) {
+    public ResponseEntity<List<SupportTicketResponseDTO>> getByEstado(@PathVariable EstadoTicket estado) {
         return ResponseEntity.ok(ticketSoporteService.findByEstado(estado));
     }
 
     @GetMapping("/status/{estado}/category/{categoria}")
-    public ResponseEntity<List<TicketSoporteResponseDTO>> getByEstadoAndCategoria(
+    public ResponseEntity<List<SupportTicketResponseDTO>> getByEstadoAndCategoria(
             @PathVariable EstadoTicket estado,
             @PathVariable CategoriaTicket categoria) {
         return ResponseEntity.ok(ticketSoporteService.findByEstadoAndCategoria(estado, categoria));
     }
 
     @PostMapping
-    public ResponseEntity<TicketSoporteResponseDTO> create(@RequestBody TicketSoporteRequestDTO request) {
+    public ResponseEntity<SupportTicketResponseDTO> create(@RequestBody SupportTicketRequestDTO request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(ticketSoporteService.create(request));
     }
 
     @PatchMapping("/{id}/status")
-    public ResponseEntity<TicketSoporteResponseDTO> updateStatus(
+    public ResponseEntity<SupportTicketResponseDTO> updateStatus(
             @PathVariable Long id,
             @RequestParam EstadoTicket estado) {
         return ResponseEntity.ok(ticketSoporteService.updateStatus(id, estado));
     }
 
     @PatchMapping("/{id}/response")
-    public ResponseEntity<TicketSoporteResponseDTO> addResponse(
+    public ResponseEntity<SupportTicketResponseDTO> addResponse(
             @PathVariable Long id,
             @RequestParam String respuesta) {
         return ResponseEntity.ok(ticketSoporteService.addResponse(id, respuesta));

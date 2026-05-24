@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.project.expressart.Usuario.dto.UserRequestDTO;
 import org.project.expressart.Usuario.dto.UserResponseDTO;
 import org.project.expressart.Usuario.infrastructure.UsuarioRepository;
+import org.project.expressart.exception.ResourceNotFoundEXception;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -76,7 +77,7 @@ public class UserService{
 
     @Transactional
     public UserResponseDTO update(Long id, UserRequestDTO request) {
-        Usuario updatedUser = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        Usuario updatedUser = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundEXception("User not found"));
 
         if (request.getUsername()!= null && !request.getEmail().isEmpty())
             updatedUser.setUsername(request.getUsername());

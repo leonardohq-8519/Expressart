@@ -1,18 +1,17 @@
 package org.project.expressart.Usuario.domain;
 
+import static org.junit.jupiter.api.Assertions.fail;
 import jakarta.persistence.EntityNotFoundException;
 import org.apache.coyote.BadRequestException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.project.expressart.Usuario.dto.UserRequestDTO;
 import org.project.expressart.Usuario.dto.UserResponseDTO;
 import org.project.expressart.Usuario.infrastructure.UsuarioRepository;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -29,10 +28,10 @@ class UserServiceTest {
     @Mock
     private UsuarioRepository usuarioRepository;
 
-    @Mock
+    // Instancia limpia y real de ModelMapper
     private ModelMapper modelMapper;
 
-    @InjectMocks
+    // Controlamos el servicio manualmente para asegurar que reciba todo
     private UserService userService;
 
     private Usuario usuario;
@@ -41,6 +40,23 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
+        // Inicializamos el ModelMapper real directamente
+        modelMapper = new ModelMapper();
+
+        // Creamos la instancia pasándole el repositorio mockeado
+        userService = new UserService(usuarioRepository);
+
+        // OPCIÓN DE SEGURIDAD MÁXIMA: Si tu servicio tiene setter o campo visible, lo asignamos.
+        // Si no, forzamos un puente directo usando java reflexivo estándar (sin librerías externas que rompan la JVM)
+        try {
+            java.lang.reflect.Field field = UserService.class.getDeclaredField("modelMapper");
+            field.setAccessible(true);
+            field.set(userService, modelMapper);
+        } catch (Exception e) {
+            // Si el campo se llama diferente o no existe, el test te avisará aquí
+            fail("No se pudo inyectar modelMapper en el servicio: " + e.getMessage());
+        }
+
         usuario = new Usuario();
         usuario.setId(1L);
         usuario.setUsername("testuser");
@@ -64,7 +80,6 @@ class UserServiceTest {
 
     @Test
     void findAll_debeRetornarListaDeUsuarios() {
-        Pageable pageable = PageRequest.of(0, 10);
         when(usuarioRepository.findAllBy(any(Pageable.class))).thenReturn(List.of(responseDTO));
 
         List<UserResponseDTO> result = userService.findAll();
@@ -79,7 +94,6 @@ class UserServiceTest {
         when(usuarioRepository.existsByEmail(requestDTO.getEmail())).thenReturn(false);
         when(usuarioRepository.existsByUsername(requestDTO.getUsername())).thenReturn(false);
         when(usuarioRepository.save(any(Usuario.class))).thenReturn(usuario);
-        when(modelMapper.map(any(Usuario.class), eq(UserResponseDTO.class))).thenReturn(responseDTO);
 
         UserResponseDTO result = userService.create(requestDTO);
 
@@ -114,12 +128,12 @@ class UserServiceTest {
     @Test
     void findById_debeRetornarUsuario_cuandoExisteId() {
         when(usuarioRepository.findById(1L)).thenReturn(Optional.of(usuario));
-        when(modelMapper.map(any(Usuario.class), eq(UserResponseDTO.class))).thenReturn(responseDTO);
 
         UserResponseDTO result = userService.findById(1L);
 
         assertThat(result).isNotNull();
         assertThat(result.getId()).isEqualTo(1L);
+        assertThat(result.getUsername()).isEqualTo("testuser");
     }
 
     @Test
@@ -134,7 +148,6 @@ class UserServiceTest {
     @Test
     void findByEmail_debeRetornarUsuario_cuandoExisteEmail() {
         when(usuarioRepository.findByEmail("test@email.com")).thenReturn(Optional.of(usuario));
-        when(modelMapper.map(any(Usuario.class), eq(UserResponseDTO.class))).thenReturn(responseDTO);
 
         UserResponseDTO result = userService.findByEmail("test@email.com");
 
@@ -164,11 +177,11 @@ class UserServiceTest {
     void update_debeActualizarUsuario_cuandoExiste() {
         when(usuarioRepository.findById(1L)).thenReturn(Optional.of(usuario));
         when(usuarioRepository.save(any(Usuario.class))).thenReturn(usuario);
-        when(modelMapper.map(any(Usuario.class), eq(UserResponseDTO.class))).thenReturn(responseDTO);
 
         UserResponseDTO result = userService.update(1L, requestDTO);
 
         assertThat(result).isNotNull();
+        assertThat(result.getUsername()).isEqualTo("testuser");
         verify(usuarioRepository, times(1)).save(any(Usuario.class));
     }
 
@@ -184,11 +197,11 @@ class UserServiceTest {
     @Test
     void findSeguidoresByArtistaId_debeRetornarLista() {
         when(usuarioRepository.findSeguidoresByArtistaId(1L)).thenReturn(List.of(usuario));
-        when(modelMapper.map(any(Usuario.class), eq(UserResponseDTO.class))).thenReturn(responseDTO);
 
         List<UserResponseDTO> result = userService.findSeguidoresByArtistaId(1L);
 
         assertThat(result).hasSize(1);
+        assertThat(result.get(0).getUsername()).isEqualTo("testuser");
         verify(usuarioRepository, times(1)).findSeguidoresByArtistaId(1L);
     }
 }

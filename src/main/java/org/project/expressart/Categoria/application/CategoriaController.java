@@ -1,8 +1,8 @@
 package org.project.expressart.Categoria.application;
 
 import org.project.expressart.Categoria.domain.CategoryService;
-import org.project.expressart.Categoria.dto.CategoriaRequestDTO;
-import org.project.expressart.Categoria.dto.CategoriaResponseDTO;
+import org.project.expressart.Categoria.dto.CategoryRequestDTO;
+import org.project.expressart.Categoria.dto.CategoryResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,29 +20,29 @@ public class CategoriaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoriaResponseDTO>> getAll() {
+    public ResponseEntity<List<CategoryResponseDTO>> getAll() {
         return ResponseEntity.ok(categoriaService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CategoriaResponseDTO> getById(@PathVariable Long id) {
+    public ResponseEntity<CategoryResponseDTO> getById(@PathVariable Long id) {
         return ResponseEntity.ok(categoriaService.findById(id));
     }
 
     @GetMapping("/name/{nombre}")
-    public ResponseEntity<CategoriaResponseDTO> getByNombre(@PathVariable String nombre) {
+    public ResponseEntity<CategoryResponseDTO> getByNombre(@PathVariable String nombre) {
         return ResponseEntity.ok(categoriaService.findByNombre(nombre));
     }
 
     @PostMapping
-    public ResponseEntity<CategoriaResponseDTO> create(@RequestBody CategoriaRequestDTO request) {
+    public ResponseEntity<CategoryResponseDTO> create(@RequestBody CategoryRequestDTO request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(categoriaService.create(request));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoriaResponseDTO> update(
+    public ResponseEntity<CategoryResponseDTO> update(
             @PathVariable Long id,
-            @RequestBody CategoriaRequestDTO request) {
+            @RequestBody CategoryRequestDTO request) {
         return ResponseEntity.ok(categoriaService.update(id, request));
     }
 
