@@ -1,8 +1,8 @@
 package org.project.expressart.Tags.application;
 
-import org.project.expressart.Tags.application.TagsService;
-import org.project.expressart.Tags.application.dto.TagsRequestDTO;
-import org.project.expressart.Tags.application.dto.TagsResponseDTO;
+import org.project.expressart.Tags.domain.TagsService;
+import org.project.expressart.Tags.dto.TagsRequestDTO;
+import org.project.expressart.Tags.dto.TagsResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,8 +1,8 @@
 package org.project.expressart.Mensaje.application;
 
 import org.project.expressart.Mensaje.application.MensajeService;
-import org.project.expressart.Mensaje.dto.MensajeRequestDTO;
-import org.project.expressart.Mensaje.dto.MensajeResponseDTO;
+import org.project.expressart.Mensaje.dto.MessageRequestDTO;
+import org.project.expressart.Mensaje.dto.MessageResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,27 +20,27 @@ public class MensajeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MensajeResponseDTO>> getAll() {
+    public ResponseEntity<List<MessageResponseDTO>> getAll() {
         return ResponseEntity.ok(mensajeService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MensajeResponseDTO> getById(@PathVariable Long id) {
+    public ResponseEntity<MessageResponseDTO> getById(@PathVariable Long id) {
         return ResponseEntity.ok(mensajeService.findById(id));
     }
 
     @GetMapping("/chat/{chatId}")
-    public ResponseEntity<List<MensajeResponseDTO>> getByChat(@PathVariable Long chatId) {
+    public ResponseEntity<List<MessageResponseDTO>> getByChat(@PathVariable Long chatId) {
         return ResponseEntity.ok(mensajeService.findByChatId(chatId));
     }
 
     @PostMapping
-    public ResponseEntity<MensajeResponseDTO> create(@RequestBody MensajeRequestDTO request) {
+    public ResponseEntity<MessageResponseDTO> create(@RequestBody MessageRequestDTO request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(mensajeService.create(request));
     }
 
     @PatchMapping("/{id}/read")
-    public ResponseEntity<MensajeResponseDTO> markAsRead(@PathVariable Long id) {
+    public ResponseEntity<MessageResponseDTO> markAsRead(@PathVariable Long id) {
         return ResponseEntity.ok(mensajeService.markAsRead(id));
     }
 

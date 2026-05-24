@@ -1,8 +1,8 @@
 package org.project.expressart.OpcionesComision.application;
 
 import org.project.expressart.OpcionesComision.application.OpcionesComisionService;
-import org.project.expressart.OpcionesComision.dto.OpcionesComisionRequestDTO;
-import org.project.expressart.OpcionesComision.dto.OpcionesComisionResponseDTO;
+import org.project.expressart.OpcionesComision.dto.CommissionOptionsRequestDTO;
+import org.project.expressart.OpcionesComision.dto.CommissionOptionsResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,29 +20,29 @@ public class OpcionesComisionController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OpcionesComisionResponseDTO>> getAll() {
+    public ResponseEntity<List<CommissionOptionsResponseDTO>> getAll() {
         return ResponseEntity.ok(opcionesComisionService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OpcionesComisionResponseDTO> getById(@PathVariable Long id) {
+    public ResponseEntity<CommissionOptionsResponseDTO> getById(@PathVariable Long id) {
         return ResponseEntity.ok(opcionesComisionService.findById(id));
     }
 
     @GetMapping("/commission/{comisionId}")
-    public ResponseEntity<List<OpcionesComisionResponseDTO>> getByComision(@PathVariable Long comisionId) {
+    public ResponseEntity<List<CommissionOptionsResponseDTO>> getByComision(@PathVariable Long comisionId) {
         return ResponseEntity.ok(opcionesComisionService.findByComisionId(comisionId));
     }
 
     @PostMapping
-    public ResponseEntity<OpcionesComisionResponseDTO> create(@RequestBody OpcionesComisionRequestDTO request) {
+    public ResponseEntity<CommissionOptionsResponseDTO> create(@RequestBody CommissionOptionsRequestDTO request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(opcionesComisionService.create(request));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<OpcionesComisionResponseDTO> update(
+    public ResponseEntity<CommissionOptionsResponseDTO> update(
             @PathVariable Long id,
-            @RequestBody OpcionesComisionRequestDTO request) {
+            @RequestBody CommissionOptionsRequestDTO request) {
         return ResponseEntity.ok(opcionesComisionService.update(id, request));
     }
 
