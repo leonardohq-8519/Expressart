@@ -2,6 +2,8 @@ package org.project.expressart.Orden.infrastructure;
 
 import jakarta.persistence.criteria.Order;
 import org.project.expressart.Orden.domain.EstadoOrden;
+import org.project.expressart.Orden.dto.OrderResponseDTO;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,6 +14,7 @@ import java.util.List;
 
 @Repository
 public interface OrdenRepository extends JpaRepository<OrdenRepository, Long> {
+        List<OrderResponseDTO> findAllBy(Pageable pageable);
 
         List<Order> findByClienteId(Long clienteId);
 

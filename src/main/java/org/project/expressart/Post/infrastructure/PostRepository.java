@@ -1,6 +1,8 @@
 package org.project.expressart.Post.infrastructure;
 
 import org.project.expressart.Post.domain.Post;
+import org.project.expressart.Post.dto.PostResponseDTO;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,7 +12,7 @@ import java.util.List;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post,Long> {
-
+    List<PostResponseDTO> findAllBy(Pageable pageable);
     List<Post> findByPortafolioId(Long portafolioId);
 
     List<Post> findByPortafolioIdAndEsPublico(Long portafolioId, Boolean esPublico);
