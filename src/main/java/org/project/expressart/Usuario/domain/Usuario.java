@@ -50,6 +50,9 @@ public class Usuario {
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
 
+    @Column(name = "isVerified", nullable = false)
+    private Boolean isVerified = false;
+
     @Column(name = "token_version")
     private Long token;
 

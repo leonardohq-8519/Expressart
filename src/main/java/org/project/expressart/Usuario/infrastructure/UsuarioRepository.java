@@ -31,7 +31,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     @Query("""
     SELECT u FROM Usuario u
-    JOIN u.cuentasOAuth c
+    JOIN u.OAuthAccounts c
     WHERE c.proveedor = :proveedor
     AND c.proveedorId = :proveedorId
 """)
