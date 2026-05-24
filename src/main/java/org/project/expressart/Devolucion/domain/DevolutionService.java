@@ -51,6 +51,10 @@ public class DevolutionService{
         return modelMapper.map(devolution, DevolutionResponseDTO.class);
     }
     public DevolutionResponseDTO  updateStatus (Long id, EstadoDevolucion estado){
+        Devolucion updatedDevolution = devolutionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Devolution not found"));
+        updatedDevolution.setEstado(estado);
+        devolutionRepository.save(updatedDevolution);
+        return modelMapper.map(updatedDevolution, DevolutionResponseDTO.class);
     }
     public void delete (Long id){
         if (devolutionRepository.existsById(id))

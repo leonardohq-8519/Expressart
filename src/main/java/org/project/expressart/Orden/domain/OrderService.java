@@ -68,8 +68,26 @@ public class OrderService {
         return modelMapper.map(order, OrderResponseDTO.class);
     }
     public OrderResponseDTO  update (Long id, OrderRequestDTO request){
+        Orden updatedOrder = orderRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Order not found"));;
+        Usuario artista = userRepository.findById(request.getArtistaId())
+                .orElseThrow(() -> new EntityNotFoundException("Artist not found"));
+        updatedOrder.setArtista(artista);
+        Usuario client = userRepository.findById(request.getClienteId())
+                .orElseThrow(() -> new EntityNotFoundException("Client not found"));
+        updatedOrder.setCliente(client);
+        OpcionesComision commOption = commissionOptionsRepository.findById(request.getOpcionComisionId())
+                .orElseThrow(() -> new EntityNotFoundException("Commission option not found"));
+        updatedOrder.setOpcionComision(commOption);
+        updatedOrder.setDescripcionTrabajo(request.getDescripcionTrabajo());
+        updatedOrder.setPrecioFinal(request.getPrecioFinal());
+        orderRepository.save(updatedOrder);
+        return modelMapper.map(updatedOrder, OrderResponseDTO.class);
     }
     public OrderResponseDTO  updateEstado (Long id, EstadoOrden status){
+        Orden updatedOrder = orderRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Order not found"));
+        updatedOrder.setEstado(status);
+        orderRepository.save(updatedOrder);
+        return modelMapper.map(updatedOrder, OrderResponseDTO.class);
     }
     public void delete (Long id){
         if (orderRepository.existsById(id))

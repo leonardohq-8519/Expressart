@@ -2,6 +2,7 @@ package org.project.expressart.PerfilCliente.domain;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.project.expressart.PerfilArtista.dto.ArtistProfileResponseDTO;
 import org.project.expressart.PerfilCliente.dto.ClientProfileRequestDTO;
 import org.project.expressart.PerfilCliente.dto.ClientProfileResponseDTO;
 import org.project.expressart.PerfilCliente.infrastructure.PerfilClienteRepository;
@@ -46,6 +47,12 @@ public class ClientProfileService {
         return modelMapper.map(clientProfile, ClientProfileResponseDTO.class);
     }
     public ClientProfileResponseDTO  update (Long id, ClientProfileRequestDTO request){
+        PerfilCliente updClientProfile = clientProfileRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Artist profile not found"));
+        Usuario user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        updClientProfile.setUsuario(user);
+        clientProfileRepository.save(updClientProfile);
+        return modelMapper.map(updClientProfile, ArtistProfileResponseDTO.class);
     }
     public void delete (Long id){
         if (clientProfileRepository.existsById(id))

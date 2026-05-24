@@ -51,6 +51,23 @@ public class CommissionOptionsService{
         return modelMapper.map(commOptions, CommissionOptionsResponseDTO.class);
     }
     public CommissionOptionsResponseDTO  update (Long id, CommissionOptionsRequestDTO request){
+        OpcionesComision updatedCommOptions = commissionOptionsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Commission options not found"));
+        Comision commission = commissionRepository.findById(request.getComisionId())
+                .orElseThrow(() -> new EntityNotFoundException("Commission not found"));
+        updatedCommOptions.setComision(commission);
+        if (request.getNombre()!= null && !request.getNombre().isEmpty())
+            updatedCommOptions.setNombre(request.getNombre());
+        updatedCommOptions.setDescripcion(request.getDescripcion());
+        if (request.getPrecio()!= null)
+            updatedCommOptions.setPrecio(request.getPrecio());
+        if (request.getTiempoEntrega()!= null)
+            updatedCommOptions.setTiempoEntrega(request.getTiempoEntrega());
+        if (request.getNumeroRevisiones()!= null)
+            updatedCommOptions.setNumeroRevisiones(request.getNumeroRevisiones());
+        updatedCommOptions.setIncluyeArchivoFuente(request.getIncluyeArchivoFuente());
+        updatedCommOptions.setEstaActiva(request.getEstaActiva());
+        commissionOptionsRepository.save(updatedCommOptions);
+        return modelMapper.map(updatedCommOptions, CommissionOptionsResponseDTO.class);
     }
     public void delete (Long id){
         if (commissionOptionsRepository.existsById(id))

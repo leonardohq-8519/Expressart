@@ -52,6 +52,10 @@ public class MessageService{
         return modelMapper.map(message, MessageResponseDTO.class);
     }
     public MessageResponseDTO  markAsRead (Long id){
+        Mensaje updatedMessage = messageRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Message not found"));
+        updatedMessage.setLeido(true);
+        messageRepository.save(updatedMessage);
+        return modelMapper.map(updatedMessage, MessageResponseDTO.class);
     }
     public void delete (Long id){
         if (messageRepository.existsById(id))

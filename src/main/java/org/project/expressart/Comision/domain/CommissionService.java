@@ -75,6 +75,29 @@ public class CommissionService{
         return modelMapper.map(commission, CommissionResponseDTO.class);
     }
     public CommissionResponseDTO  update (Long id, CommissionRequestDTO request){
+        Comision updatedCommission = commissionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Commission not found"));
+        PerfilArtista artistProfile = artistProfileRepository.findById(request.getPerfilArtistaId()).orElseThrow(() -> new EntityNotFoundException("Artist profile not found"));
+        if (request.getPerfilArtistaId() != null)
+            updatedCommission.setPerfilArtista(artistProfile);
+        if (request.getTitulo() != null && !request.getTitulo().isEmpty())
+            updatedCommission.setTitulo(request.getTitulo());
+        updatedCommission.setDescripcion(request.getDescripcion());
+        updatedCommission.setPortadaUrl(request.getPortadaUrl());
+        updatedCommission.setEstaActiva(request.getEstaActiva());
+        List<Long> categoriaIds = request.getCategoriaIds();
+        List<Categoria> categories = categoryRepository.findAllById(categoriaIds);
+        if (categories.size() != categoriaIds.size()) {
+            throw new EntityNotFoundException("Not all categories were found");
+        }
+        updatedCommission.setCategorias(categories);
+        List<Long> tagsIds = request.getTagIds();
+        List<Tags> tags = tagsRepository.findAllById(tagsIds);
+        if (tags.size() != tagsIds.size()) {
+            throw new EntityNotFoundException("Not all tags were found");
+        }
+        updatedCommission.setTags(tags);
+        commissionRepository.save(updatedCommission);
+        return modelMapper.map(updatedCommission, CommissionResponseDTO.class);
     }
     public void delete (Long id){
         if (commissionRepository.existsById(id))

@@ -47,6 +47,14 @@ public class ArtistProfileService {
         return modelMapper.map(artistProfile, ArtistProfileResponseDTO.class);
     }
     public ArtistProfileResponseDTO  update (Long id, ArtistProfileRequestDTO request){
+        PerfilArtista updArtistProfile = artistProfileRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Artist profile not found"));
+        updArtistProfile.setComsDisponibles(request.getComsDisponibles());
+        updArtistProfile.setTiempoEntregaPromedio(request.getTiempoEntregaPromedio());
+        Usuario user = userRepository.findByUsername(request.getNombreUsuario())
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        updArtistProfile.setUsuario(user);
+        artistProfileRepository.save(updArtistProfile);
+        return modelMapper.map(updArtistProfile, ArtistProfileResponseDTO.class);
     }
     public void delete (Long id){
         if (artistProfileRepository.existsById(id))

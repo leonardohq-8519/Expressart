@@ -42,6 +42,13 @@ public class CategoryService {
         return modelMapper.map(category, CategoryResponseDTO.class);
     }
     public CategoryResponseDTO  update (Long id, CategoryRequestDTO request){
+        Categoria updatedCategory = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+        if (request.getNombre() != null && !request.getNombre().isEmpty())
+            updatedCategory.setNombre(request.getNombre());
+        updatedCategory.setDescripcion(request.getDescripcion());
+        updatedCategory.setIconoUrl(request.getIconoUrl());
+        categoryRepository.save(updatedCategory);
+        return modelMapper.map(updatedCategory, CategoryResponseDTO.class);
     }
     public void delete (Long id){
         if (categoryRepository.existsById(id))

@@ -80,6 +80,28 @@ public class PostService{
         return modelMapper.map(post, PostResponseDTO.class);
     }
     public PostResponseDTO  update (Long id, PostRequestDTO request){
+        Post updatedPost = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post not found"));
+        Portafolio portafolio = portafolioRepository.findById(request.getPortafolioId()).orElseThrow(() -> new EntityNotFoundException("Portafolio not found"));
+        updatedPost.setPortafolio(portafolio);
+        if (request.getTitulo()!= null && !request.getTitulo().isEmpty())
+            updatedPost.setTitulo(request.getTitulo());
+        if (request.getDescripcion()!= null && !request.getDescripcion().isEmpty())
+            updatedPost.setDescripcion(request.getDescripcion());
+        updatedPost.setEsPublico(request.getEsPublico());
+        List<Long> categoriaIds = request.getCategoriaIds();
+        List<Categoria> categories = categoryRepository.findAllById(categoriaIds);
+        if (categories.size() != categoriaIds.size()) {
+            throw new EntityNotFoundException("Not all categories were found");
+        }
+        updatedPost.setCategorias(categories);
+        List<Long> tagsIds = request.getTagIds();
+        List<Tags> tags = tagsRepository.findAllById(tagsIds);
+        if (tags.size() != tagsIds.size()) {
+            throw new EntityNotFoundException("Not all tags were found");
+        }
+        updatedPost.setTags(tags);
+        postRepository.save(updatedPost);
+        return modelMapper.map(updatedPost, PostResponseDTO.class);
     }
     public void delete (Long id){
         if (postRepository.existsById(id))

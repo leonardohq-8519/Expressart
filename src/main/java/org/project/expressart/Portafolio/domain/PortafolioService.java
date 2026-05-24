@@ -46,6 +46,13 @@ public class PortafolioService{
         return modelMapper.map(portafolio, PortafolioResponseDTO.class);
     }
     public PortafolioResponseDTO  update (Long id, PortafolioRequestDTO request){
+        Portafolio updPortafolio = portafolioRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Portafolio not found"));
+        if (request.getTitulo()!= null && !request.getTitulo().isEmpty())
+            updPortafolio.setTitulo(request.getTitulo());
+        updPortafolio.setDescripcion(request.getDescripcion());
+        updPortafolio.setPortada_url(request.getPortada_url());
+        portafolioRepository.save(updPortafolio);
+        return modelMapper.map(updPortafolio, PortafolioResponseDTO.class);
     }
     public void delete (Long id){
         if (portafolioRepository.existsById(id))

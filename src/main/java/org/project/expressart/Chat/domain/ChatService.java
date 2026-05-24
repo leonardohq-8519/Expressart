@@ -45,6 +45,11 @@ public class ChatService{
         return modelMapper.map(chat, ChatResponseDTO.class);
     }
     public ChatResponseDTO  update (Long id, ChatRequestDTO request){
+        Chat updatedChat = chatRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Chat not found"));
+        Orden order = orderRepository.findById(request.getOrdenId()).orElseThrow(() -> new EntityNotFoundException("Order not found"));
+        updatedChat.setOrden(order);
+        chatRepository.save(updatedChat);
+        return modelMapper.map(updatedChat, ChatResponseDTO.class);
     }
     public void delete (Long id){
         if (chatRepository.existsById(id))

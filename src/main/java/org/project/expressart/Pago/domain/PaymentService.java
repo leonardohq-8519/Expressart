@@ -56,6 +56,10 @@ public class PaymentService{
 
     }
     public PaymentResponseDTO  updateEstado (Long id, EstadoPago status){
+        Pago updatedPayment = paymentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Payment not found"));
+        updatedPayment.setEstado(status);
+        paymentRepository.save(updatedPayment);
+        return modelMapper.map(updatedPayment, PaymentResponseDTO.class);
     }
     public void delete (Long id){
         if (paymentRepository.existsById(id))
