@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.project.expressart.NotifiacionCorreo.domain.EstadoCorreo;
-import org.project.expressart.NotifiacionCorreo.domain.TipoCorreo;
+import org.project.expressart.NotificacionCorreo.domain.EstadoCorreo;
+import org.project.expressart.NotificacionCorreo.domain.TipoCorreo;
 
 import java.time.ZonedDateTime;
 
