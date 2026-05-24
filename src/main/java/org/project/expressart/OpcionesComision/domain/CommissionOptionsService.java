@@ -2,6 +2,8 @@ package org.project.expressart.OpcionesComision.domain;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.project.expressart.Comision.domain.Comision;
+import org.project.expressart.Comision.infrastructure.ComisionRepository;
 import org.project.expressart.OpcionesComision.dto.CommissionOptionsRequestDTO;
 import org.project.expressart.OpcionesComision.dto.CommissionOptionsResponseDTO;
 import org.project.expressart.OpcionesComision.infrastructure.OpcionesComisionRepository;
@@ -19,6 +21,8 @@ public class CommissionOptionsService{
     private ModelMapper modelMapper;
     @Autowired
     private final OpcionesComisionRepository commissionOptionsRepository;
+    @Autowired
+    private final ComisionRepository commissionRepository;
     public List<CommissionOptionsResponseDTO> findAll(){
         Pageable pageable = PageRequest.of(0, 10);
         return commissionOptionsRepository.findAllBy(pageable);
@@ -32,6 +36,19 @@ public class CommissionOptionsService{
         return modelMapper.map(commOptions, CommissionOptionsResponseDTO.class);
     }
     public CommissionOptionsResponseDTO create(CommissionOptionsRequestDTO request){
+        OpcionesComision commOptions = new OpcionesComision();
+        Comision commission = commissionRepository.findById(request.getComisionId())
+                .orElseThrow(() -> new EntityNotFoundException("Commission not found"));
+        commOptions.setComision(commission);
+        commOptions.setNombre(request.getNombre());
+        commOptions.setDescripcion(request.getDescripcion());
+        commOptions.setPrecio(request.getPrecio());
+        commOptions.setTiempoEntrega(request.getTiempoEntrega());
+        commOptions.setNumeroRevisiones(request.getNumeroRevisiones());
+        commOptions.setIncluyeArchivoFuente(request.getIncluyeArchivoFuente());
+        commOptions.setEstaActiva(request.getEstaActiva());
+        commissionOptionsRepository.save(commOptions);
+        return modelMapper.map(commOptions, CommissionOptionsResponseDTO.class);
     }
     public CommissionOptionsResponseDTO  update (Long id, CommissionOptionsRequestDTO request){
     }

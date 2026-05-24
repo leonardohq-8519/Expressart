@@ -2,9 +2,13 @@ package org.project.expressart.ResenaArtista.domain;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.project.expressart.Orden.domain.Orden;
+import org.project.expressart.Orden.infrastructure.OrdenRepository;
 import org.project.expressart.ResenaArtista.dto.ArtistReviewRequestDTO;
 import org.project.expressart.ResenaArtista.dto.ArtistReviewResponseDTO;
 import org.project.expressart.ResenaArtista.infrastructure.ResenaArtistaRepository;
+import org.project.expressart.Usuario.domain.Usuario;
+import org.project.expressart.Usuario.infrastructure.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +21,10 @@ import java.util.List;
 public class ArtistReviewService {
     @Autowired
     private final ResenaArtistaRepository artistReviewRepository;
+    @Autowired
+    private final OrdenRepository orderRepository;
+    @Autowired
+    private final UsuarioRepository userRepository;
     @Autowired
     private ModelMapper modelMapper;
     public List<ArtistReviewResponseDTO> findAll(){
@@ -38,6 +46,12 @@ public class ArtistReviewService {
 
     public ArtistReviewResponseDTO create(ArtistReviewRequestDTO request){
         ResenaArtista artistReview = new ResenaArtista();
+        Orden order = orderRepository.findById(request.getOrdenId()).orElseThrow(() -> new EntityNotFoundException("Order not found"));
+        artistReview.setOrder(order);
+        Usuario artist = userRepository.findById(request.getArtistaId()).orElseThrow(() -> new EntityNotFoundException("Artist not found"));
+        artistReview.setArtist(artist);
+        Usuario client = userRepository.findById(request.getClienteId()).orElseThrow(() -> new EntityNotFoundException("Client not found"));
+        artistReview.setClient(client);
         artistReview.setScore(request.getPuntuacion());
         artistReview.setComment(request.getComentario());
         artistReviewRepository.save(artistReview);

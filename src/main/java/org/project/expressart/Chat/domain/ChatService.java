@@ -5,6 +5,8 @@ import org.modelmapper.ModelMapper;
 import org.project.expressart.Chat.dto.ChatRequestDTO;
 import org.project.expressart.Chat.dto.ChatResponseDTO;
 import org.project.expressart.Chat.infrastructure.ChatRepository;
+import org.project.expressart.Orden.domain.Orden;
+import org.project.expressart.Orden.infrastructure.OrdenRepository;
 import org.project.expressart.Portafolio.domain.Portafolio;
 import org.project.expressart.Portafolio.dto.PortafolioResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,8 @@ public class ChatService{
     private ModelMapper modelMapper;
     @Autowired
     private final ChatRepository chatRepository;
+    @Autowired
+    private final OrdenRepository orderRepository;
     public List<ChatResponseDTO> findAll(){
         Pageable pageable = PageRequest.of(0, 10);
         return chatRepository.findAllBy(pageable);
@@ -34,6 +38,11 @@ public class ChatService{
         return modelMapper.map(chat, ChatResponseDTO.class);
     }
     public ChatResponseDTO create(ChatRequestDTO request){
+        Chat chat = new Chat();
+        Orden order = orderRepository.findById(request.getOrdenId()).orElseThrow(() -> new EntityNotFoundException("Order not found"));
+        chat.setOrden(order);
+        chatRepository.save(chat);
+        return modelMapper.map(chat, ChatResponseDTO.class);
     }
     public ChatResponseDTO  update (Long id, ChatRequestDTO request){
     }

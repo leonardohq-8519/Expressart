@@ -3,11 +3,14 @@ package org.project.expressart.Pago.domain;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.project.expressart.Orden.domain.Orden;
+import org.project.expressart.Orden.infrastructure.OrdenRepository;
 import org.project.expressart.Pago.dto.PaymentRequestDTO;
 import org.project.expressart.Pago.dto.PaymentResponseDTO;
 import org.project.expressart.Pago.infrastructure.PagoRepository;
 import org.project.expressart.Portafolio.domain.Portafolio;
 import org.project.expressart.Portafolio.dto.PortafolioResponseDTO;
+import org.project.expressart.Usuario.domain.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +23,8 @@ import java.util.List;
 public class PaymentService{
     @Autowired
     private final PagoRepository paymentRepository;
+    @Autowired
+    private final OrdenRepository orderRepository;
     @Autowired
     private ModelMapper modelMapper;
 
@@ -38,6 +43,17 @@ public class PaymentService{
     public PaymentResponseDTO findByStripePaymentIntentId (String stripePaymentIntentId){
     }
     public PaymentResponseDTO create(PaymentRequestDTO request){
+        Pago payment = new Pago();
+        Orden order = orderRepository.findById(request.getOrdenId())
+                .orElseThrow(() -> new EntityNotFoundException("Order not found"));
+        payment.setOrden(order);
+        payment.setMonto(request.getMonto());
+        payment.setMontoArtista(request.getMontoArtista());
+        payment.setMontoComisionPlataforma(request.getMontoComisionPlataforma());
+        payment.setStripePaymentIntentId(request.getStripePaymentIntentId());
+        paymentRepository.save(payment);
+        return modelMapper.map(payment, PaymentResponseDTO.class);
+
     }
     public PaymentResponseDTO  updateEstado (Long id, EstadoPago status){
     }

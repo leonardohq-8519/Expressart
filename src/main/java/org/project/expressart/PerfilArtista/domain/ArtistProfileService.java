@@ -2,9 +2,12 @@ package org.project.expressart.PerfilArtista.domain;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.project.expressart.Orden.domain.Orden;
 import org.project.expressart.PerfilArtista.dto.ArtistProfileRequestDTO;
 import org.project.expressart.PerfilArtista.dto.ArtistProfileResponseDTO;
 import org.project.expressart.PerfilArtista.infrastructure.PerfilArtistaRepository;
+import org.project.expressart.Usuario.domain.Usuario;
+import org.project.expressart.Usuario.infrastructure.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +20,8 @@ import java.util.List;
 public class ArtistProfileService {
     @Autowired
     private final PerfilArtistaRepository artistProfileRepository;
+    @Autowired
+    private final UsuarioRepository userRepository;
     @Autowired
     private ModelMapper modelMapper;
     public List<ArtistProfileResponseDTO> findAll(){
@@ -31,7 +36,15 @@ public class ArtistProfileService {
         PerfilArtista artistProfile = artistProfileRepository.findByUsuarioId(userId).orElseThrow(()-> new ResourceNotFoundEXception("Artist profile not found"));
         return modelMapper.map(artistProfile, ArtistProfileResponseDTO.class);
     }
-    public ArtistProfileResponseDTO create(ArtistProfileRequestDTO request){
+    public ArtistProfileResponseDTO create(Long userId, ArtistProfileRequestDTO request){
+        PerfilArtista artistProfile = new PerfilArtista();
+        artistProfile.setComsDisponibles(request.getComsDisponibles());
+        artistProfile.setTiempoEntregaPromedio(request.getTiempoEntregaPromedio());
+        Usuario user = userRepository.findByUsername(request.getNombreUsuario())
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        artistProfile.setUsuario(user);
+        artistProfileRepository.save(artistProfile);
+        return modelMapper.map(artistProfile, ArtistProfileResponseDTO.class);
     }
     public ArtistProfileResponseDTO  update (Long id, ArtistProfileRequestDTO request){
     }

@@ -4,9 +4,13 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.modelmapper.ModelMapper;
+import org.project.expressart.Orden.domain.Orden;
+import org.project.expressart.Orden.infrastructure.OrdenRepository;
 import org.project.expressart.TicketSoporte.dto.SupportTicketRequestDTO;
 import org.project.expressart.TicketSoporte.dto.SupportTicketResponseDTO;
 import org.project.expressart.TicketSoporte.infrastructure.TicketSoporteRepository;
+import org.project.expressart.Usuario.domain.Usuario;
+import org.project.expressart.Usuario.infrastructure.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +23,10 @@ import java.util.List;
 public class SupportTicketService {
     @Autowired
     private final TicketSoporteRepository supportTicketRepository;
+    @Autowired
+    private final UsuarioRepository userRepository;
+    @Autowired
+    private final OrdenRepository orderRepository;
     @Autowired
     private ModelMapper modelMapper;
 
@@ -44,11 +52,13 @@ public class SupportTicketService {
     }
     public SupportTicketResponseDTO create(SupportTicketRequestDTO request)throws BadRequestException {
         TicketSoporte ticket = new TicketSoporte();
+        Usuario user = userRepository.findById(request.getUsuarioId()).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        ticket.setUser(user);
+        Orden order = orderRepository.findById(request.getOrdenId()).orElseThrow(() -> new EntityNotFoundException("Order not found"));
+        ticket.setOrder(order);
         ticket.setSubject(request.getAsunto());
         ticket.setCategory(request.getCategoria());
         ticket.setDescription(request.getDescripcion());
-        // ticket.setUser(request.getUsuarioId());
-        // ticket.setOrder(request.getOrdenId());
         supportTicketRepository.save(ticket);
         return modelMapper.map(ticket, SupportTicketResponseDTO.class);
     }

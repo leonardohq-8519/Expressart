@@ -2,9 +2,15 @@ package org.project.expressart.Comision.domain;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.project.expressart.Categoria.domain.Categoria;
+import org.project.expressart.Categoria.infrastructure.CategoriaRepository;
 import org.project.expressart.Comision.dto.CommissionRequestDTO;
 import org.project.expressart.Comision.dto.CommissionResponseDTO;
 import org.project.expressart.Comision.infrastructure.ComisionRepository;
+import org.project.expressart.PerfilArtista.domain.PerfilArtista;
+import org.project.expressart.PerfilArtista.infrastructure.PerfilArtistaRepository;
+import org.project.expressart.Tags.domain.Tags;
+import org.project.expressart.Tags.infrastructure.TagsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +25,12 @@ public class CommissionService{
     private ModelMapper modelMapper;
     @Autowired
     private final ComisionRepository commissionRepository;
+    @Autowired
+    private final PerfilArtistaRepository artistProfileRepository;
+    @Autowired
+    private final CategoriaRepository categoryRepository;
+    @Autowired
+    private final TagsRepository tagsRepository;
     public List<CommissionResponseDTO> findAll(){
         Pageable pageable = PageRequest.of(0, 10);
         return commissionRepository.findAllBy(pageable);
@@ -40,6 +52,27 @@ public class CommissionService{
         return modelMapper.map(commission, CommissionResponseDTO.class);
     }
     public CommissionResponseDTO create(CommissionRequestDTO request){
+        Comision commission = new Comision();
+        PerfilArtista artistProfile = artistProfileRepository.findById(request.getPerfilArtistaId()).orElseThrow(() -> new EntityNotFoundException("Artist profile not found"));
+        commission.setPerfilArtista(artistProfile);
+        commission.setTitulo(request.getTitulo());
+        commission.setDescripcion(request.getDescripcion());
+        commission.setPortadaUrl(request.getPortadaUrl());
+        commission.setEstaActiva(request.getEstaActiva());
+        List<Long> categoriaIds = request.getCategoriaIds();
+        List<Categoria> categories = categoryRepository.findAllById(categoriaIds);
+        if (categories.size() != categoriaIds.size()) {
+            throw new EntityNotFoundException("Not all categories were found");
+        }
+        commission.setCategorias(categories);
+        List<Long> tagsIds = request.getTagIds();
+        List<Tags> tags = tagsRepository.findAllById(tagsIds);
+        if (tags.size() != tagsIds.size()) {
+            throw new EntityNotFoundException("Not all tags were found");
+        }
+        commission.setTags(tags);
+        commissionRepository.save(commission);
+        return modelMapper.map(commission, CommissionResponseDTO.class);
     }
     public CommissionResponseDTO  update (Long id, CommissionRequestDTO request){
     }

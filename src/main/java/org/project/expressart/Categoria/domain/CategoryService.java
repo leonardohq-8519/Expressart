@@ -34,6 +34,12 @@ public class CategoryService {
         return modelMapper.map(category, CategoryResponseDTO.class);
     }
     public CategoryResponseDTO create(CategoryRequestDTO request){
+        Categoria category = new Categoria();
+        category.setNombre(request.getNombre());
+        category.setDescripcion(request.getDescripcion());
+        category.setIconoUrl(request.getIconoUrl());
+        categoryRepository.save(category);
+        return modelMapper.map(category, CategoryResponseDTO.class);
     }
     public CategoryResponseDTO  update (Long id, CategoryRequestDTO request){
     }

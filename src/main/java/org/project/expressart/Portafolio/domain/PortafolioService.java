@@ -38,6 +38,12 @@ public class PortafolioService{
 
 
     public PortafolioResponseDTO create(PortafolioRequestDTO request){
+        Portafolio portafolio = new Portafolio();
+        portafolio.setTitulo(request.getTitulo());
+        portafolio.setDescripcion(request.getDescripcion());
+        portafolio.setPortada_url(request.getPortada_url());
+        portafolioRepository.save(portafolio);
+        return modelMapper.map(portafolio, PortafolioResponseDTO.class);
     }
     public PortafolioResponseDTO  update (Long id, PortafolioRequestDTO request){
     }

@@ -10,8 +10,8 @@ import java.util.List;
 @Setter
 public class ArtistProfileResponseDTO {
     private Long id;
-    private Long usuarioId;        // solo el ID, no el objeto completo
-    private String nombreUsuario;  // dato útil del usuario
+    private Long usuarioId;
+    private String nombreUsuario;
     private Boolean comsDisponibles;
     private Integer tiempoEntregaPromedio;
     private BigDecimal ratingPromedio;
@@ -19,6 +19,5 @@ public class ArtistProfileResponseDTO {
     private Integer ordenesCompletadas;
     private ZonedDateTime fechaCreacion;
     private Boolean stripeVerificado;
-    private List<String> categorias; // nombres de las categorías
-    // No incluimos stripeId por seguridad
+    private List<String> categorias;
 }

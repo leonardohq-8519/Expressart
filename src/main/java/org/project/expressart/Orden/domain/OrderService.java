@@ -2,11 +2,13 @@ package org.project.expressart.Orden.domain;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.project.expressart.OpcionesComision.domain.OpcionesComision;
+import org.project.expressart.OpcionesComision.infrastructure.OpcionesComisionRepository;
 import org.project.expressart.Orden.dto.OrderRequestDTO;
 import org.project.expressart.Orden.dto.OrderResponseDTO;
 import org.project.expressart.Orden.infrastructure.OrdenRepository;
-import org.project.expressart.Portafolio.domain.Portafolio;
-import org.project.expressart.Portafolio.dto.PortafolioResponseDTO;
+import org.project.expressart.Usuario.domain.Usuario;
+import org.project.expressart.Usuario.infrastructure.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +23,10 @@ public class OrderService {
     private ModelMapper modelMapper;
     @Autowired
     private final OrdenRepository orderRepository;
+    @Autowired
+    private final UsuarioRepository userRepository;
+    @Autowired
+    private final OpcionesComisionRepository commissionOptionsRepository;
     public List<OrderResponseDTO> findAll(){
         Pageable pageable = PageRequest.of(0, 10);
         return orderRepository.findAllBy(pageable);
@@ -46,6 +52,20 @@ public class OrderService {
         return modelMapper.map(order, OrderResponseDTO.class);
     }
     public OrderResponseDTO create(OrderRequestDTO request){
+        Orden order = new Orden();
+        Usuario artista = userRepository.findById(request.getArtistaId())
+                .orElseThrow(() -> new EntityNotFoundException("Artist not found"));
+        order.setArtista(artista);
+        Usuario client = userRepository.findById(request.getClienteId())
+                .orElseThrow(() -> new EntityNotFoundException("Client not found"));
+        order.setCliente(client);
+        OpcionesComision commOption = commissionOptionsRepository.findById(request.getOpcionComisionId())
+                .orElseThrow(() -> new EntityNotFoundException("Commission option not found"));
+        order.setOpcionComision(commOption);
+        order.setDescripcionTrabajo(request.getDescripcionTrabajo());
+        order.setPrecioFinal(request.getPrecioFinal());
+        orderRepository.save(order);
+        return modelMapper.map(order, OrderResponseDTO.class);
     }
     public OrderResponseDTO  update (Long id, OrderRequestDTO request){
     }

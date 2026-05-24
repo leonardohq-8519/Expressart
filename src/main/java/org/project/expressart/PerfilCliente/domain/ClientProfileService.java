@@ -7,6 +7,8 @@ import org.project.expressart.PerfilCliente.dto.ClientProfileResponseDTO;
 import org.project.expressart.PerfilCliente.infrastructure.PerfilClienteRepository;
 import org.project.expressart.Portafolio.domain.Portafolio;
 import org.project.expressart.Portafolio.dto.PortafolioResponseDTO;
+import org.project.expressart.Usuario.domain.Usuario;
+import org.project.expressart.Usuario.infrastructure.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +21,8 @@ import java.util.List;
 public class ClientProfileService {
     @Autowired
     private final PerfilClienteRepository clientProfileRepository;
+    @Autowired
+    private final UsuarioRepository userRepository;
     @Autowired
     private ModelMapper modelMapper;
     public List<ClientProfileResponseDTO> findAll(){
@@ -33,7 +37,13 @@ public class ClientProfileService {
         PerfilCliente clientProfile = clientProfileRepository.findByUsuarioId(userId).orElseThrow(()-> new ResourceNotFoundEXception("Client profile not found"));
         return modelMapper.map(clientProfile, ClientProfileResponseDTO.class);
     }
-    public ClientProfileResponseDTO create(ClientProfileRequestDTO request){
+    public ClientProfileResponseDTO create(Long userId){
+        PerfilCliente clientProfile = new PerfilCliente();
+        Usuario user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        clientProfile.setUsuario(user);
+        clientProfileRepository.save(clientProfile);
+        return modelMapper.map(clientProfile, ClientProfileResponseDTO.class);
     }
     public ClientProfileResponseDTO  update (Long id, ClientProfileRequestDTO request){
     }

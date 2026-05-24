@@ -5,6 +5,8 @@ import org.modelmapper.ModelMapper;
 import org.project.expressart.Devolucion.dto.DevolutionRequestDTO;
 import org.project.expressart.Devolucion.dto.DevolutionResponseDTO;
 import org.project.expressart.Devolucion.infrastructure.DevolucionRepository;
+import org.project.expressart.Orden.domain.Orden;
+import org.project.expressart.Orden.infrastructure.OrdenRepository;
 import org.project.expressart.Portafolio.domain.Portafolio;
 import org.project.expressart.Portafolio.dto.PortafolioResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,8 @@ public class DevolutionService{
     private ModelMapper modelMapper;
     @Autowired
     private final DevolucionRepository devolutionRepository;
+    @Autowired
+    private final OrdenRepository orderRepository;
     public List<DevolutionResponseDTO> findAll(){
         Pageable pageable = PageRequest.of(0, 10);
         return devolutionRepository.findAllBy(pageable);
@@ -38,6 +42,13 @@ public class DevolutionService{
         return modelMapper.map(devolution, DevolutionResponseDTO.class);
     }
     public DevolutionResponseDTO create(DevolutionRequestDTO request){
+        Devolucion devolution = new Devolucion();
+        Orden order = orderRepository.findById(request.getOrdenId()).orElseThrow(() -> new EntityNotFoundException("Order not found"));
+        devolution.setOrder(order);
+        devolution.setMotivo(request.getMotivo());
+        devolution.setMontoReembolso(request.getMontoReembolso());
+        devolutionRepository.save(devolution);
+        return modelMapper.map(devolution, DevolutionResponseDTO.class);
     }
     public DevolutionResponseDTO  updateStatus (Long id, EstadoDevolucion estado){
     }
