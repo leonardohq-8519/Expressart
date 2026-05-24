@@ -4,6 +4,7 @@ import org.project.expressart.Pago.domain.PaymentService;
 import org.project.expressart.Pago.dto.PaymentRequestDTO;
 import org.project.expressart.Pago.dto.PaymentResponseDTO;
 import org.project.expressart.Pago.domain.EstadoPago;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,47 +15,47 @@ import java.util.List;
 @RequestMapping("/payments")
 public class PagoController {
 
-    private final PaymentService pagoService;
+    private final PaymentService paymentService;
 
-    public PagoController(PaymentService pagoService) {
-        this.pagoService = pagoService;
+    public PagoController(PaymentService paymentService) {
+        this.paymentService = paymentService;
     }
 
     @GetMapping
     public ResponseEntity<List<PaymentResponseDTO>> getAll() {
-        return ResponseEntity.ok(pagoService.findAll());
+        return ResponseEntity.ok(paymentService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PaymentResponseDTO> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(pagoService.findById(id));
+    public ResponseEntity<PaymentResponseDTO> getById(@PathVariable Long id)throws ResourceNotFoundException {
+        return ResponseEntity.ok(paymentService.findById(id));
     }
 
     @GetMapping("/order/{orderId}")
-    public ResponseEntity<PaymentResponseDTO> getByOrder(@PathVariable Long orderId) {
-        return ResponseEntity.ok(pagoService.findByOrderId(orderId));
+    public ResponseEntity<PaymentResponseDTO> getByOrder(@PathVariable Long orderId)throws ResourceNotFoundException {
+        return ResponseEntity.ok(paymentService.findByOrderId(orderId));
     }
 
     @GetMapping("/stripe/{stripePaymentIntentId}")
-    public ResponseEntity<PaymentResponseDTO> getByStripeIntent(@PathVariable String stripePaymentIntentId) {
-        return ResponseEntity.ok(pagoService.findByStripePaymentIntentId(stripePaymentIntentId));
+    public ResponseEntity<PaymentResponseDTO> getByStripeIntent(@PathVariable String stripePaymentIntentId) throws ResourceNotFoundException{
+        return ResponseEntity.ok(paymentService.findByStripePaymentIntentId(stripePaymentIntentId));
     }
 
     @PostMapping
     public ResponseEntity<PaymentResponseDTO> create(@RequestBody PaymentRequestDTO request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(pagoService.create(request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(paymentService.create(request));
     }
 
     @PatchMapping("/{id}/status")
-    public ResponseEntity<PaymentResponseDTO> updateStatus(
+    public ResponseEntity<PaymentResponseDTO> updateStatus (
             @PathVariable Long id,
-            @RequestParam EstadoPago estado) {
-        return ResponseEntity.ok(pagoService.updateStatus(id, estado));
+            @RequestParam EstadoPago estado) throws ResourceNotFoundException {
+        return ResponseEntity.ok(paymentService.updateStatus(id, estado));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        pagoService.delete(id);
+        paymentService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

@@ -1,16 +1,19 @@
 package org.project.expressart.Post.infrastructure;
 
 import org.project.expressart.Post.domain.Post;
+import org.project.expressart.Post.dto.PostResponseDTO;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post,Long> {
-
+    List<PostResponseDTO> findAllBy(Pageable pageable);
     List<Post> findByPortafolioId(Long portafolioId);
 
     List<Post> findByPortafolioIdAndEsPublico(Long portafolioId, Boolean esPublico);
@@ -22,7 +25,7 @@ public interface PostRepository extends JpaRepository<Post,Long> {
         AND p.esPublico = true
         ORDER BY p.fechaPublicacion DESC
     """)
-    List<Post> findByCategoriaId(@Param("categoriaId") Long categoriaId);
+   List<Post> findByCategoriaId(@Param("categoriaId") Long categoriaId);
 
     @Query("""
         SELECT p FROM Post p

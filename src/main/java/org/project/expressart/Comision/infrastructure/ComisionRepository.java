@@ -1,13 +1,17 @@
 package org.project.expressart.Comision.infrastructure;
 
 import org.project.expressart.Comision.domain.Comision;
+import org.project.expressart.Comision.dto.CommissionResponseDTO;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ComisionRepository extends JpaRepository<Comision, Long> {
+    List<CommissionResponseDTO> findAllBy(Pageable pageable);
 
     List<Comision> findByPerfilArtistaId(Long perfilArtistaId);
     List<Comision> findByPerfilArtistaIdAndEstaActiva(Long perfilArtistaId, Boolean estaActiva);

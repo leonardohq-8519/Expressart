@@ -1,12 +1,15 @@
 package org.project.expressart.OpcionesComision.domain;
-
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.project.expressart.Comision.domain.Comision;
+import org.project.expressart.Comision.infrastructure.ComisionRepository;
 import org.project.expressart.OpcionesComision.dto.CommissionOptionsRequestDTO;
 import org.project.expressart.OpcionesComision.dto.CommissionOptionsResponseDTO;
 import org.project.expressart.OpcionesComision.infrastructure.OpcionesComisionRepository;
-import org.project.expressart.exception.ResourceNotFoundEXception;
+import org.project.expressart.ResenaArtista.domain.ResenaArtista;
+import org.project.expressart.ResenaArtista.dto.ArtistReviewResponseDTO;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,58 +20,69 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class CommissionOptionsService {
-
+public class CommissionOptionsService{
     @Autowired
     private ModelMapper modelMapper;
-
     @Autowired
     private final OpcionesComisionRepository commissionOptionsRepository;
-
-    public List<CommissionOptionsResponseDTO> findAll() {
+    @Autowired
+    private final ComisionRepository commissionRepository;
+    public List<CommissionOptionsResponseDTO> findAll(){
         Pageable pageable = PageRequest.of(0, 10);
-        List<OpcionesComision> opciones = commissionOptionsRepository.findAll(pageable).getContent();
-        return convertToDtoList(opciones);
+        return commissionOptionsRepository.findAllBy(pageable);
     }
-
-    public CommissionOptionsResponseDTO findById(Long id) {
-        OpcionesComision commOptions = commissionOptionsRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundEXception("Commission option not found"));
+    public CommissionOptionsResponseDTO  findById (Long id) throws ResourceNotFoundException {
+        OpcionesComision commOptions = commissionOptionsRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Commission option not found"));
         return modelMapper.map(commOptions, CommissionOptionsResponseDTO.class);
     }
-
-    public List<CommissionOptionsResponseDTO> findByComisionId(Long commissionId) {
-        List<OpcionesComision> opciones = commissionOptionsRepository.findByComisionId(commissionId);
-        return convertToDtoList(opciones);
+    public List<CommissionOptionsResponseDTO> findByComisionId (Long commissionId) throws ResourceNotFoundException {
+        List<OpcionesComision> commOptions = commissionOptionsRepository.findByComisionId(commissionId);
+        if (commOptions.isEmpty()) {
+            throw new ResourceNotFoundException("No commission options found for commission id: " + commissionId);
+        }
+        return commOptions.stream()
+                .map(ticket -> modelMapper.map(commOptions, CommissionOptionsResponseDTO.class))
+                .collect(Collectors.toList());
     }
-
-    public CommissionOptionsResponseDTO create(CommissionOptionsRequestDTO request) {
-        OpcionesComision commOptions = modelMapper.map(request, OpcionesComision.class);
-        OpcionesComision savedOptions = commissionOptionsRepository.save(commOptions);
-        return modelMapper.map(savedOptions, CommissionOptionsResponseDTO.class);
+    public CommissionOptionsResponseDTO create(CommissionOptionsRequestDTO request){
+        OpcionesComision commOptions = new OpcionesComision();
+        Comision commission = commissionRepository.findById(request.getComisionId())
+                .orElseThrow(() -> new EntityNotFoundException("Commission not found"));
+        commOptions.setComision(commission);
+        commOptions.setNombre(request.getNombre());
+        commOptions.setDescripcion(request.getDescripcion());
+        commOptions.setPrecio(request.getPrecio());
+        commOptions.setTiempoEntrega(request.getTiempoEntrega());
+        commOptions.setNumeroRevisiones(request.getNumeroRevisiones());
+        commOptions.setIncluyeArchivoFuente(request.getIncluyeArchivoFuente());
+        commOptions.setEstaActiva(request.getEstaActiva());
+        commissionOptionsRepository.save(commOptions);
+        return modelMapper.map(commOptions, CommissionOptionsResponseDTO.class);
     }
-
-    public CommissionOptionsResponseDTO update(Long id, CommissionOptionsRequestDTO request) {
-        OpcionesComision existingOptions = commissionOptionsRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundEXception("Commission option not found"));
-
-        modelMapper.map(request, existingOptions);
-        existingOptions.setId(id);
-
-        OpcionesComision updatedOptions = commissionOptionsRepository.save(existingOptions);
-        return modelMapper.map(updatedOptions, CommissionOptionsResponseDTO.class);
+    public CommissionOptionsResponseDTO  update (Long id, CommissionOptionsRequestDTO request)throws ResourceNotFoundException{
+        OpcionesComision updatedCommOptions = commissionOptionsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Commission options not found"));
+        Comision commission = commissionRepository.findById(request.getComisionId())
+                .orElseThrow(() -> new EntityNotFoundException("Commission not found"));
+        updatedCommOptions.setComision(commission);
+        if (request.getNombre()!= null && !request.getNombre().isEmpty())
+            updatedCommOptions.setNombre(request.getNombre());
+        updatedCommOptions.setDescripcion(request.getDescripcion());
+        if (request.getPrecio()!= null)
+            updatedCommOptions.setPrecio(request.getPrecio());
+        if (request.getTiempoEntrega()!= null)
+            updatedCommOptions.setTiempoEntrega(request.getTiempoEntrega());
+        if (request.getNumeroRevisiones()!= null)
+            updatedCommOptions.setNumeroRevisiones(request.getNumeroRevisiones());
+        updatedCommOptions.setIncluyeArchivoFuente(request.getIncluyeArchivoFuente());
+        updatedCommOptions.setEstaActiva(request.getEstaActiva());
+        commissionOptionsRepository.save(updatedCommOptions);
+        return modelMapper.map(updatedCommOptions, CommissionOptionsResponseDTO.class);
     }
-
-    public void delete(Long id) {
+    public void delete (Long id){
         if (commissionOptionsRepository.existsById(id))
             commissionOptionsRepository.deleteById(id);
         else
             throw new EntityNotFoundException("Commission option with ID " + id + " doesn't exist");
     }
 
-    private List<CommissionOptionsResponseDTO> convertToDtoList(List<OpcionesComision> opciones) {
-        return opciones.stream()
-                .map(opcion -> modelMapper.map(opcion, CommissionOptionsResponseDTO.class))
-                .collect(Collectors.toList());
-    }
 }

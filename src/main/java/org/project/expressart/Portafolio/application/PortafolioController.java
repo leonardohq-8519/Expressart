@@ -3,6 +3,7 @@ package org.project.expressart.Portafolio.application;
 import org.project.expressart.Portafolio.domain.PortafolioService;
 import org.project.expressart.Portafolio.dto.PortafolioRequestDTO;
 import org.project.expressart.Portafolio.dto.PortafolioResponseDTO;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,12 +31,12 @@ public class PortafolioController {
     }
 
     @GetMapping("/artist-profile/{perfilArtistaId}")
-    public ResponseEntity<List<PortafolioResponseDTO>> getByPerfilArtista(@PathVariable Long perfilArtistaId) {
+    public ResponseEntity<List<PortafolioResponseDTO>> getByPerfilArtista(@PathVariable Long perfilArtistaId) throws ResourceNotFoundException {
         return ResponseEntity.ok(portafolioService.findByPerfilArtistaId(perfilArtistaId));
     }
 
     @GetMapping("/artist-profile/{perfilArtistaId}/public")
-    public ResponseEntity<List<PortafolioResponseDTO>> getPublicByPerfilArtista(@PathVariable Long perfilArtistaId) {
+    public ResponseEntity<List<PortafolioResponseDTO>> getPublicByPerfilArtista(@PathVariable Long perfilArtistaId) throws ResourceNotFoundException{
         return ResponseEntity.ok(portafolioService.findByPerfilArtistaIdAndEsPublico(perfilArtistaId, true));
     }
 
@@ -47,7 +48,7 @@ public class PortafolioController {
     @PutMapping("/{id}")
     public ResponseEntity<PortafolioResponseDTO> update(
             @PathVariable Long id,
-            @RequestBody PortafolioRequestDTO request) {
+            @RequestBody PortafolioRequestDTO request)throws ResourceNotFoundException {
         return ResponseEntity.ok(portafolioService.update(id, request));
     }
 

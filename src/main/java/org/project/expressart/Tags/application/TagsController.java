@@ -3,6 +3,7 @@ package org.project.expressart.Tags.application;
 import org.project.expressart.Tags.domain.TagsService;
 import org.project.expressart.Tags.dto.TagsRequestDTO;
 import org.project.expressart.Tags.dto.TagsResponseDTO;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,12 +26,12 @@ public class TagsController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TagsResponseDTO> getById(@PathVariable Long id) {
+    public ResponseEntity<TagsResponseDTO> getById(@PathVariable Long id) throws ResourceNotFoundException{
         return ResponseEntity.ok(tagsService.findById(id));
     }
 
     @GetMapping("/name/{nombre}")
-    public ResponseEntity<TagsResponseDTO> getByNombre(@PathVariable String nombre) {
+    public ResponseEntity<TagsResponseDTO> getByNombre(@PathVariable String nombre) throws ResourceNotFoundException{
         return ResponseEntity.ok(tagsService.findByNombre(nombre));
     }
 
@@ -42,7 +43,7 @@ public class TagsController {
     @PutMapping("/{id}")
     public ResponseEntity<TagsResponseDTO> update(
             @PathVariable Long id,
-            @RequestBody TagsRequestDTO request) {
+            @RequestBody TagsRequestDTO request)throws ResourceNotFoundException {
         return ResponseEntity.ok(tagsService.update(id, request));
     }
 

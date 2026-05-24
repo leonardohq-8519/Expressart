@@ -1,12 +1,15 @@
 package org.project.expressart.ResenaCliente.domain;
-
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.project.expressart.Orden.domain.Orden;
+import org.project.expressart.Orden.infrastructure.OrdenRepository;
 import org.project.expressart.ResenaCliente.dto.ClientReviewRequestDTO;
 import org.project.expressart.ResenaCliente.dto.ClientReviewResponseDTO;
 import org.project.expressart.ResenaCliente.infrastructure.ResenaClienteRepository;
-import org.project.expressart.exception.ResourceNotFoundEXception;
+import org.project.expressart.Usuario.domain.Usuario;
+import org.project.expressart.Usuario.infrastructure.UsuarioRepository;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,51 +21,58 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ClientReviewService {
-
     @Autowired
     private final ResenaClienteRepository cliReviewRepository;
-
+    @Autowired
+    private final OrdenRepository orderRepository;
+    @Autowired
+    private final UsuarioRepository userRepository;
     @Autowired
     private ModelMapper modelMapper;
-
-    public List<ClientReviewResponseDTO> findAll() {
+    public List<ClientReviewResponseDTO> findAll(){
         Pageable pageable = PageRequest.of(0, 10);
-        List<ResenaCliente> reviews = cliReviewRepository.findAll(pageable).getContent();
-        return convertToDtoList(reviews);
+        return cliReviewRepository.findAllBy(pageable);
     }
-
-    public ClientReviewResponseDTO findById(Long id) {
-        ResenaCliente cliReview = cliReviewRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundEXception("Client review not found"));
+    public ClientReviewResponseDTO  findById (Long id)throws ResourceNotFoundException{
+        ResenaCliente cliReview = cliReviewRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Client review not found"));
         return modelMapper.map(cliReview, ClientReviewResponseDTO.class);
     }
-
-    public List<ClientReviewResponseDTO> findByClienteId(Long clientId) {
-        List<ResenaCliente> reviews = cliReviewRepository.findByClienteId(clientId);
-        return convertToDtoList(reviews);
+    public List<ClientReviewResponseDTO> findByClienteId (Long clientId)throws ResourceNotFoundException{
+        List<ResenaCliente> cliReview = cliReviewRepository.findByClienteId(clientId);
+        if (cliReview.isEmpty()) {
+            throw new ResourceNotFoundException("No client reviews found for client id: " + clientId);
+        }
+        return cliReview.stream()
+                .map(ticket -> modelMapper.map(cliReview, ClientReviewResponseDTO.class))
+                .collect(Collectors.toList());
     }
-
-    public List<ClientReviewResponseDTO> findByArtistaId(Long artistId) {
-        List<ResenaCliente> reviews = cliReviewRepository.findByArtistaId(artistId);
-        return convertToDtoList(reviews);
+    public List<ClientReviewResponseDTO> findByArtistaId (Long artistId)throws ResourceNotFoundException {
+        List<ResenaCliente> cliReview = cliReviewRepository.findByArtistaId(artistId);
+        if (cliReview.isEmpty()) {
+            throw new ResourceNotFoundException("No client reviews found for artist id: " + artistId);
+        }
+        return cliReview.stream()
+                .map(ticket -> modelMapper.map(cliReview, ClientReviewResponseDTO.class))
+                .collect(Collectors.toList());
     }
-
-    public ClientReviewResponseDTO create(ClientReviewRequestDTO request) {
-        ResenaCliente cliReview = modelMapper.map(request, ResenaCliente.class);
-        ResenaCliente savedReview = cliReviewRepository.save(cliReview);
-        return modelMapper.map(savedReview, ClientReviewResponseDTO.class);
+    public ClientReviewResponseDTO create(ClientReviewRequestDTO request){
+        ResenaCliente clientReview = new ResenaCliente();
+        Orden order = orderRepository.findById(request.getOrdenId()).orElseThrow(() -> new EntityNotFoundException("Order not found"));
+        clientReview.setOrden(order);
+        Usuario artist = userRepository.findById(request.getArtistaId()).orElseThrow(() -> new EntityNotFoundException("Artist not found"));
+        clientReview.setArtista(artist);
+        Usuario client = userRepository.findById(request.getClienteId()).orElseThrow(() -> new EntityNotFoundException("Client not found"));
+        clientReview.setCliente(client);
+        clientReview.setPuntuacion(request.getPuntuacion());
+        clientReview.setComentario(request.getComentario());
+        cliReviewRepository.save(clientReview);
+        return modelMapper.map(clientReview, ClientReviewResponseDTO.class);
     }
-
-    public void delete(Long id) {
+    public void delete (Long id){
         if (cliReviewRepository.existsById(id))
             cliReviewRepository.deleteById(id);
         else
             throw new EntityNotFoundException("Client review with ID " + id + " doesn't exist");
     }
-
-    private List<ClientReviewResponseDTO> convertToDtoList(List<ResenaCliente> reviews) {
-        return reviews.stream()
-                .map(review -> modelMapper.map(review, ClientReviewResponseDTO.class))
-                .collect(Collectors.toList());
-    }
 }
+

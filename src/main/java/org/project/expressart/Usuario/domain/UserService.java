@@ -8,7 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.project.expressart.Usuario.dto.UserRequestDTO;
 import org.project.expressart.Usuario.dto.UserResponseDTO;
 import org.project.expressart.Usuario.infrastructure.UsuarioRepository;
-import org.project.expressart.exception.ResourceNotFoundEXception;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -51,13 +51,13 @@ public class UserService{
     }
 
 
-    public UserResponseDTO findById(Long id){
-        Usuario user = userRepository.findById(id).orElseThrow(()-> new ResourceNotFoundEXception("User not found"));
+    public UserResponseDTO findById(Long id)throws ResourceNotFoundException{
+        Usuario user = userRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("User not found"));
         return modelMapper.map(user, UserResponseDTO.class);
     }
 
-    public UserResponseDTO findByEmail(String email){
-        Usuario user = userRepository.findByEmail(email).orElseThrow(()-> new ResourceNotFoundEXception("User not found"));
+    public UserResponseDTO findByEmail(String email)throws ResourceNotFoundException{
+        Usuario user = userRepository.findByEmail(email).orElseThrow(()-> new ResourceNotFoundException("User not found"));
         return modelMapper.map(user, UserResponseDTO.class);
     }
 
@@ -76,8 +76,8 @@ public class UserService{
     }
 
     @Transactional
-    public UserResponseDTO update(Long id, UserRequestDTO request) {
-        Usuario updatedUser = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundEXception("User not found"));
+    public UserResponseDTO update(Long id, UserRequestDTO request) throws ResourceNotFoundException {
+        Usuario updatedUser = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         if (request.getUsername()!= null && !request.getEmail().isEmpty())
             updatedUser.setUsername(request.getUsername());

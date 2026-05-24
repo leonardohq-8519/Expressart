@@ -3,6 +3,7 @@ package org.project.expressart.Post.application;
 import org.project.expressart.Post.domain.PostService;
 import org.project.expressart.Post.dto.PostRequestDTO;
 import org.project.expressart.Post.dto.PostResponseDTO;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,31 +27,31 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PostResponseDTO> getById(@PathVariable Long id) {
+    public ResponseEntity<PostResponseDTO> getById(@PathVariable Long id)throws ResourceNotFoundException {
         PostResponseDTO post = postService.findById(id);
         return ResponseEntity.ok(post);
     }
 
     @GetMapping("/portafolio/{portafolioId}")
-    public ResponseEntity<List<PostResponseDTO>> getByPortafolio(@PathVariable Long portafolioId) {
+    public ResponseEntity<List<PostResponseDTO>> getByPortafolio(@PathVariable Long portafolioId)throws ResourceNotFoundException {
         List<PostResponseDTO> posts = postService.findByPortafolioId(portafolioId);
         return ResponseEntity.ok(posts);
     }
 
     @GetMapping("/portafolio/{portafolioId}/publicos")
-    public ResponseEntity<List<PostResponseDTO>> getPublicosByPortafolio(@PathVariable Long portafolioId) {
+    public ResponseEntity<List<PostResponseDTO>> getPublicosByPortafolio(@PathVariable Long portafolioId)throws ResourceNotFoundException {
         List<PostResponseDTO> posts = postService.findByPortafolioIdAndEsPublico(portafolioId, true);
         return ResponseEntity.ok(posts);
     }
 
     @GetMapping("/categoria/{categoriaId}")
-    public ResponseEntity<List<PostResponseDTO>> getByCategoria(@PathVariable Long categoriaId) {
+    public ResponseEntity<List<PostResponseDTO>> getByCategoria(@PathVariable Long categoriaId) throws ResourceNotFoundException{
         List<PostResponseDTO> posts = postService.findByCategoriaId(categoriaId);
         return ResponseEntity.ok(posts);
     }
 
     @GetMapping("/tag/{tagId}")
-    public ResponseEntity<List<PostResponseDTO>> getByTag(@PathVariable Long tagId) {
+    public ResponseEntity<List<PostResponseDTO>> getByTag(@PathVariable Long tagId) throws ResourceNotFoundException {
         List<PostResponseDTO> posts = postService.findByTagId(tagId);
         return ResponseEntity.ok(posts);
     }
@@ -64,7 +65,7 @@ public class PostController {
     @PutMapping("/{id}")
     public ResponseEntity<PostResponseDTO> update(
             @PathVariable Long id,
-            @RequestBody PostRequestDTO request) {
+            @RequestBody PostRequestDTO request)throws ResourceNotFoundException {
         PostResponseDTO updated = postService.update(id, request);
         return ResponseEntity.ok(updated);
     }

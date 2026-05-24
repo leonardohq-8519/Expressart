@@ -1,7 +1,9 @@
 package org.project.expressart.Orden.infrastructure;
 
-import org.project.expressart.Orden.domain.Orden;
 import org.project.expressart.Orden.domain.EstadoOrden;
+import org.project.expressart.Orden.domain.Orden;
+import org.project.expressart.Orden.dto.OrderResponseDTO;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -9,12 +11,12 @@ import org.springframework.stereotype.Repository;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface OrdenRepository extends JpaRepository<Orden, Long> {
-
+        List<OrderResponseDTO> findAllBy(Pageable pageable);
         List<Orden> findByClienteId(Long clienteId);
-
         List<Orden> findByArtistaId(Long artistaId);
 
         List<Orden> findByClienteIdAndEstado(Long clienteId, EstadoOrden estado);
@@ -27,5 +29,6 @@ public interface OrdenRepository extends JpaRepository<Orden, Long> {
         AND o.estado NOT IN :estadosExcluidos
         ORDER BY o.fechaLimite ASC
         """)
-        List<Orden> findByFechaLimiteBeforeAndEstadoNotIn(@Param("fecha") ZonedDateTime fecha, @Param("estadosExcluidos") List<EstadoOrden> estadosExcluidos);
+        List<OrderResponseDTO> findByFechaLimiteBeforeAndEstadoNotIn(@Param("fecha") ZonedDateTime fecha, @Param("estadosExcluidos") List<EstadoOrden> estadosExcluidos
+    );
 }
