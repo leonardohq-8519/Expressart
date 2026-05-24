@@ -3,6 +3,7 @@ package org.project.expressart.Categoria.application;
 import org.project.expressart.Categoria.domain.CategoryService;
 import org.project.expressart.Categoria.dto.CategoryRequestDTO;
 import org.project.expressart.Categoria.dto.CategoryResponseDTO;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,12 +26,12 @@ public class CategoriaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryResponseDTO> getById(@PathVariable Long id) {
+    public ResponseEntity<CategoryResponseDTO> getById(@PathVariable Long id) throws ResourceNotFoundException{
         return ResponseEntity.ok(categoryService.findById(id));
     }
 
     @GetMapping("/name/{nombre}")
-    public ResponseEntity<CategoryResponseDTO> getByNombre(@PathVariable String nombre) {
+    public ResponseEntity<CategoryResponseDTO> getByNombre(@PathVariable String nombre) throws ResourceNotFoundException {
         return ResponseEntity.ok(categoryService.findByNombre(nombre));
     }
 
@@ -42,7 +43,7 @@ public class CategoriaController {
     @PutMapping("/{id}")
     public ResponseEntity<CategoryResponseDTO> update(
             @PathVariable Long id,
-            @RequestBody CategoryRequestDTO request) {
+            @RequestBody CategoryRequestDTO request)throws ResourceNotFoundException {
         return ResponseEntity.ok(categoryService.update(id, request));
     }
 

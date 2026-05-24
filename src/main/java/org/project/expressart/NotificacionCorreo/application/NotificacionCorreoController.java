@@ -1,9 +1,9 @@
-package org.project.expressart.NotifiacionCorreo.infrastructure;
+package org.project.expressart.NotificacionCorreo.application;
 
 import lombok.RequiredArgsConstructor;
-import org.project.expressart.NotifiacionCorreo.application.dto.NotificacionCorreoCreateDTO;
-import org.project.expressart.NotifiacionCorreo.application.dto.NotificacionCorreoEstadoDTO;
-import org.project.expressart.NotifiacionCorreo.application.dto.NotificacionCorreoResponseDTO;
+import org.project.expressart.NotificacionCorreo.dtos.NotificacionCorreoCreateDTO;
+import org.project.expressart.NotificacionCorreo.dtos.NotificacionCorreoEstadoDTO;
+import org.project.expressart.NotificacionCorreo.dtos.NotificacionCorreoResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

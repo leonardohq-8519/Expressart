@@ -3,6 +3,7 @@ package org.project.expressart.Mensaje.application;
 import org.project.expressart.Mensaje.domain.MessageService;
 import org.project.expressart.Mensaje.dto.MessageRequestDTO;
 import org.project.expressart.Mensaje.dto.MessageResponseDTO;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,12 +26,12 @@ public class MensajeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MessageResponseDTO> getById(@PathVariable Long id) {
+    public ResponseEntity<MessageResponseDTO> getById(@PathVariable Long id)throws ResourceNotFoundException {
         return ResponseEntity.ok(messageService.findById(id));
     }
 
     @GetMapping("/chat/{chatId}")
-    public ResponseEntity<List<MessageResponseDTO>> getByChat(@PathVariable Long chatId) {
+    public ResponseEntity<List<MessageResponseDTO>> getByChat(@PathVariable Long chatId) throws ResourceNotFoundException {
         return ResponseEntity.ok(messageService.findByChatId(chatId));
     }
 
@@ -40,7 +41,7 @@ public class MensajeController {
     }
 
     @PatchMapping("/{id}/read")
-    public ResponseEntity<MessageResponseDTO> markAsRead(@PathVariable Long id) {
+    public ResponseEntity<MessageResponseDTO> markAsRead(@PathVariable Long id)throws ResourceNotFoundException {
         return ResponseEntity.ok(messageService.markAsRead(id));
     }
 

@@ -7,12 +7,16 @@ import org.project.expressart.Comision.infrastructure.ComisionRepository;
 import org.project.expressart.OpcionesComision.dto.CommissionOptionsRequestDTO;
 import org.project.expressart.OpcionesComision.dto.CommissionOptionsResponseDTO;
 import org.project.expressart.OpcionesComision.infrastructure.OpcionesComisionRepository;
+import org.project.expressart.ResenaArtista.domain.ResenaArtista;
+import org.project.expressart.ResenaArtista.dto.ArtistReviewResponseDTO;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,13 +31,18 @@ public class CommissionOptionsService{
         Pageable pageable = PageRequest.of(0, 10);
         return commissionOptionsRepository.findAllBy(pageable);
     }
-    public CommissionOptionsResponseDTO  findById (Long id){
-        OpcionesComision commOptions = commissionOptionsRepository.findById(id).orElseThrow(()-> new ResourceNotFoundEXception("Commission option not found"));
+    public CommissionOptionsResponseDTO  findById (Long id) throws ResourceNotFoundException {
+        OpcionesComision commOptions = commissionOptionsRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Commission option not found"));
         return modelMapper.map(commOptions, CommissionOptionsResponseDTO.class);
     }
-    public CommissionOptionsResponseDTO findByComisionId (Long commissionId){
-        OpcionesComision commOptions = commissionOptionsRepository.findByComisionId(commissionId).orElseThrow(()-> new ResourceNotFoundEXception("Commission option not found"));
-        return modelMapper.map(commOptions, CommissionOptionsResponseDTO.class);
+    public List<CommissionOptionsResponseDTO> findByComisionId (Long commissionId) throws ResourceNotFoundException {
+        List<OpcionesComision> commOptions = commissionOptionsRepository.findByComisionId(commissionId);
+        if (commOptions.isEmpty()) {
+            throw new ResourceNotFoundException("No commission options found for commission id: " + commissionId);
+        }
+        return commOptions.stream()
+                .map(ticket -> modelMapper.map(commOptions, CommissionOptionsResponseDTO.class))
+                .collect(Collectors.toList());
     }
     public CommissionOptionsResponseDTO create(CommissionOptionsRequestDTO request){
         OpcionesComision commOptions = new OpcionesComision();
@@ -50,7 +59,7 @@ public class CommissionOptionsService{
         commissionOptionsRepository.save(commOptions);
         return modelMapper.map(commOptions, CommissionOptionsResponseDTO.class);
     }
-    public CommissionOptionsResponseDTO  update (Long id, CommissionOptionsRequestDTO request){
+    public CommissionOptionsResponseDTO  update (Long id, CommissionOptionsRequestDTO request)throws ResourceNotFoundException{
         OpcionesComision updatedCommOptions = commissionOptionsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Commission options not found"));
         Comision commission = commissionRepository.findById(request.getComisionId())
                 .orElseThrow(() -> new EntityNotFoundException("Commission not found"));

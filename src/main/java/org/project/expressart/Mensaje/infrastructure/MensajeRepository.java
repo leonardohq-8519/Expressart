@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface MensajeRepository extends JpaRepository<Mensaje, Long> {
     List<MessageResponseDTO> findAllBy(Pageable pageable);
-    Optional<Mensaje> findByChatId(Long chatId);
+    List<Mensaje> findByChatId(Long chatId);
 
 }
 

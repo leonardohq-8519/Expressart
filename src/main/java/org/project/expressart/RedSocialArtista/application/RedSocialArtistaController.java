@@ -1,4 +1,4 @@
-package org.project.expressart.RedSocialArtista.infrastructure;
+package org.project.expressart.RedSocialArtista.application;
 
 import lombok.RequiredArgsConstructor;
 import org.project.expressart.RedSocialArtista.application.dto.RedSocialArtistaCreateDTO;

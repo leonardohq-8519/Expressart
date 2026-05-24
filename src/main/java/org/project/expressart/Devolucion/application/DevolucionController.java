@@ -4,6 +4,7 @@ import org.project.expressart.Devolucion.domain.DevolutionService;
 import org.project.expressart.Devolucion.dto.DevolutionRequestDTO;
 import org.project.expressart.Devolucion.dto.DevolutionResponseDTO;
 import org.project.expressart.Devolucion.domain.EstadoDevolucion;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,17 +27,17 @@ public class DevolucionController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DevolutionResponseDTO> getById(@PathVariable Long id) {
+    public ResponseEntity<DevolutionResponseDTO> getById(@PathVariable Long id)throws ResourceNotFoundException {
         return ResponseEntity.ok(devolutionService.findById(id));
     }
 
     @GetMapping("/order/{orderId}")
-    public ResponseEntity<DevolutionResponseDTO> getByOrder(@PathVariable Long orderId) {
+    public ResponseEntity<DevolutionResponseDTO> getByOrder(@PathVariable Long orderId) throws ResourceNotFoundException {
         return ResponseEntity.ok(devolutionService.findByOrderId(orderId));
     }
 
     @GetMapping("/status/{estado}")
-    public ResponseEntity<List<DevolutionResponseDTO>> getByEstado(@PathVariable EstadoDevolucion estado) {
+    public ResponseEntity<List<DevolutionResponseDTO>> getByEstado(@PathVariable EstadoDevolucion estado)throws ResourceNotFoundException {
         return ResponseEntity.ok(devolutionService.findByEstado(estado));
     }
 
@@ -48,7 +49,7 @@ public class DevolucionController {
     @PatchMapping("/{id}/status")
     public ResponseEntity<DevolutionResponseDTO> updateStatus(
             @PathVariable Long id,
-            @RequestParam EstadoDevolucion estado) {
+            @RequestParam EstadoDevolucion estado) throws ResourceNotFoundException{
         return ResponseEntity.ok(devolutionService.updateStatus(id, estado));
     }
 

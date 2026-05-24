@@ -1,4 +1,4 @@
-package org.project.expressart.NotifiacionCorreo.application.dto;
+package org.project.expressart.NotificacionCorreo.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

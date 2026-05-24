@@ -9,12 +9,16 @@ import org.project.expressart.Orden.domain.Orden;
 import org.project.expressart.Orden.infrastructure.OrdenRepository;
 import org.project.expressart.Portafolio.domain.Portafolio;
 import org.project.expressart.Portafolio.dto.PortafolioResponseDTO;
+import org.project.expressart.ResenaArtista.domain.ResenaArtista;
+import org.project.expressart.ResenaArtista.dto.ArtistReviewResponseDTO;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,17 +33,22 @@ public class DevolutionService{
         Pageable pageable = PageRequest.of(0, 10);
         return devolutionRepository.findAllBy(pageable);
     }
-    public DevolutionResponseDTO  findById (Long id){
-        Devolucion devolution = devolutionRepository.findById(id).orElseThrow(()-> new ResourceNotFoundEXception("Devolution not found"));
+    public DevolutionResponseDTO  findById (Long id)throws ResourceNotFoundException {
+        Devolucion devolution = devolutionRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Devolution not found"));
         return modelMapper.map(devolution, DevolutionResponseDTO.class);
     }
-    public DevolutionResponseDTO findByOrderId (Long orderId){
-        Devolucion devolution = devolutionRepository.findByOrderId(orderId).orElseThrow(()-> new ResourceNotFoundEXception("Devolution not found"));
+    public DevolutionResponseDTO findByOrderId (Long orderId)throws ResourceNotFoundException{
+        Devolucion devolution = devolutionRepository.findByOrderId(orderId).orElseThrow(()-> new ResourceNotFoundException("Devolution not found"));
         return modelMapper.map(devolution, DevolutionResponseDTO.class);
     }
-    public DevolutionResponseDTO findByEstado (EstadoDevolucion estado){
-        Devolucion devolution = devolutionRepository.findByEstado(estado).orElseThrow(()-> new ResourceNotFoundEXception("Devolution not found"));
-        return modelMapper.map(devolution, DevolutionResponseDTO.class);
+    public List<DevolutionResponseDTO> findByEstado (EstadoDevolucion estado)throws ResourceNotFoundException{
+        List<Devolucion> artistReview = devolutionRepository.findByEstado(estado);
+        if (artistReview.isEmpty()) {
+            throw new ResourceNotFoundException("No devolutions found for status: " + estado);
+        }
+        return artistReview.stream()
+                .map(ticket -> modelMapper.map(artistReview, DevolutionResponseDTO.class))
+                .collect(Collectors.toList());
     }
     public DevolutionResponseDTO create(DevolutionRequestDTO request){
         Devolucion devolution = new Devolucion();
@@ -50,7 +59,7 @@ public class DevolutionService{
         devolutionRepository.save(devolution);
         return modelMapper.map(devolution, DevolutionResponseDTO.class);
     }
-    public DevolutionResponseDTO  updateStatus (Long id, EstadoDevolucion estado){
+    public DevolutionResponseDTO  updateStatus (Long id, EstadoDevolucion estado)throws ResourceNotFoundException{
         Devolucion updatedDevolution = devolutionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Devolution not found"));
         updatedDevolution.setEstado(estado);
         devolutionRepository.save(updatedDevolution);

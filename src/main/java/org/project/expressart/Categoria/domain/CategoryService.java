@@ -7,6 +7,7 @@ import org.project.expressart.Categoria.dto.CategoryResponseDTO;
 import org.project.expressart.Categoria.infrastructure.CategoriaRepository;
 import org.project.expressart.Portafolio.domain.Portafolio;
 import org.project.expressart.Portafolio.dto.PortafolioResponseDTO;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,12 +26,12 @@ public class CategoryService {
         Pageable pageable = PageRequest.of(0, 10);
         return categoryRepository.findAllBy(pageable);
     }
-    public CategoryResponseDTO  findById (Long id){
-        Categoria category = categoryRepository.findById(id).orElseThrow(()-> new ResourceNotFoundEXception("Category not found"));
+    public CategoryResponseDTO  findById (Long id)throws ResourceNotFoundException {
+        Categoria category = categoryRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Category not found"));
         return modelMapper.map(category, CategoryResponseDTO.class);
     }
-    public CategoryResponseDTO findByNombre (String name){
-        Categoria category = categoryRepository.findByNombre(name).orElseThrow(()-> new ResourceNotFoundEXception("Category not found"));
+    public CategoryResponseDTO findByNombre (String name)throws ResourceNotFoundException{
+        Categoria category = categoryRepository.findByNombre(name).orElseThrow(()-> new ResourceNotFoundException("Category not found"));
         return modelMapper.map(category, CategoryResponseDTO.class);
     }
     public CategoryResponseDTO create(CategoryRequestDTO request){
@@ -41,7 +42,7 @@ public class CategoryService {
         categoryRepository.save(category);
         return modelMapper.map(category, CategoryResponseDTO.class);
     }
-    public CategoryResponseDTO  update (Long id, CategoryRequestDTO request){
+    public CategoryResponseDTO  update (Long id, CategoryRequestDTO request)throws ResourceNotFoundException{
         Categoria updatedCategory = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category not found"));
         if (request.getNombre() != null && !request.getNombre().isEmpty())
             updatedCategory.setNombre(request.getNombre());

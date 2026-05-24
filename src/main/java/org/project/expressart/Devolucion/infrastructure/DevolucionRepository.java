@@ -13,8 +13,8 @@ import java.util.Optional;
 
 @Repository
 public interface DevolucionRepository extends JpaRepository<Devolucion, Long> {
-    Optional<Pago> findByOrderId(Long orderId);
+    Optional<Devolucion> findByOrderId(Long orderId);
     List<DevolutionResponseDTO> findAllBy(Pageable pageable);
 
-    Optional<List<Devolucion>> findByEstado(EstadoDevolucion estado);
+    List<Devolucion> findByEstado(EstadoDevolucion estado);
 }

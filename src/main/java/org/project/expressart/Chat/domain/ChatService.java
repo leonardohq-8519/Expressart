@@ -9,6 +9,7 @@ import org.project.expressart.Orden.domain.Orden;
 import org.project.expressart.Orden.infrastructure.OrdenRepository;
 import org.project.expressart.Portafolio.domain.Portafolio;
 import org.project.expressart.Portafolio.dto.PortafolioResponseDTO;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -29,12 +30,12 @@ public class ChatService{
         Pageable pageable = PageRequest.of(0, 10);
         return chatRepository.findAllBy(pageable);
     }
-    public ChatResponseDTO  findById (Long id){
-        Chat chat = chatRepository.findById(id).orElseThrow(()-> new ResourceNotFoundEXception("Chat not found"));
+    public ChatResponseDTO  findById (Long id)throws ResourceNotFoundException {
+        Chat chat = chatRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Chat not found"));
         return modelMapper.map(chat, ChatResponseDTO.class);
     }
-    public ChatResponseDTO findByOrderId (Long orderId){
-        Chat chat = chatRepository.findByOrderId(orderId).orElseThrow(()-> new ResourceNotFoundEXception("Chat not found"));
+    public ChatResponseDTO findByOrderId (Long orderId)throws ResourceNotFoundException{
+        Chat chat = chatRepository.findByOrderId(orderId).orElseThrow(()-> new ResourceNotFoundException("Chat not found"));
         return modelMapper.map(chat, ChatResponseDTO.class);
     }
     public ChatResponseDTO create(ChatRequestDTO request){
@@ -44,7 +45,7 @@ public class ChatService{
         chatRepository.save(chat);
         return modelMapper.map(chat, ChatResponseDTO.class);
     }
-    public ChatResponseDTO  update (Long id, ChatRequestDTO request){
+    public ChatResponseDTO  update (Long id, ChatRequestDTO request)throws ResourceNotFoundException{
         Chat updatedChat = chatRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Chat not found"));
         Orden order = orderRepository.findById(request.getOrdenId()).orElseThrow(() -> new EntityNotFoundException("Order not found"));
         updatedChat.setOrden(order);
