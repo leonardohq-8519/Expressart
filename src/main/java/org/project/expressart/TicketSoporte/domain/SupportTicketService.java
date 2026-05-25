@@ -85,6 +85,7 @@ public class SupportTicketService {
         ticket.setSubject(request.getAsunto());
         ticket.setCategory(request.getCategoria());
         ticket.setDescription(request.getDescripcion());
+        ticket.setStatus(EstadoTicket.values()[0]);
         supportTicketRepository.save(ticket);
         eventPublisher.publishEvent(new TicketCreatedEvent(ticket.getId(), ticket.getSubject()));
         return modelMapper.map(ticket, SupportTicketResponseDTO.class);

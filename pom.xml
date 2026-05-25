@@ -107,7 +107,6 @@
             <artifactId>s3</artifactId>
             <version>2.25.0</version>
         </dependency>
-
     </dependencies>
 
     <build>
