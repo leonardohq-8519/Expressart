@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.project.expressart.PerfilCliente.domain.PerfilCliente;
+import org.project.expressart.PerfilArtista.domain.PerfilArtista;
 
 @Entity
 @Table(
@@ -26,11 +26,11 @@ public class RedSocialArtista {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "perfil_artista_id", nullable = false)
-    private PerfilCliente perfilArtista;
+    private PerfilArtista perfilArtista;
 
-    @Column(nullable = false, length = 50)
+    @Column(name = "plataforma", nullable = false, length = 50)
     private String plataforma;
 
-    @Column(nullable = false, length = 500)
+    @Column(name = "url", nullable = false, length = 500)
     private String url;
 }

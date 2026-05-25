@@ -1,0 +1,25 @@
+name: CI/CD con Maven
+
+on:
+  push:
+    branches: [ "main" , "services"]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clonar el repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Compilar / Probar con Maven
+        run: mvn -B clean test

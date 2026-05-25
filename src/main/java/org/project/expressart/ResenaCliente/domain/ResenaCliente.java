@@ -11,7 +11,7 @@ import org.project.expressart.Usuario.domain.Usuario;
 import java.time.ZonedDateTime;
 
 @Entity
-@Table(name = "resenas_artista")
+@Table(name = "resenas_cliente")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -33,7 +33,7 @@ public class ResenaCliente {
     @JoinColumn(name = "artista_id", nullable = false)
     private Usuario artista;
 
-    @Column(nullable = false)
+    @Column(name = "score",nullable = false)
     private Short puntuacion;
 
     @Column(columnDefinition = "TEXT")

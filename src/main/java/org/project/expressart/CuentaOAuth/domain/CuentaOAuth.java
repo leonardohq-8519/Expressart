@@ -33,7 +33,8 @@ public class CuentaOAuth {
     @Column(name = "proveedor_id", nullable = false)
     private String proveedorId;
 
-    private String email_oauth;
+    @Column(name = "email_oauth", length = 255)
+    private String emailOauth;
 
 
 }

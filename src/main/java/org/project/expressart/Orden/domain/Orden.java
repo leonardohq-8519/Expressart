@@ -59,19 +59,19 @@ public class Orden {
     @Column(name = "fecha_limite", nullable = false, updatable = false)
     private ZonedDateTime fechaLimite;
 
-    @Column(name = "fecha_completada", nullable = false, updatable = false)
+    @Column(name = "fecha_completada")
     private ZonedDateTime fechaCompletada;
 
     @OneToOne(mappedBy = "orden", cascade = CascadeType.ALL)
     private Pago pago;
 
-    @OneToOne(mappedBy = "orden", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
     private Devolucion devolucion;
 
     @OneToOne(mappedBy = "orden", cascade = CascadeType.ALL)
     private Chat chat;
 
-    @OneToOne(mappedBy = "orden", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
     private ResenaArtista resenaArtista;
 
     @OneToOne(mappedBy = "orden", cascade = CascadeType.ALL)

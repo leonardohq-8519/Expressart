@@ -29,12 +29,13 @@ public class PerfilArtista {
     @JoinColumn(name = "usuario_id", nullable = false, unique = true)
     private Usuario usuario;
 
-    @Column(nullable = false)
+    @Column(name = "disponible", nullable = false)
     private Boolean comsDisponibles = true;
 
+    @Column(name = "tiempo_entrega_promedio")
     private Integer tiempoEntregaPromedio;
 
-    @Column(precision = 3, scale = 2)
+    @Column(name = "rating_promedio", precision = 3, scale = 2)
     private BigDecimal ratingPromedio;
 
     @Column(nullable = false)

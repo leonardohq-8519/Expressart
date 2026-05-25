@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.project.expressart.PerfilArtista.domain.PerfilArtista;
 
 @Entity
 @Table(name = "categorias")
@@ -17,12 +18,16 @@ public class Categoria {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 100)
+    @Column(name = "nombre", nullable = false, unique = true, length = 100)
     private String nombre;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "descripcion", columnDefinition = "TEXT")
     private String descripcion;
 
     @Column(name = "icono_url", length = 500)
     private String iconoUrl;
+
+    @ManyToOne
+    @JoinColumn(name = "perfil_artista_id")
+    private PerfilArtista artistProfile;
 }

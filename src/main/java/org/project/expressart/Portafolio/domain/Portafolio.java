@@ -29,10 +29,10 @@ public class Portafolio {
     @JoinColumn(name = "perfil_artista_id", nullable = false)
     private PerfilArtista perfilArtista;
 
-    @Column(nullable = false, length = 100)
+    @Column(name = "titulo", nullable = false, length = 100)
     private String titulo;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "descripcion", columnDefinition = "TEXT")
     private String descripcion;
 
     @Column(name = "portada_url", length = 500)
@@ -44,7 +44,6 @@ public class Portafolio {
     @Column(name = "fecha_creacion", nullable = false, updatable = false)
     private ZonedDateTime fechaCreacion;
 
-    // 1 a N con los posts
     @OneToMany(mappedBy = "portafolio", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
 
