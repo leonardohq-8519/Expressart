@@ -3,7 +3,6 @@ package org.project.expressart.Comision.infrastructure;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.project.expressart.Comision.domain.Comision;
-import org.project.expressart.Comision.dto.CommissionResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -63,7 +62,7 @@ class ComisionRepositoryTest {
     @Test
     @DisplayName("Debería retornar lista paginada vacía cuando no hay comisiones")
     void shouldReturnEmptyPageWhenNoComisiones() {
-        List<CommissionResponseDTO> result = comisionRepository.findAllBy(PageRequest.of(0, 10));
+        List<Comision> result = comisionRepository.findAllBy(PageRequest.of(0, 10));
         assertThat(result).isEmpty();
     }
 

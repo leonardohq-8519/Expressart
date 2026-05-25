@@ -82,7 +82,7 @@ class ComisionServiceTest {
     @Test
     @DisplayName("Debería retornar lista de comisiones al llamar findAll")
     void shouldReturnCommissionListWhenFindAll() {
-        when(commissionRepository.findAllBy(any())).thenReturn(List.of(responseDTO));
+        when(commissionRepository.findAllBy(any())).thenReturn(List.of(comision));
 
         List<CommissionResponseDTO> result = commissionService.findAll();
 

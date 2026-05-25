@@ -121,6 +121,7 @@ class CategoriaRepositoryTest {
 
         saved.setNombre("Arte Moderno");
         categoriaRepository.save(saved);
+        entityManager.flush();
         entityManager.clear();
 
         Optional<Categoria> updated = categoriaRepository.findById(saved.getId());

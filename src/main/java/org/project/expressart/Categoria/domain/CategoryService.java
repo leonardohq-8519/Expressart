@@ -35,6 +35,8 @@ public class CategoryService {
         return modelMapper.map(category, CategoryResponseDTO.class);
     }
     public CategoryResponseDTO create(CategoryRequestDTO request){
+        if (categoryRepository.existsByNombre(request.getNombre()))
+            throw new IllegalArgumentException("Category name already exists");
         Categoria category = new Categoria();
         category.setNombre(request.getNombre());
         category.setDescripcion(request.getDescripcion());

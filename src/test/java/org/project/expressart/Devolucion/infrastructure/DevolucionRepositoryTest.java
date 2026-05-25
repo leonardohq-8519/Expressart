@@ -4,7 +4,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.project.expressart.Devolucion.domain.Devolucion;
 import org.project.expressart.Devolucion.domain.EstadoDevolucion;
-import org.project.expressart.Devolucion.dto.DevolutionResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -50,7 +49,7 @@ class DevolucionRepositoryTest {
     @Test
     @DisplayName("Debería retornar lista paginada vacía cuando no hay devoluciones")
     void shouldReturnEmptyPageWhenNoDevolucion() {
-        List<DevolutionResponseDTO> result = devolucionRepository.findAllBy(PageRequest.of(0, 10));
+        List<Devolucion> result = devolucionRepository.findAllBy(PageRequest.of(0, 10));
         assertThat(result).isEmpty();
     }
 

@@ -35,7 +35,9 @@ public class CommissionService{
     private final TagsRepository tagsRepository;
     public List<CommissionResponseDTO> findAll(){
         Pageable pageable = PageRequest.of(0, 10);
-        return commissionRepository.findAllBy(pageable);
+        return commissionRepository.findAllBy(pageable).stream()
+                .map(c -> modelMapper.map(c, CommissionResponseDTO.class))
+                .collect(Collectors.toList());
     }
     public CommissionResponseDTO  findById (Long id) throws ResourceNotFoundException {
         Comision commission = commissionRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Commission not found"));

@@ -70,7 +70,7 @@ class DevolucionServiceTest {
     @Test
     @DisplayName("Debería retornar lista de devoluciones al llamar findAll")
     void shouldReturnDevolutionListWhenFindAll() {
-        when(devolutionRepository.findAllBy(any())).thenReturn(List.of(responseDTO));
+        when(devolutionRepository.findAllBy(any())).thenReturn(List.of(devolucion));
 
         List<DevolutionResponseDTO> result = devolutionService.findAll();
 

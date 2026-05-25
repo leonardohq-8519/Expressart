@@ -98,9 +98,6 @@ class OAuthAccountServiceTest {
     void shouldThrowExceptionWhenProviderNotSupported() {
         org.springframework.security.oauth2.core.user.OAuth2User oAuth2User =
                 mock(org.springframework.security.oauth2.core.user.OAuth2User.class);
-        when(userRepository.findByOAuthProveedorAndProveedorId("twitter", null))
-                .thenReturn(Optional.empty());
-        when(oAuth2User.getAttribute(any())).thenReturn(null);
 
         assertThrows(IllegalArgumentException.class,
                 () -> oAuthAccountService.processOAuthLogin(oAuth2User, "twitter"));

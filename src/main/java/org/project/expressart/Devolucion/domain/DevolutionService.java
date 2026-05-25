@@ -31,7 +31,9 @@ public class DevolutionService{
     private final OrdenRepository orderRepository;
     public List<DevolutionResponseDTO> findAll(){
         Pageable pageable = PageRequest.of(0, 10);
-        return devolutionRepository.findAllBy(pageable);
+        return devolutionRepository.findAllBy(pageable).stream()
+                .map(d -> modelMapper.map(d, DevolutionResponseDTO.class))
+                .collect(Collectors.toList());
     }
     public DevolutionResponseDTO  findById (Long id)throws ResourceNotFoundException {
         Devolucion devolution = devolutionRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Devolution not found"));

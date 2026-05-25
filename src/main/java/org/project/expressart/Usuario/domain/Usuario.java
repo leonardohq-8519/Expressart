@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import org.project.expressart.CuentaOAuth.domain.CuentaOAuth;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -35,7 +36,7 @@ public class Usuario {
     private List<Usuario> favorites;
 
     @OneToMany(mappedBy = "usuario")
-    private List<CuentaOAuth> OAuthAccounts;
+    private List<CuentaOAuth> OAuthAccounts = new ArrayList<>();
 
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
