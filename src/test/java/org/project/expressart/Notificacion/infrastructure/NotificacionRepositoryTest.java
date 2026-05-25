@@ -27,11 +27,10 @@ class NotificacionRepositoryTest {
     private Usuario crearUsuarioDePrueba() {
         Usuario usuario = new Usuario();
         usuario.setEmail("test@expressart.com");
-        usuario.setFullName("Luciano Matias"); // Corregido a setFullName (con 'N' mayúscula)
+        usuario.setName("Luciano Matias");
         usuario.setUsername("lucianoma");
-        usuario.setActive(true);              // Lombok mapea boolean "isActive" como setActive()
-        usuario.setVerified(true);            // Lombok mapea boolean "isVerified" como setVerified()
-        usuario.setRegisterDate(ZonedDateTime.now());
+        usuario.setIsActive(true);
+        usuario.setIsVerified(true);
         return entityManager.persistAndFlush(usuario);
     }
 
@@ -59,8 +58,8 @@ class NotificacionRepositoryTest {
 
         entityManager.flush();
 
-        // Se asume que en Usuario el identificador es 'usuarioId'
-        List<Notificacion> noLeidas = notificacionRepository.findByUsuarioUsuarioIdAndLeida(usuarioGuardado.getUsuarioId(), false);
+        // Invoca el método tal cual está en producción pasando el ID limpio
+        List<Notificacion> noLeidas = notificacionRepository.findByUsuarioUsuarioIdAndLeida(usuarioGuardado.getId(), false);
 
         assertThat(noLeidas).hasSize(1);
         assertThat(noLeidas.getFirst().getTitulo()).isEqualTo("Notificacion 1");
@@ -79,7 +78,7 @@ class NotificacionRepositoryTest {
         n1.setFechaCreacion(ZonedDateTime.now());
         entityManager.persistAndFlush(n1);
 
-        long totalNoLeidas = notificacionRepository.countByUsuarioUsuarioIdAndLeida(usuarioGuardado.getUsuarioId(), false);
+        long totalNoLeidas = notificacionRepository.countByUsuarioUsuarioIdAndLeida(usuarioGuardado.getId(), false);
 
         assertThat(totalNoLeidas).isEqualTo(1L);
     }

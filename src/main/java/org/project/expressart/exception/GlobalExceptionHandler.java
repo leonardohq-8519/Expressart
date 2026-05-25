@@ -2,6 +2,7 @@ package org.project.expressart.exception;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -46,5 +47,12 @@ public class GlobalExceptionHandler {
                 "message", ex.getMessage(),
                 "timestamp", ZonedDateTime.now().toString()
         ));
+    }
+    @ExceptionHandler(ImageLimitException.class)
+    public ProblemDetail handleImageLimitException(ImageLimitException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(422);
+        problemDetail.setTitle("Image Limit Exceeded");
+        problemDetail.setDetail(ex.getMessage());
+        return problemDetail;
     }
 }

@@ -32,7 +32,10 @@ public class MessageService{
     private final UsuarioRepository userRepository;
     public List<MessageResponseDTO> findAll(){
         Pageable pageable = PageRequest.of(0, 10);
-        return messageRepository.findAllBy(pageable);
+        List<Mensaje> mensajes = messageRepository.findAllBy(pageable);
+        return mensajes.stream()
+                .map(mensaje -> modelMapper.map(mensaje, MessageResponseDTO.class))
+                .collect(java.util.stream.Collectors.toList());
     }
     public MessageResponseDTO  findById (Long id)throws ResourceNotFoundException {
         Mensaje message = messageRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Message not found"));

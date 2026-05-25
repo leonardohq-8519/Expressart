@@ -1,7 +1,6 @@
 package org.project.expressart.Usuario.infrastructure;
 
 import org.project.expressart.Usuario.domain.Usuario;
-import org.project.expressart.Usuario.dto.UserResponseDTO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -21,6 +20,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     boolean existsByEmail(String email);
     boolean existsByUsername(String username);
 
+
     @Query("""
         SELECT u FROM Usuario AS u
         JOIN u.favorites f
@@ -29,12 +29,13 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     """)
     List<Usuario> findSeguidoresByArtistaId(@Param("artistaId") Long artistaId);
 
+
     @Query("""
-    SELECT u FROM Usuario u
-    JOIN u.OAuthAccounts c
-    WHERE c.proveedor = :proveedor
-    AND c.proveedorId = :proveedorId
-""")
+        SELECT u FROM Usuario u
+        JOIN u.OAuthAccounts c
+        WHERE c.proveedor = :proveedor
+        AND c.proveedorId = :proveedorId
+    """)
     Optional<Usuario> findByOAuthProveedorAndProveedorId(
             @Param("proveedor") String proveedor,
             @Param("proveedorId") String proveedorId
