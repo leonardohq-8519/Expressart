@@ -6,10 +6,12 @@ import org.project.expressart.Orden.domain.Orden;
 import org.project.expressart.Orden.infrastructure.OrdenRepository;
 import org.project.expressart.Pago.dto.PaymentRequestDTO;
 import org.project.expressart.Pago.dto.PaymentResponseDTO;
+import org.project.expressart.Pago.events.PagoExitosoEvent;
 import org.project.expressart.Pago.infrastructure.PagoRepository;
 import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.project.expressart.exceptions.PaymentProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,7 +25,7 @@ public class PaymentService {
 
     private final PagoRepository paymentRepository;
     private final OrdenRepository orderRepository;
-
+    private final ApplicationEventPublisher eventPublisher;
     @Autowired
     private ModelMapper modelMapper;
 
@@ -67,6 +69,7 @@ public class PaymentService {
         payment.setStripePaymentIntentId(request.getStripePaymentIntentId());
 
         paymentRepository.save(payment);
+        eventPublisher.publishEvent(new PagoExitosoEvent(payment.getId(), order.getId(), order.getCliente().getId(), order.getCliente().getEmail(), payment.getMonto()));
         return modelMapper.map(payment, PaymentResponseDTO.class);
     }
 

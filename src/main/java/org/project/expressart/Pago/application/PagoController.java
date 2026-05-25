@@ -42,7 +42,7 @@ public class PagoController {
     }
 
     @PostMapping
-    public ResponseEntity<PaymentResponseDTO> create(@RequestBody PaymentRequestDTO request) {
+    public ResponseEntity<PaymentResponseDTO> create(@RequestBody PaymentRequestDTO request) throws ResourceNotFoundException {
         return ResponseEntity.status(HttpStatus.CREATED).body(paymentService.create(request));
     }
 
@@ -54,7 +54,7 @@ public class PagoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) throws ResourceNotFoundException {
         paymentService.delete(id);
         return ResponseEntity.noContent().build();
     }

@@ -1,6 +1,7 @@
 package org.project.expressart.TicketSoporte.domain;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.modelmapper.ModelMapper;
@@ -8,11 +9,13 @@ import org.project.expressart.Orden.domain.Orden;
 import org.project.expressart.Orden.infrastructure.OrdenRepository;
 import org.project.expressart.TicketSoporte.dto.SupportTicketRequestDTO;
 import org.project.expressart.TicketSoporte.dto.SupportTicketResponseDTO;
+import org.project.expressart.TicketSoporte.events.TicketCreatedEvent;
 import org.project.expressart.TicketSoporte.infrastructure.TicketSoporteRepository;
 import org.project.expressart.Usuario.domain.Usuario;
 import org.project.expressart.Usuario.infrastructure.UsuarioRepository;
 import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,12 +26,10 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class SupportTicketService {
-    @Autowired
     private final TicketSoporteRepository supportTicketRepository;
-    @Autowired
     private final UsuarioRepository userRepository;
-    @Autowired
     private final OrdenRepository orderRepository;
+    private final ApplicationEventPublisher eventPublisher;
     @Autowired
     private ModelMapper modelMapper;
 
@@ -74,6 +75,7 @@ public class SupportTicketService {
                 .map(ticket -> modelMapper.map(ticket, SupportTicketResponseDTO.class))
                 .collect(Collectors.toList());
     }
+    @Transactional
     public SupportTicketResponseDTO create(SupportTicketRequestDTO request)throws BadRequestException {
         TicketSoporte ticket = new TicketSoporte();
         Usuario user = userRepository.findById(request.getUsuarioId()).orElseThrow(() -> new EntityNotFoundException("User not found"));
@@ -84,6 +86,7 @@ public class SupportTicketService {
         ticket.setCategory(request.getCategoria());
         ticket.setDescription(request.getDescripcion());
         supportTicketRepository.save(ticket);
+        eventPublisher.publishEvent(new TicketCreatedEvent(ticket.getId(), ticket.getSubject()));
         return modelMapper.map(ticket, SupportTicketResponseDTO.class);
     }
     public SupportTicketResponseDTO updateStatus(Long id, EstadoTicket status)throws ResourceNotFoundException{
@@ -98,6 +101,7 @@ public class SupportTicketService {
         supportTicketRepository.save(ticketSoporte);
         return modelMapper.map(ticketSoporte, SupportTicketResponseDTO.class);
     }
+    @Transactional
     public void delete (Long id){
         if (supportTicketRepository.existsById(id))
             supportTicketRepository.deleteById(id);
