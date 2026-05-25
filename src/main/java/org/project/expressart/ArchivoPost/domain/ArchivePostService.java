@@ -47,7 +47,7 @@ public class ArchivePostService {
         return modelMapper.map(postArchive, ArchivoPostResponseDTO.class);
     }
     public ArchivoPostResponseDTO update(Long id, ArchivoPostUpdateDTO dto)throws ResourceNotFoundException{
-        ArchivoPost postArchive = archivePostRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post archive not found"));;
+        ArchivoPost postArchive = archivePostRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post archive not found"));
         postArchive.setUrl(dto.getUrl());
         postArchive.setOrdenVisualizacion(dto.getOrdenVisualizacion());
         archivePostRepository.save(postArchive);

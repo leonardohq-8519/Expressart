@@ -108,7 +108,7 @@ public class CommissionPictureService {
 
 
     public ImagenComisionResponseDTO update(Long id, ImagenComisionUpdateDTO dto)throws ResourceNotFoundException{
-        ImagenComision postArchive = commissionPictureRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Commission picture not found"));;
+        ImagenComision postArchive = commissionPictureRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Commission picture not found"));
         postArchive.setUrl(dto.getUrl());
         postArchive.setOrden(dto.getOrden());
         commissionPictureRepository.save(postArchive);
