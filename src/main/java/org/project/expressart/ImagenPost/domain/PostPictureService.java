@@ -25,14 +25,11 @@ import java.util.stream.Collectors;
 public class PostPictureService {
     @Autowired
     private ModelMapper modelMapper;
-    @Autowired
     private final ImagenPostRepository postPictureRepository;
-    @Autowired
     private final PostRepository postRepository;
 
     private static final int IMAGE_LIMIT = 4;
-    @Autowired
-    private FileService fileService;
+    private final FileService fileService;
 
     public List<ImagenPostResponseDTO> getByPostId(Long postId) throws ResourceNotFoundException {
         Post post = postRepository.findById(postId)

@@ -58,7 +58,7 @@ public class PaymentService {
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with ID: " + request.getOrdenId()));
 
         if (request.getStripePaymentIntentId() == null || request.getStripePaymentIntentId().trim().isEmpty()) {
-            throw new PaymentProcessingException("The gateway transaction code (Stripe PaymentIntent ID) is missing or invalid.");
+            throw new PaymentProcessingException("The Stripe PaymentIntent ID is missing or invalid.");
         }
 
         Pago payment = new Pago();

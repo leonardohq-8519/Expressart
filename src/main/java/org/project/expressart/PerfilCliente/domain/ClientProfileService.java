@@ -9,6 +9,7 @@ import org.project.expressart.PerfilCliente.infrastructure.PerfilClienteReposito
 import org.project.expressart.Usuario.domain.Usuario;
 import org.project.expressart.Usuario.infrastructure.UsuarioRepository;
 import org.project.expressart.exceptions.ResourceNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,8 @@ public class ClientProfileService {
 
     private final PerfilClienteRepository clientProfileRepository;
     private final UsuarioRepository userRepository;
-    private final ModelMapper modelMapper;
+    @Autowired
+    private ModelMapper modelMapper;
 
     public List<ClientProfileResponseDTO> findAll(){
         Pageable pageable = PageRequest.of(0, 10);
@@ -40,17 +42,15 @@ public class ClientProfileService {
 
     public ClientProfileResponseDTO create(Long userId){
         PerfilCliente clientProfile = new PerfilCliente();
-        Usuario user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        Usuario user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
         clientProfile.setUsuario(user);
         clientProfileRepository.save(clientProfile);
         return modelMapper.map(clientProfile, ClientProfileResponseDTO.class);
     }
 
     public ClientProfileResponseDTO update (Long id, ClientProfileRequestDTO request) throws ResourceNotFoundException {
-        PerfilCliente updClientProfile = clientProfileRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Artist profile not found"));
-        Usuario user = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        PerfilCliente updClientProfile = clientProfileRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Client profile not found"));
+        Usuario user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
         updClientProfile.setUsuario(user);
         updClientProfile.setRatingPromedio(request.getRatingPromedio());
         updClientProfile.setTotalResenas(request.getTotalResenas());

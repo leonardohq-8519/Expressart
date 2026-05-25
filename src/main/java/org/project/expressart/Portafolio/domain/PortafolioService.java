@@ -7,6 +7,7 @@ import org.project.expressart.Portafolio.dto.PortafolioRequestDTO;
 import org.project.expressart.Portafolio.dto.PortafolioResponseDTO;
 import org.project.expressart.Portafolio.infrastructure.PortafolioRepository;
 import org.project.expressart.exceptions.ResourceNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,8 @@ import java.util.stream.Collectors;
 public class PortafolioService {
 
     private final PortafolioRepository portafolioRepository;
-    private final ModelMapper modelMapper;
+    @Autowired
+    private ModelMapper modelMapper;
 
     public List<PortafolioResponseDTO> findAll(){
         Pageable pageable = PageRequest.of(0, 10);
@@ -74,6 +76,6 @@ public class PortafolioService {
         if (portafolioRepository.existsById(id))
             portafolioRepository.deleteById(id);
         else
-            throw new EntityNotFoundException("User with ID " + id + " doesn't exist");
+            throw new EntityNotFoundException("Portafolio with ID " + id + " doesn't exist");
     }
 }

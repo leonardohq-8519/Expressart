@@ -22,18 +22,17 @@ import java.util.stream.Collectors;
 public class NotificationService {
     @Autowired
     private ModelMapper modelMapper;
-    @Autowired
+
     private final NotificacionRepository notificationRepository;
-    @Autowired
     private final UsuarioRepository userRepository;
 
     public List<NotificacionResponseDTO> getByUsuario (Long usuarioId) throws ResourceNotFoundException {
         List<Notificacion> notification = notificationRepository.findByUsuarioId(usuarioId);
         if (notification.isEmpty()) {
-            throw new ResourceNotFoundException("No notifications found for post id: " + usuarioId);
+            throw new ResourceNotFoundException("No notifications found for user id: " + usuarioId);
         }
         return notification.stream()
-                .map(ticket -> modelMapper.map(notification, NotificacionResponseDTO.class))
+                .map(notif -> modelMapper.map(notif, NotificacionResponseDTO.class))
                 .collect(Collectors.toList());
     }
     public List<NotificacionResponseDTO> getNoLeidas(Long usuarioId) throws ResourceNotFoundException {

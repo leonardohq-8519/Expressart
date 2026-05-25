@@ -20,9 +20,7 @@ import java.util.List;
 public class ChatService{
     @Autowired
     private ModelMapper modelMapper;
-    @Autowired
     private final ChatRepository chatRepository;
-    @Autowired
     private final OrdenRepository orderRepository;
     public List<ChatResponseDTO> findAll(){
         Pageable pageable = PageRequest.of(0, 10);

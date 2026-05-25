@@ -43,7 +43,6 @@ public class TagsService {
 
     @Transactional
     public TagsResponseDTO create(TagsRequestDTO request) {
-        // 1. IMPLEMENTACIÓN: Evitar duplicados al crear un Tag
         if (tagsRepository.existsByNombre(request.getNombre())) {
             throw new ResourceAlreadyExistsException("A tag with the name '" + request.getNombre() + "' already exists.");
         }

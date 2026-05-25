@@ -9,6 +9,7 @@ import org.project.expressart.OpcionesComision.dto.CommissionOptionsRequestDTO;
 import org.project.expressart.OpcionesComision.dto.CommissionOptionsResponseDTO;
 import org.project.expressart.OpcionesComision.infrastructure.OpcionesComisionRepository;
 import org.project.expressart.exceptions.ResourceNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,8 +20,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class CommissionOptionsService {
-
-    private final ModelMapper modelMapper;
+    @Autowired
+    private ModelMapper modelMapper;
     private final OpcionesComisionRepository commissionOptionsRepository;
     private final ComisionRepository commissionRepository;
 
@@ -41,7 +42,7 @@ public class CommissionOptionsService {
             throw new ResourceNotFoundException("No commission options found for commission id: " + commissionId);
         }
         return commOptions.stream()
-                .map(ticket -> modelMapper.map(ticket, CommissionOptionsResponseDTO.class))
+                .map(commOpt -> modelMapper.map(commOpt, CommissionOptionsResponseDTO.class))
                 .collect(Collectors.toList());
     }
 

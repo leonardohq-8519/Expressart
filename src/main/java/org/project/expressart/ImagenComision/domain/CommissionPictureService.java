@@ -25,11 +25,9 @@ import java.util.List;
 public class CommissionPictureService {
     @Autowired
     private ModelMapper modelMapper;
-    @Autowired
     private final ImagenComisionRepository commissionPictureRepository;
 
     private final FileService fileService;
-    @Autowired
     private final ComisionRepository commissionRepository;
 
     private static final int IMAGE_LIMIT = 6;

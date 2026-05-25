@@ -11,6 +11,7 @@ import org.project.expressart.ResenaCliente.infrastructure.ResenaClienteReposito
 import org.project.expressart.Usuario.domain.Usuario;
 import org.project.expressart.Usuario.infrastructure.UsuarioRepository;
 import org.project.expressart.exceptions.ResourceNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ public class ClientReviewService {
     private final ResenaClienteRepository cliReviewRepository;
     private final OrdenRepository orderRepository;
     private final UsuarioRepository userRepository;
+    @Autowired
     private final ModelMapper modelMapper;
 
     public List<ClientReviewResponseDTO> findAll(){

@@ -11,6 +11,7 @@ import org.project.expressart.Orden.infrastructure.OrdenRepository;
 import org.project.expressart.Usuario.domain.Usuario;
 import org.project.expressart.Usuario.infrastructure.UsuarioRepository;
 import org.project.expressart.exceptions.ResourceNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,8 +22,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class OrderService {
-
-    private final ModelMapper modelMapper;
+    @Autowired
+    private ModelMapper modelMapper;
     private final OrdenRepository orderRepository;
     private final UsuarioRepository userRepository;
     private final OpcionesComisionRepository commissionOptionsRepository;
@@ -43,7 +44,7 @@ public class OrderService {
             throw new ResourceNotFoundException("No orders found for client id: " + clientId);
         }
         return orders.stream()
-                .map(ticket -> modelMapper.map(ticket, OrderResponseDTO.class))
+                .map(ord -> modelMapper.map(ord, OrderResponseDTO.class))
                 .collect(Collectors.toList());
     }
 
@@ -53,7 +54,7 @@ public class OrderService {
             throw new ResourceNotFoundException("No orders found for artist id: " + artistId);
         }
         return orders.stream()
-                .map(ticket -> modelMapper.map(ticket, OrderResponseDTO.class))
+                .map(ord -> modelMapper.map(ord, OrderResponseDTO.class))
                 .collect(Collectors.toList());
     }
 
@@ -63,7 +64,7 @@ public class OrderService {
             throw new ResourceNotFoundException("No orders found for client id: " + clientId + " with status: " + status);
         }
         return orders.stream()
-                .map(ticket -> modelMapper.map(ticket, OrderResponseDTO.class))
+                .map(ord -> modelMapper.map(ord, OrderResponseDTO.class))
                 .collect(Collectors.toList());
     }
 
@@ -73,7 +74,7 @@ public class OrderService {
             throw new ResourceNotFoundException("No orders found for artist id: " + artistId + " with status: " + status);
         }
         return orders.stream()
-                .map(ticket -> modelMapper.map(ticket, OrderResponseDTO.class))
+                .map(ord -> modelMapper.map(ord, OrderResponseDTO.class))
                 .collect(Collectors.toList());
     }
 

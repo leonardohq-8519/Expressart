@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserService{
-    @Autowired
     private final UsuarioRepository userRepository;
     @Autowired
     private ModelMapper modelMapper;
@@ -39,9 +38,9 @@ public class UserService{
 
     public UserResponseDTO create(UserRequestDTO userdto) throws BadRequestException {
         if (userRepository.existsByEmail(userdto.getEmail()))
-            throw new BadRequestException("El email ya está en uso");
+            throw new BadRequestException("The email is already in use.");
         if (userRepository.existsByUsername(userdto.getUsername()))
-            throw new BadRequestException("El username ya está en uso");
+            throw new BadRequestException("The username is already in use.");
         Usuario user = new Usuario();
         user.setUsername(userdto.getUsername());
         user.setEmail(userdto.getEmail());

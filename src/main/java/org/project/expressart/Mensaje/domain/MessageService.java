@@ -23,11 +23,8 @@ import java.util.stream.Collectors;
 public class MessageService{
     @Autowired
     private ModelMapper modelMapper;
-    @Autowired
     private final MensajeRepository messageRepository;
-    @Autowired
     private final ChatRepository chatRepository;
-    @Autowired
     private final UsuarioRepository userRepository;
     public List<MessageResponseDTO> findAll(){
         Pageable pageable = PageRequest.of(0, 10);

@@ -20,11 +20,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ArtistProfileService {
-    @Autowired
     private final PerfilArtistaRepository artistProfileRepository;
-    @Autowired
     private final UsuarioRepository userRepository;
-    @Autowired
     private final CategoriaRepository categoryRepository;
     @Autowired
     private ModelMapper modelMapper;
@@ -44,7 +41,7 @@ public class ArtistProfileService {
         PerfilArtista artistProfile = new PerfilArtista();
         artistProfile.setComsDisponibles(request.getComsDisponibles());
         artistProfile.setTiempoEntregaPromedio(request.getTiempoEntregaPromedio());
-        Usuario user = userRepository.findByUsername(request.getNombreUsuario())
+        Usuario user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
         artistProfile.setUsuario(user);
         artistProfileRepository.save(artistProfile);

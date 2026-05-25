@@ -18,7 +18,6 @@ import java.util.List;
 public class CategoryService {
     @Autowired
     private ModelMapper modelMapper;
-    @Autowired
     private final CategoriaRepository categoryRepository;
     public List<CategoryResponseDTO> findAll(){
         Pageable pageable = PageRequest.of(0, 10);

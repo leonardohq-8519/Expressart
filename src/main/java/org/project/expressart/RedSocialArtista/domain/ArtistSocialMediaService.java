@@ -18,9 +18,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ArtistSocialMediaService {
-    @Autowired
     private final RedSocialArtistaRepository artistSocialMediaRepository;
-    @Autowired
     private final PerfilArtistaRepository artistProfileRepository;
     @Autowired
     private ModelMapper modelMapper;
@@ -29,7 +27,7 @@ public class ArtistSocialMediaService {
         if (artistSocialMedia.isEmpty())
             throw new ResourceNotFoundException("No social media found for artist profile id: " + perfilArtistaId);
         return artistSocialMedia.stream()
-                .map(ticket -> modelMapper.map(artistSocialMedia, RedSocialArtistaResponseDTO.class))
+                .map(socialMedia -> modelMapper.map(socialMedia, RedSocialArtistaResponseDTO.class))
                 .collect(Collectors.toList());
     }
     public RedSocialArtistaResponseDTO getById(Long id) throws ResourceNotFoundException {
@@ -39,7 +37,7 @@ public class ArtistSocialMediaService {
 
     public RedSocialArtistaResponseDTO create(RedSocialArtistaCreateDTO dto){
         RedSocialArtista artistSocialMedia = new RedSocialArtista();
-        PerfilArtista artistProfile = artistProfileRepository.findById(dto.getPerfilArtistaId()).orElseThrow(() -> new EntityNotFoundException("Artist not found"));
+        PerfilArtista artistProfile = artistProfileRepository.findById(dto.getPerfilArtistaId()).orElseThrow(() -> new EntityNotFoundException("Artist profile not found"));
         artistSocialMedia.setPerfilArtista(artistProfile);
         artistSocialMedia.setPlataforma(dto.getPlataforma());
         artistSocialMedia.setUrl(dto.getUrl());

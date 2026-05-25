@@ -21,9 +21,7 @@ import java.util.stream.Collectors;
 public class DevolutionService{
     @Autowired
     private ModelMapper modelMapper;
-    @Autowired
     private final DevolucionRepository devolutionRepository;
-    @Autowired
     private final OrdenRepository orderRepository;
     public List<DevolutionResponseDTO> findAll(){
         Pageable pageable = PageRequest.of(0, 10);
@@ -43,7 +41,7 @@ public class DevolutionService{
             throw new ResourceNotFoundException("No devolutions found for status: " + estado);
         }
         return artistReview.stream()
-                .map(ticket -> modelMapper.map(artistReview, DevolutionResponseDTO.class))
+                .map(devo -> modelMapper.map(devo, DevolutionResponseDTO.class))
                 .collect(Collectors.toList());
     }
     public DevolutionResponseDTO create(DevolutionRequestDTO request){

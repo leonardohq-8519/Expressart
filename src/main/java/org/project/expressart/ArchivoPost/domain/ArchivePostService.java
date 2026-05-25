@@ -20,9 +20,7 @@ import java.util.stream.Collectors;
 public class ArchivePostService {
     @Autowired
     private ModelMapper modelMapper;
-    @Autowired
     private final ArchivoPostRepository archivePostRepository;
-    @Autowired
     private final PostRepository postRepository;
     public List<ArchivoPostResponseDTO> getByPost(Long postId) throws ResourceNotFoundException {
         List<ArchivoPost> postArchive = archivePostRepository.findByPostId(postId);

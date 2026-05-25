@@ -21,11 +21,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ArtistReviewService {
-    @Autowired
     private final ResenaArtistaRepository artistReviewRepository;
-    @Autowired
     private final OrdenRepository orderRepository;
-    @Autowired
     private final UsuarioRepository userRepository;
     @Autowired
     private ModelMapper modelMapper;
@@ -43,7 +40,7 @@ public class ArtistReviewService {
             throw new ResourceNotFoundException("No artists reviews found for artist id: " + artistId);
         }
         return artistReview.stream()
-                .map(ticket -> modelMapper.map(artistReview, ArtistReviewResponseDTO.class))
+                .map(arRe -> modelMapper.map(arRe, ArtistReviewResponseDTO.class))
                 .collect(Collectors.toList());
     }
     public List<ArtistReviewResponseDTO> findByClienteId (Long clientId) throws ResourceNotFoundException {
@@ -52,7 +49,7 @@ public class ArtistReviewService {
             throw new ResourceNotFoundException("No artists reviews found for client id: " + clientId);
         }
         return artistReview.stream()
-                .map(ticket -> modelMapper.map(artistReview, ArtistReviewResponseDTO.class))
+                .map(arRe -> modelMapper.map(arRe, ArtistReviewResponseDTO.class))
                 .collect(Collectors.toList());
     }
 
