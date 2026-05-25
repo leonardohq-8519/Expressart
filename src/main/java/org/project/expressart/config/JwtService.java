@@ -3,6 +3,8 @@ package org.project.expressart.config;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.project.expressart.Usuario.domain.Usuario;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -11,32 +13,44 @@ import java.util.Date;
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY = "mi_clave_super_secreta_para_jwt_debe_ser_larga_123456789";
+    @Value("${jwt.secret}")
+    private String secretKey;
+
+    @Value("${jwt.expiration}")
+    private Long expiration;
 
     private Key getSigningKey() {
-        return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+        return Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
-    public String generateToken(String username) {
+    public String generateToken(Usuario user) {
         long now = System.currentTimeMillis();
         long expiration = now + 1000 * 60 * 60;
 
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(String.valueOf(user.getId()))
+                .claim("username", user.getUsername())
+                .claim("token_version", user.getToken())
                 .setIssuedAt(new Date(now))
-                .setExpiration(new Date(expiration))
+                .setExpiration(new Date(now + expiration))
                 .signWith(getSigningKey())
                 .compact();
     }
 
-    public String extractUsername(String token) {
-        return extractClaims(token).getSubject();
+    public Long extractUserId(String token){
+        return Long.parseLong(extractClaims(token).getSubject());
     }
 
-    public boolean isTokenValid(String token) {
+    public Integer extractTokenVersion(String token) {
+        return extractClaims(token).get("token_version", Integer.class);
+    }
+
+    public boolean isTokenValid(String token, Integer actualTokenVersion) {
         try {
             Claims claims = extractClaims(token);
-            return claims.getExpiration().after(new Date());
+            boolean notExpired = claims.getExpiration().after(new Date());
+            boolean validVersion = extractTokenVersion(token).equals(actualTokenVersion);
+            return notExpired && validVersion;
         } catch (Exception e) {
             return false;
         }

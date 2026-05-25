@@ -36,7 +36,7 @@ public class OAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         Usuario user = oAuthAccountService.processOAuthLogin(oAuth2User, provider);
 
         //TODO: Adaptar la parte de JWT para generar los tokens respecto a la entidad y no al username
-        String jwt = jwtService.generateToken(user.getUsername());
+        String jwt = jwtService.generateToken(user);
 
         String destinyUrl = UriComponentsBuilder.fromUriString(redirectUrl).queryParam("token", jwt).build().toUriString();
 

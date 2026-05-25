@@ -11,6 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ImagenPostResponseDTO {
     private Long id;
+    private Long postId;
     private String url;
     private Integer orden;
 }
