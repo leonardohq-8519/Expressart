@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.project.expressart.Mensaje.dto.MessageResponseDTO;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Getter
@@ -11,5 +12,7 @@ import java.util.List;
 public class ChatResponseDTO {
     private Long id;
     private Long ordenId;
+    private String redisChannel;
+    private ZonedDateTime fechaCreacion;
     private List<MessageResponseDTO> mensajes;
 }

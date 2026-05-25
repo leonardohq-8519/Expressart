@@ -17,5 +17,5 @@ public interface CategoriaRepository extends JpaRepository<Categoria, Long> {
 
     boolean existsByNombre(String nombre);
 
-    List<Categoria> findAllByArtistProfileId(Long id);
+    List<Categoria> findAllByArtistProfile_Id(Long id);
 }

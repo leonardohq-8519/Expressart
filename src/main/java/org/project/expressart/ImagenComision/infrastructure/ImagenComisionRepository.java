@@ -8,8 +8,8 @@ import java.util.List;
 
 @Repository
 public interface ImagenComisionRepository extends JpaRepository<ImagenComision, Long> {
-    List<ImagenComision> findByCommissionId(Long commissionId);
-    Boolean existsByCommissionId(Long commId);
-    void deleteByCommissionId(Long commId);
+    List<ImagenComision> findByComisionId(Long commissionId);
+    Boolean existsByComisionId(Long commId);
+    void deleteByComisionId(Long commId);
 
 }

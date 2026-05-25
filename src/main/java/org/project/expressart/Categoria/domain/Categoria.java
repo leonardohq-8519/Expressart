@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.project.expressart.PerfilArtista.domain.PerfilArtista;
 
 @Entity
 @Table(name = "categorias")
@@ -25,4 +26,8 @@ public class Categoria {
 
     @Column(name = "icono_url", length = 500)
     private String iconoUrl;
+
+    @ManyToOne
+    @JoinColumn(name = "perfil_artista_id")
+    private PerfilArtista artistProfile;
 }
