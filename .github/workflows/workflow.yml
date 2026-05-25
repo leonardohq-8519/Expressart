@@ -2,7 +2,7 @@ name: CI/CD con Maven
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main" , "services"]
   pull_request:
     branches: [ "main" ]
 
