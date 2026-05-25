@@ -1,5 +1,6 @@
 package org.project.expressart.Chat.domain;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.project.expressart.Chat.dto.ChatRequestDTO;
@@ -22,6 +23,8 @@ public class ChatService{
     private ModelMapper modelMapper;
     private final ChatRepository chatRepository;
     private final OrdenRepository orderRepository;
+
+
     public List<ChatResponseDTO> findAll(){
         Pageable pageable = PageRequest.of(0, 10);
         return chatRepository.findAllBy(pageable);
@@ -34,6 +37,7 @@ public class ChatService{
         Chat chat = chatRepository.findByOrderId(orderId).orElseThrow(()-> new ResourceNotFoundException("Chat not found"));
         return modelMapper.map(chat, ChatResponseDTO.class);
     }
+    @Transactional
     public ChatResponseDTO create(ChatRequestDTO request){
         Chat chat = new Chat();
         Orden order = orderRepository.findById(request.getOrdenId()).orElseThrow(() -> new EntityNotFoundException("Order not found"));

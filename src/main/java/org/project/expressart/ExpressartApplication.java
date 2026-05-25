@@ -14,8 +14,4 @@ public class ExpressartApplication {
         SpringApplication.run(ExpressartApplication.class, args);
     }
 
-    @Bean
-    public ModelMapper modelMapper(){
-        return new ModelMapper();
-    }
 }

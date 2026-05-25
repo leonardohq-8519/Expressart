@@ -2,10 +2,10 @@ package org.project.expressart.Notificacion.domain;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.project.expressart.Notificacion.application.dto.MarcarLeidaDTO;
-import org.project.expressart.Notificacion.application.dto.NotificacionCountDTO;
-import org.project.expressart.Notificacion.application.dto.NotificacionCreateDTO;
-import org.project.expressart.Notificacion.application.dto.NotificacionResponseDTO;
+import org.project.expressart.Notificacion.dto.MarcarLeidaDTO;
+import org.project.expressart.Notificacion.dto.NotificacionCountDTO;
+import org.project.expressart.Notificacion.dto.NotificacionCreateDTO;
+import org.project.expressart.Notificacion.dto.NotificacionResponseDTO;
 import org.project.expressart.Notificacion.infrastructure.NotificacionRepository;
 import org.project.expressart.Usuario.domain.Usuario;
 import org.project.expressart.Usuario.infrastructure.UsuarioRepository;
@@ -26,7 +26,7 @@ public class NotificationServiceTest {
 
     @Transactional(readOnly = true)
     public List<NotificacionResponseDTO> getByUsuario(Long usuarioId) {
-        return notificationRepository.findByUsuarioUsuarioId(usuarioId).stream()
+        return notificationRepository.findByUsuarioId(usuarioId).stream()
                 .map(notificacion -> modelMapper.map(notificacion, NotificacionResponseDTO.class))
                 .collect(Collectors.toList());
     }
@@ -40,7 +40,7 @@ public class NotificationServiceTest {
 
     @Transactional(readOnly = true)
     public NotificacionCountDTO countNoLeidas(Long usuarioId) {
-        long count = notificationRepository.countByUsuarioUsuarioIdAndLeida(usuarioId, false);
+        long count = notificationRepository.countByUsuarioIdAndLeida(usuarioId, false);
         NotificacionCountDTO dto = new NotificacionCountDTO();
         dto.setUsuarioId(usuarioId);
         dto.setNoLeidas(count);

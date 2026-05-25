@@ -23,5 +23,5 @@ public interface NotificacionCorreoRepository extends JpaRepository<Notificacion
 
     List<NotificacionCorreo> findCorreosPendientesDeReintento(@Param("maxIntentos") Integer maxIntentos);
 
-    List<NotificacionCorreo> findByUserId(Long userId);
+    List<NotificacionCorreo> findByUsuario_Id(Long userId);
 }

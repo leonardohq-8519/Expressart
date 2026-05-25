@@ -2,7 +2,8 @@ CREATE TABLE categorias (
     id BIGSERIAL PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL UNIQUE,
     descripcion TEXT,
-    icono_url VARCHAR(500)
+    icono_url VARCHAR(500),
+    perfil_artista_id BIGINT NOT NULL REFERENCES perfiles_artista(id)
     );
 
 CREATE TABLE tags (

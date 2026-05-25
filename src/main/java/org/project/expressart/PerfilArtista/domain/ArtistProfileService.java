@@ -55,7 +55,7 @@ public class ArtistProfileService {
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
         updArtistProfile.setUsuario(user);
         List<Long> categoriaIds = request.getCategoriaIds();
-        List<Categoria> categories = categoryRepository.findAllByArtistProfileId(profId);
+        List<Categoria> categories = categoryRepository.findAllByArtistProfile_Id(profId);
         if (categories.size() != categoriaIds.size())
             throw new EntityNotFoundException("Not all categories were found");
         updArtistProfile.setCategorias(categories);

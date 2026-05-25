@@ -30,7 +30,7 @@ public class EmailNotificationService {
     private final UsuarioRepository userRepository;
 
     public List<NotificacionCorreoResponseDTO> getByUser(Long userId) throws ResourceNotFoundException {
-        List<NotificacionCorreo> emailNotif = emailNotificationRepository.findByUserId(userId);
+        List<NotificacionCorreo> emailNotif = emailNotificationRepository.findByUsuario_Id(userId);
         if (emailNotif.isEmpty()) {
             throw new ResourceNotFoundException("No email notifications found for user id: " + userId);
         }
