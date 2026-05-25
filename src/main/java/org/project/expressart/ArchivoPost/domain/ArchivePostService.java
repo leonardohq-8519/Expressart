@@ -8,8 +8,6 @@ import org.project.expressart.ArchivoPost.dto.ArchivoPostUpdateDTO;
 import org.project.expressart.ArchivoPost.infrastructure.ArchivoPostRepository;
 import org.project.expressart.Post.domain.Post;
 import org.project.expressart.Post.infrastructure.PostRepository;
-import org.project.expressart.ResenaArtista.domain.ResenaArtista;
-import org.project.expressart.ResenaArtista.dto.ArtistReviewResponseDTO;
 import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +30,7 @@ public class ArchivePostService {
             throw new ResourceNotFoundException("No post archives found for post id: " + postId);
         }
         return postArchive.stream()
-                .map(ticket -> modelMapper.map(postArchive, ArchivoPostResponseDTO.class))
+                .map(pA -> modelMapper.map(pA, ArchivoPostResponseDTO.class))
                 .collect(Collectors.toList());
     }
 

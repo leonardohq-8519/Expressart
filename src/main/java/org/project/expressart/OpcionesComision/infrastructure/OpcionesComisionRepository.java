@@ -4,12 +4,13 @@ import org.project.expressart.OpcionesComision.domain.OpcionesComision;
 import org.project.expressart.OpcionesComision.dto.CommissionOptionsResponseDTO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
+@Repository
 public interface OpcionesComisionRepository extends JpaRepository<OpcionesComision, Long> {
-    List<OpcionesComision> findAllBy(Pageable pageable);
+    List<CommissionOptionsResponseDTO> findAllBy(Pageable pageable);
     List<OpcionesComision> findByComisionId(Long commissionId);
 
 }

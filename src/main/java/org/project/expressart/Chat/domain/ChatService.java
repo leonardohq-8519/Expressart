@@ -7,7 +7,7 @@ import org.project.expressart.Chat.dto.ChatResponseDTO;
 import org.project.expressart.Chat.infrastructure.ChatRepository;
 import org.project.expressart.Orden.domain.Orden;
 import org.project.expressart.Orden.infrastructure.OrdenRepository;
-import org.project.expressart.exception.ResourceNotFoundException;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

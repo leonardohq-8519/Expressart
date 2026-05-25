@@ -33,7 +33,7 @@ public class NotificationServiceTest {
 
     @Transactional(readOnly = true)
     public List<NotificacionResponseDTO> getNoLeidas(Long usuarioId) {
-        return notificationRepository.findByUsuarioUsuarioIdAndLeida(usuarioId, false).stream()
+        return notificationRepository.findByUsuarioIdAndLeida(usuarioId, false).stream()
                 .map(notificacion -> modelMapper.map(notificacion, NotificacionResponseDTO.class))
                 .collect(Collectors.toList());
     }
@@ -74,7 +74,7 @@ public class NotificationServiceTest {
 
     @Transactional
     public void marcarTodasLeidas(Long usuarioId) {
-        List<Notificacion> noLeidas = notificationRepository.findByUsuarioUsuarioIdAndLeida(usuarioId, false);
+        List<Notificacion> noLeidas = notificationRepository.findByUsuarioIdAndLeida(usuarioId, false);
         if (!noLeidas.isEmpty()) {
             noLeidas.forEach(notificacion -> {
                 notificacion.setLeida(true);

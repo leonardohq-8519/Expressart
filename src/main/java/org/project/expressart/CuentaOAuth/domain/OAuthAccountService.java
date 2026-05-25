@@ -7,9 +7,9 @@ import org.project.expressart.PerfilCliente.domain.PerfilCliente;
 import org.project.expressart.PerfilCliente.infrastructure.PerfilClienteRepository;
 import org.project.expressart.Usuario.domain.Usuario;
 import org.project.expressart.Usuario.infrastructure.UsuarioRepository;
-import org.project.expressart.CuentaOAuth.application.dto.CuentaOAuthCreateDTO;
-import org.project.expressart.CuentaOAuth.application.dto.CuentaOAuthResponseDTO;
-import org.project.expressart.CuentaOAuth.application.dto.CuentaOAuthUpdateDTO;
+import org.project.expressart.CuentaOAuth.dto.CuentaOAuthCreateDTO;
+import org.project.expressart.CuentaOAuth.dto.CuentaOAuthResponseDTO;
+import org.project.expressart.CuentaOAuth.dto.CuentaOAuthUpdateDTO;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 

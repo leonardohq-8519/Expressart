@@ -2,9 +2,11 @@ package org.project.expressart.ImagenPost.infrastructure;
 
 import org.project.expressart.ImagenPost.domain.ImagenPost;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface ImagenPostRepository extends JpaRepository<ImagenPost, Long> {
 
     List<ImagenPost> findByPostId(Long postId);
@@ -14,5 +16,4 @@ public interface ImagenPostRepository extends JpaRepository<ImagenPost, Long> {
     void deleteByPostId(Long postId);
 
     long countByPostId(Long postId);
-    Boolean existsByPostId(Long postId);
 }

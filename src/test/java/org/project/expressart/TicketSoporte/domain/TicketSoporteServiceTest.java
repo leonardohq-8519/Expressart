@@ -10,7 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.project.expressart.TicketSoporte.infrastructure.TicketSoporteRepository;
 import org.project.expressart.TicketSoporte.dto.SupportTicketRequestDTO;
 import org.project.expressart.TicketSoporte.dto.SupportTicketResponseDTO;
-import org.project.expressart.exception.ResourceNotFoundException;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 
 import java.util.Optional;
 

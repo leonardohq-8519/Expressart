@@ -2,7 +2,6 @@ package org.project.expressart.ImagenComision.application;
 
 import lombok.RequiredArgsConstructor;
 import org.project.expressart.ImagenComision.domain.CommissionPictureService;
-import org.project.expressart.ImagenComision.dto.ImagenComisionCreateDTO;
 import org.project.expressart.ImagenComision.dto.ImagenComisionResponseDTO;
 import org.project.expressart.ImagenComision.dto.ImagenComisionUpdateDTO;
 import org.project.expressart.exceptions.ResourceNotFoundException;

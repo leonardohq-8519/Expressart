@@ -9,7 +9,7 @@ import org.project.expressart.ResenaArtista.dto.ArtistReviewResponseDTO;
 import org.project.expressart.ResenaArtista.infrastructure.ResenaArtistaRepository;
 import org.project.expressart.Usuario.domain.Usuario;
 import org.project.expressart.Usuario.infrastructure.UsuarioRepository;
-import org.project.expressart.exception.ResourceNotFoundException;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

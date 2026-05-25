@@ -2,15 +2,14 @@ package org.project.expressart.RedSocialArtista.infrastructure;
 
 import org.project.expressart.RedSocialArtista.domain.RedSocialArtista;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
+@Repository
 public interface RedSocialArtistaRepository extends JpaRepository<RedSocialArtista, Long> {
 
     List<RedSocialArtista> findByPerfilArtistaId(Long perfilArtistaId);
-
-    Optional<RedSocialArtista> findByPerfilArtistaIdAndPlataforma(Long perfilArtistaId, String plataforma);
 
     void deleteByPerfilArtistaId(Long perfilArtistaId);
     Boolean existsByPerfilArtista(Long perfilArtistaId);

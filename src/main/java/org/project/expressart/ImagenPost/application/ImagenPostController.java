@@ -2,7 +2,6 @@ package org.project.expressart.ImagenPost.application;
 
 import lombok.RequiredArgsConstructor;
 import org.project.expressart.ImagenPost.domain.PostPictureService;
-import org.project.expressart.ImagenPost.dto.ImagenPostCreateDTO;
 import org.project.expressart.ImagenPost.dto.ImagenPostResponseDTO;
 import org.project.expressart.ImagenPost.dto.ImagenPostUpdateDTO;
 import org.project.expressart.exceptions.ResourceNotFoundException;

@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.project.expressart.PerfilArtista.domain.PerfilArtista;
-import org.project.expressart.PerfilCliente.domain.PerfilCliente;
 
 @Entity
 @Table(

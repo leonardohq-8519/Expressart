@@ -4,7 +4,7 @@ import org.project.expressart.Pago.domain.PaymentService;
 import org.project.expressart.Pago.dto.PaymentRequestDTO;
 import org.project.expressart.Pago.dto.PaymentResponseDTO;
 import org.project.expressart.Pago.domain.EstadoPago;
-import org.project.expressart.exception.ResourceNotFoundException;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

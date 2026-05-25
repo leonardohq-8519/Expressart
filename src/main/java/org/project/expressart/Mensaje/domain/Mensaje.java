@@ -56,16 +56,4 @@ public class Mensaje {
     protected void onCreate(){
         this.fechaEnvio = ZonedDateTime.now();
     }
-
-    /*
-    id del mensaje
-    id del chat
-    id del que envia
-    id del receptor
-    string texto
-    archivos
-    fueleido?
-    fecha de envio
-    entregafinal?
-     */
 }

@@ -98,7 +98,7 @@ public class EmailNotificationService {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(emailNotif.getDestinatarioEmail());
             message.setSubject(emailNotif.getAsunto());
-            message.setFrom("notifications@gmail.com");
+            message.setFrom("notifications.expressart@gmail.com");
             message.setText(emailNotif.getMensaje());
             mailSender.send(message);
             emailNotif.setEstado(EstadoCorreo.ENVIADO);

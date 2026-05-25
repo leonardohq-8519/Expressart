@@ -4,7 +4,7 @@ import org.apache.coyote.BadRequestException;
 import org.project.expressart.Usuario.domain.UserService;
 import org.project.expressart.Usuario.dto.UserRequestDTO;
 import org.project.expressart.Usuario.dto.UserResponseDTO;
-import org.project.expressart.exception.ResourceNotFoundException;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

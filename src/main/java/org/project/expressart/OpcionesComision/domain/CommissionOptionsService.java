@@ -8,7 +8,7 @@ import org.project.expressart.Comision.infrastructure.ComisionRepository;
 import org.project.expressart.OpcionesComision.dto.CommissionOptionsRequestDTO;
 import org.project.expressart.OpcionesComision.dto.CommissionOptionsResponseDTO;
 import org.project.expressart.OpcionesComision.infrastructure.OpcionesComisionRepository;
-import org.project.expressart.exception.ResourceNotFoundException;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,10 +26,7 @@ public class CommissionOptionsService {
 
     public List<CommissionOptionsResponseDTO> findAll(){
         Pageable pageable = PageRequest.of(0, 10);
-        List<OpcionesComision> listaEntidades = commissionOptionsRepository.findAllBy(pageable);
-        return listaEntidades.stream()
-                .map(opcion -> modelMapper.map(opcion, CommissionOptionsResponseDTO.class))
-                .collect(Collectors.toList());
+        return commissionOptionsRepository.findAllBy(pageable);
     }
 
     public CommissionOptionsResponseDTO findById (Long id) throws ResourceNotFoundException {
@@ -44,7 +41,7 @@ public class CommissionOptionsService {
             throw new ResourceNotFoundException("No commission options found for commission id: " + commissionId);
         }
         return commOptions.stream()
-                .map(ticket -> modelMapper.map(ticket, CommissionOptionsResponseDTO.class)) // ¡Corregido!
+                .map(ticket -> modelMapper.map(ticket, CommissionOptionsResponseDTO.class))
                 .collect(Collectors.toList());
     }
 

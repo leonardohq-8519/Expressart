@@ -8,7 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.project.expressart.Usuario.dto.UserRequestDTO;
 import org.project.expressart.Usuario.dto.UserResponseDTO;
 import org.project.expressart.Usuario.infrastructure.UsuarioRepository;
-import org.project.expressart.exception.ResourceNotFoundException;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

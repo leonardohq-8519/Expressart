@@ -8,7 +8,7 @@ import org.project.expressart.PerfilCliente.dto.ClientProfileResponseDTO;
 import org.project.expressart.PerfilCliente.infrastructure.PerfilClienteRepository;
 import org.project.expressart.Usuario.domain.Usuario;
 import org.project.expressart.Usuario.infrastructure.UsuarioRepository;
-import org.project.expressart.exception.ResourceNotFoundException;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

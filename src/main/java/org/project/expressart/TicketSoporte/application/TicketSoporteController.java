@@ -6,7 +6,7 @@ import org.project.expressart.TicketSoporte.dto.SupportTicketRequestDTO;
 import org.project.expressart.TicketSoporte.dto.SupportTicketResponseDTO;
 import org.project.expressart.TicketSoporte.domain.CategoriaTicket;
 import org.project.expressart.TicketSoporte.domain.EstadoTicket;
-import org.project.expressart.exception.ResourceNotFoundException;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

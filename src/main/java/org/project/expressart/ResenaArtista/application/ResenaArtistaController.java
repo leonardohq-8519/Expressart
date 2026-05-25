@@ -3,7 +3,7 @@ package org.project.expressart.ResenaArtista.application;
 import org.project.expressart.ResenaArtista.domain.ArtistReviewService;
 import org.project.expressart.ResenaArtista.dto.ArtistReviewRequestDTO;
 import org.project.expressart.ResenaArtista.dto.ArtistReviewResponseDTO;
-import org.project.expressart.exception.ResourceNotFoundException;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

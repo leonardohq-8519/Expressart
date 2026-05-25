@@ -1,4 +1,4 @@
-package org.project.expressart.RedSocialArtista.application.dto;
+package org.project.expressart.RedSocialArtista.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RedSocialArtistaUpdateDTO {
+public class RedSocialArtistaCreateDTO {
+    private Long perfilArtistaId;
+    private String plataforma;
     private String url;
 }

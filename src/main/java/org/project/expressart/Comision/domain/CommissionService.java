@@ -1,5 +1,4 @@
 package org.project.expressart.Comision.domain;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.project.expressart.Categoria.domain.Categoria;
@@ -9,8 +8,6 @@ import org.project.expressart.Comision.dto.CommissionResponseDTO;
 import org.project.expressart.Comision.infrastructure.ComisionRepository;
 import org.project.expressart.PerfilArtista.domain.PerfilArtista;
 import org.project.expressart.PerfilArtista.infrastructure.PerfilArtistaRepository;
-import org.project.expressart.Post.domain.Post;
-import org.project.expressart.Post.dto.PostResponseDTO;
 import org.project.expressart.Tags.domain.Tags;
 import org.project.expressart.Tags.infrastructure.TagsRepository;
 import org.project.expressart.exceptions.InvalidStateTransitionException;

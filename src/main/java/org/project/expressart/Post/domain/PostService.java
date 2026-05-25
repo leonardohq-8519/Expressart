@@ -12,7 +12,7 @@ import org.project.expressart.Post.dto.PostResponseDTO;
 import org.project.expressart.Post.infrastructure.PostRepository;
 import org.project.expressart.Tags.domain.Tags;
 import org.project.expressart.Tags.infrastructure.TagsRepository;
-import org.project.expressart.exception.ResourceNotFoundException;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

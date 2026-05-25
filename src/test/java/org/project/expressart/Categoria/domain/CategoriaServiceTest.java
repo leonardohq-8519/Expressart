@@ -10,7 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.project.expressart.Categoria.dto.CategoryRequestDTO;
 import org.project.expressart.Categoria.dto.CategoryResponseDTO;
 import org.project.expressart.Categoria.infrastructure.CategoriaRepository;
-import org.project.expressart.exception.ResourceNotFoundException;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 

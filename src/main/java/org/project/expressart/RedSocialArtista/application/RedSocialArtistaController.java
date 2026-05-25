@@ -1,9 +1,9 @@
 package org.project.expressart.RedSocialArtista.application;
 
 import lombok.RequiredArgsConstructor;
-import org.project.expressart.RedSocialArtista.application.dto.RedSocialArtistaCreateDTO;
-import org.project.expressart.RedSocialArtista.application.dto.RedSocialArtistaResponseDTO;
-import org.project.expressart.RedSocialArtista.application.dto.RedSocialArtistaUpdateDTO;
+import org.project.expressart.RedSocialArtista.dto.RedSocialArtistaCreateDTO;
+import org.project.expressart.RedSocialArtista.dto.RedSocialArtistaResponseDTO;
+import org.project.expressart.RedSocialArtista.dto.RedSocialArtistaUpdateDTO;
 import org.project.expressart.RedSocialArtista.domain.ArtistSocialMediaService;
 import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;

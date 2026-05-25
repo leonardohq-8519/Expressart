@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.project.expressart.Categoria.domain.Categoria;
 import org.project.expressart.Categoria.infrastructure.CategoriaRepository;
-import org.project.expressart.Orden.domain.Orden;
 import org.project.expressart.PerfilArtista.dto.ArtistProfileRequestDTO;
 import org.project.expressart.PerfilArtista.dto.ArtistProfileResponseDTO;
 import org.project.expressart.PerfilArtista.infrastructure.PerfilArtistaRepository;

@@ -8,7 +8,6 @@ import lombok.Setter;
 import org.project.expressart.Mensaje.domain.Mensaje;
 import org.project.expressart.Orden.domain.Orden;
 
-import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;

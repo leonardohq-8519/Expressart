@@ -44,7 +44,6 @@ public class Portafolio {
     @Column(name = "fecha_creacion", nullable = false, updatable = false)
     private ZonedDateTime fechaCreacion;
 
-    // 1 a N con los posts
     @OneToMany(mappedBy = "portafolio", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
 

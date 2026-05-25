@@ -36,7 +36,7 @@ class NotificacionRepositoryTest {
     }
 
     @Test
-    void findByUsuarioUsuarioIdAndLeida_DebeRetornarSoloRegistrosCorrespondientes() {
+    void findByUsuarioIdAndLeida_DebeRetornarSoloRegistrosCorrespondientes() {
         Usuario usuarioGuardado = crearUsuarioDePrueba();
 
         Notificacion n1 = new Notificacion();
@@ -60,7 +60,7 @@ class NotificacionRepositoryTest {
         entityManager.flush();
 
         // Se asume que en Usuario el identificador es 'usuarioId'
-        List<Notificacion> noLeidas = notificacionRepository.findByUsuarioUsuarioIdAndLeida(usuarioGuardado.getUsuarioId(), false);
+        List<Notificacion> noLeidas = notificacionRepository.findByUsuarioIdAndLeida(usuarioGuardado.getId(), false);
 
         assertThat(noLeidas).hasSize(1);
         assertThat(noLeidas.getFirst().getTitulo()).isEqualTo("Notificacion 1");
@@ -79,7 +79,7 @@ class NotificacionRepositoryTest {
         n1.setFechaCreacion(ZonedDateTime.now());
         entityManager.persistAndFlush(n1);
 
-        long totalNoLeidas = notificacionRepository.countByUsuarioUsuarioIdAndLeida(usuarioGuardado.getUsuarioId(), false);
+        long totalNoLeidas = notificacionRepository.countByUsuarioIdAndLeida(usuarioGuardado.getId(), false);
 
         assertThat(totalNoLeidas).isEqualTo(1L);
     }

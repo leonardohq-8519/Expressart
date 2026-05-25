@@ -8,7 +8,6 @@ import org.project.expressart.Notificacion.dto.NotificacionCountDTO;
 import org.project.expressart.Notificacion.dto.NotificacionCreateDTO;
 import org.project.expressart.Notificacion.dto.NotificacionResponseDTO;
 import org.project.expressart.Notificacion.infrastructure.NotificacionRepository;
-import org.project.expressart.Post.domain.Post;
 import org.project.expressart.Usuario.domain.Usuario;
 import org.project.expressart.Usuario.infrastructure.UsuarioRepository;
 import org.project.expressart.exceptions.ResourceNotFoundException;

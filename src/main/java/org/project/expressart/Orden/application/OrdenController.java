@@ -4,7 +4,7 @@ import org.project.expressart.Orden.domain.OrderService;
 import org.project.expressart.Orden.dto.OrderRequestDTO;
 import org.project.expressart.Orden.dto.OrderResponseDTO;
 import org.project.expressart.Orden.domain.EstadoOrden;
-import org.project.expressart.exception.ResourceNotFoundException;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

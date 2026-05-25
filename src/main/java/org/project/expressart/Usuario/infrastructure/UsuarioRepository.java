@@ -1,7 +1,6 @@
 package org.project.expressart.Usuario.infrastructure;
 
 import org.project.expressart.Usuario.domain.Usuario;
-import org.project.expressart.Usuario.dto.UserResponseDTO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

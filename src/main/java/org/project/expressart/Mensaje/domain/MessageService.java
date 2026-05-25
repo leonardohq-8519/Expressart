@@ -7,10 +7,9 @@ import org.project.expressart.Chat.infrastructure.ChatRepository;
 import org.project.expressart.Mensaje.dto.MessageRequestDTO;
 import org.project.expressart.Mensaje.dto.MessageResponseDTO;
 import org.project.expressart.Mensaje.infrastructure.MensajeRepository;
-import org.project.expressart.ResenaArtista.dto.ArtistReviewResponseDTO;
 import org.project.expressart.Usuario.domain.Usuario;
 import org.project.expressart.Usuario.infrastructure.UsuarioRepository;
-import org.project.expressart.exception.ResourceNotFoundException;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -44,7 +43,7 @@ public class MessageService{
             throw new ResourceNotFoundException("No messages found for chat id: " + chatId);
         }
         return message.stream()
-                .map(ticket -> modelMapper.map(message, MessageResponseDTO.class))
+                .map(m -> modelMapper.map(m, MessageResponseDTO.class))
                 .collect(Collectors.toList());
     }
     public MessageResponseDTO create(MessageRequestDTO request){

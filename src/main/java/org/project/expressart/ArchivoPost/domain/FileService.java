@@ -1,7 +1,5 @@
 package org.project.expressart.ArchivoPost.domain;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.project.expressart.ArchivoPost.infrastructure.ArchivoPostRepository;
 import org.project.expressart.exceptions.InvalidFileException;
 import org.project.expressart.exceptions.S3Exception;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +18,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class FileService {
-
+    @Autowired(required = false)
     private final S3Client s3Client;
 
     @Value("${aws.s3.bucket}")

@@ -10,6 +10,6 @@ public class TicketSupportListener {
     @Async
     @EventListener
     public void onTicketCreated(TicketCreatedEvent event) {
-        System.out.println("ASYNCHRONOUS LOG: Alert sent to moderators for ticket ID: " + event.id());
+        System.out.println("TICKET CREATED: Alert sent to moderators for ticket ID: " + event.id());
     }
 }

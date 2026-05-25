@@ -3,7 +3,7 @@ package org.project.expressart.OpcionesComision.application;
 import org.project.expressart.OpcionesComision.domain.CommissionOptionsService;
 import org.project.expressart.OpcionesComision.dto.CommissionOptionsRequestDTO;
 import org.project.expressart.OpcionesComision.dto.CommissionOptionsResponseDTO;
-import org.project.expressart.exception.ResourceNotFoundException;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

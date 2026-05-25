@@ -4,7 +4,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.project.expressart.ArchivoPost.domain.FileService;
-import org.project.expressart.ImagenPost.dto.ImagenPostCreateDTO;
 import org.project.expressart.ImagenPost.dto.ImagenPostResponseDTO;
 import org.project.expressart.ImagenPost.dto.ImagenPostUpdateDTO;
 import org.project.expressart.ImagenPost.infrastructure.ImagenPostRepository;

@@ -1,4 +1,4 @@
-package org.project.expressart.RedSocialArtista.application.dto;
+package org.project.expressart.RedSocialArtista.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
