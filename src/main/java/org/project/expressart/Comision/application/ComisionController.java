@@ -63,7 +63,7 @@ public class ComisionController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id)throws ResourceNotFoundException {
         commissionService.delete(id);
         return ResponseEntity.noContent().build();
     }

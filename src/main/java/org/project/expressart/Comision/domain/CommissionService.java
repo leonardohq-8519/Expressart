@@ -13,7 +13,9 @@ import org.project.expressart.Post.domain.Post;
 import org.project.expressart.Post.dto.PostResponseDTO;
 import org.project.expressart.Tags.domain.Tags;
 import org.project.expressart.Tags.infrastructure.TagsRepository;
+import org.project.expressart.exceptions.InvalidStateTransitionException;
 import org.project.expressart.exceptions.ResourceNotFoundException;
+import org.project.expressart.exceptions.UnauthorizedActionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,13 +29,10 @@ import java.util.stream.Collectors;
 public class CommissionService{
     @Autowired
     private ModelMapper modelMapper;
-    @Autowired
     private final ComisionRepository commissionRepository;
-    @Autowired
+
     private final PerfilArtistaRepository artistProfileRepository;
-    @Autowired
     private final CategoriaRepository categoryRepository;
-    @Autowired
     private final TagsRepository tagsRepository;
     public List<CommissionResponseDTO> findAll(){
         Pageable pageable = PageRequest.of(0, 10);
@@ -51,7 +50,7 @@ public class CommissionService{
             throw new ResourceNotFoundException("No commissions found for category id: " + categoryId);
         }
         return commission.stream()
-                .map(ticket -> modelMapper.map(commission, CommissionResponseDTO.class))
+                .map(c -> modelMapper.map(c, CommissionResponseDTO.class))
                 .collect(Collectors.toList());
     }
 
@@ -61,7 +60,7 @@ public class CommissionService{
             throw new ResourceNotFoundException("No commissions found for artist id: " + artistaId);
         }
         return commission.stream()
-                .map(ticket -> modelMapper.map(commission, CommissionResponseDTO.class))
+                .map(c -> modelMapper.map(c, CommissionResponseDTO.class))
                 .collect(Collectors.toList());
     }
     public List<CommissionResponseDTO> findByPerfilArtistaIdAndEstaActiva (Long artistaId, Boolean status)throws ResourceNotFoundException{
@@ -70,7 +69,7 @@ public class CommissionService{
             throw new ResourceNotFoundException("No active commissions found for artist id: " + artistaId);
         }
         return commission.stream()
-                .map(ticket -> modelMapper.map(commission, CommissionResponseDTO.class))
+                .map(c -> modelMapper.map(c, CommissionResponseDTO.class))
                 .collect(Collectors.toList());
     }
     public List<CommissionResponseDTO> findByTagsId (Long tagId)throws ResourceNotFoundException{
@@ -79,14 +78,14 @@ public class CommissionService{
             throw new ResourceNotFoundException("No commissions found for tag id: " + tagId);
         }
         return commission.stream()
-                .map(ticket -> modelMapper.map(commission, CommissionResponseDTO.class))
+                .map(c -> modelMapper.map(c, CommissionResponseDTO.class))
                 .collect(Collectors.toList());
     }
 
 
     public CommissionResponseDTO create(CommissionRequestDTO request)throws ResourceNotFoundException{
         Comision commission = new Comision();
-        PerfilArtista artistProfile = artistProfileRepository.findById(request.getPerfilArtistaId()).orElseThrow(() -> new EntityNotFoundException("Artist profile not found"));
+        PerfilArtista artistProfile = artistProfileRepository.findById(request.getPerfilArtistaId()).orElseThrow(() -> new ResourceNotFoundException("Artist profile not found"));
         commission.setPerfilArtista(artistProfile);
         commission.setTitulo(request.getTitulo());
         commission.setDescripcion(request.getDescripcion());
@@ -95,13 +94,13 @@ public class CommissionService{
         List<Long> categoriaIds = request.getCategoriaIds();
         List<Categoria> categories = categoryRepository.findAllById(categoriaIds);
         if (categories.size() != categoriaIds.size()) {
-            throw new EntityNotFoundException("Not all categories were found");
+            throw new ResourceNotFoundException("Not all categories were found");
         }
         commission.setCategorias(categories);
         List<Long> tagsIds = request.getTagIds();
         List<Tags> tags = tagsRepository.findAllById(tagsIds);
         if (tags.size() != tagsIds.size()) {
-            throw new EntityNotFoundException("Not all tags were found");
+            throw new ResourceNotFoundException("Not all tags were found");
         }
         commission.setTags(tags);
         commissionRepository.save(commission);
@@ -109,9 +108,20 @@ public class CommissionService{
     }
     public CommissionResponseDTO  update (Long id, CommissionRequestDTO request)throws ResourceNotFoundException{
         Comision updatedCommission = commissionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Commission not found"));
-        PerfilArtista artistProfile = artistProfileRepository.findById(request.getPerfilArtistaId()).orElseThrow(() -> new EntityNotFoundException("Artist profile not found"));
+        PerfilArtista artistProfile = artistProfileRepository.findById(request.getPerfilArtistaId()).orElseThrow(() -> new ResourceNotFoundException("Artist profile not found"));
         if (request.getPerfilArtistaId() != null)
             updatedCommission.setPerfilArtista(artistProfile);
+
+        if (request.getPerfilArtistaId() != null && !updatedCommission.getPerfilArtista().getId().equals(request.getPerfilArtistaId())) {
+            throw new UnauthorizedActionException("You are not authorized to transfer this commission to another artist profile.");
+        }
+
+        if (updatedCommission.getEstaActiva() && !request.getEstaActiva()) {
+            if (!updatedCommission.getImagenes().isEmpty()) {
+                throw new InvalidStateTransitionException("You cannot deactivate or cancel a commission that already has progress images");
+            }
+        }
+
         if (request.getTitulo() != null && !request.getTitulo().isEmpty())
             updatedCommission.setTitulo(request.getTitulo());
         updatedCommission.setDescripcion(request.getDescripcion());
@@ -120,23 +130,23 @@ public class CommissionService{
         List<Long> categoriaIds = request.getCategoriaIds();
         List<Categoria> categories = categoryRepository.findAllById(categoriaIds);
         if (categories.size() != categoriaIds.size()) {
-            throw new EntityNotFoundException("Not all categories were found");
+            throw new ResourceNotFoundException("Not all categories were found");
         }
         updatedCommission.setCategorias(categories);
         List<Long> tagsIds = request.getTagIds();
         List<Tags> tags = tagsRepository.findAllById(tagsIds);
         if (tags.size() != tagsIds.size()) {
-            throw new EntityNotFoundException("Not all tags were found");
+            throw new ResourceNotFoundException("Not all tags were found");
         }
         updatedCommission.setTags(tags);
         commissionRepository.save(updatedCommission);
         return modelMapper.map(updatedCommission, CommissionResponseDTO.class);
     }
-    public void delete (Long id){
+    public void delete (Long id) throws ResourceNotFoundException {
         if (commissionRepository.existsById(id))
             commissionRepository.deleteById(id);
         else
-            throw new EntityNotFoundException("Commission with ID " + id + " doesn't exist");
+            throw new ResourceNotFoundException("Commission with ID " + id + " doesn't exist");
     }
 
 }
