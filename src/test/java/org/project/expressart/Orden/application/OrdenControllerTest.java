@@ -67,7 +67,7 @@ class OrdenControllerTest {
     }
 
     @Test
-    void getAll_debeRetornar200() throws Exception {
+    void shouldReturn200_WhenGetAllIsCalled() throws Exception {
         when(orderService.findAll()).thenReturn(List.of(responseDTO));
 
         mockMvc.perform(get("/orders"))
@@ -76,7 +76,7 @@ class OrdenControllerTest {
     }
 
     @Test
-    void getById_debeRetornar200_cuandoExiste() throws Exception {
+    void shouldReturn200_WhenGetByIdFindsExistingOrder() throws Exception {
         when(orderService.findById(1L)).thenReturn(responseDTO);
 
         mockMvc.perform(get("/orders/1"))
@@ -85,7 +85,7 @@ class OrdenControllerTest {
     }
 
     @Test
-    void getByCliente_debeRetornar200() throws Exception {
+    void shouldReturn200_WhenGetByClienteIsCalled() throws Exception {
         when(orderService.findByClienteId(3L)).thenReturn(List.of(responseDTO));
 
         mockMvc.perform(get("/orders/client/3"))
@@ -94,7 +94,7 @@ class OrdenControllerTest {
     }
 
     @Test
-    void getByArtista_debeRetornar200() throws Exception {
+    void shouldReturn200_WhenGetByArtistaIsCalled() throws Exception {
         when(orderService.findByArtistaId(2L)).thenReturn(List.of(responseDTO));
 
         mockMvc.perform(get("/orders/artist/2"))
@@ -103,7 +103,7 @@ class OrdenControllerTest {
     }
 
     @Test
-    void getByClienteAndEstado_debeRetornar200() throws Exception {
+    void shouldReturn200_WhenGetByClienteAndEstadoIsCalled() throws Exception {
         when(orderService.findByClienteIdAndEstado(3L, EstadoOrden.PENDIENTE)).thenReturn(List.of(responseDTO));
 
         mockMvc.perform(get("/orders/client/3/status/PENDIENTE"))
@@ -111,7 +111,7 @@ class OrdenControllerTest {
     }
 
     @Test
-    void getByArtistaAndEstado_debeRetornar200() throws Exception {
+    void shouldReturn200_WhenGetByArtistaAndEstadoIsCalled() throws Exception {
         when(orderService.findByArtistaIdAndEstado(2L, EstadoOrden.PENDIENTE)).thenReturn(List.of(responseDTO));
 
         mockMvc.perform(get("/orders/artist/2/status/PENDIENTE"))
@@ -119,7 +119,7 @@ class OrdenControllerTest {
     }
 
     @Test
-    void create_debeRetornar201() throws Exception {
+    void shouldReturn201_WhenOrderIsCreatedSuccessfully() throws Exception {
         when(orderService.create(any(OrderRequestDTO.class))).thenReturn(responseDTO);
 
         mockMvc.perform(post("/orders")
@@ -130,7 +130,7 @@ class OrdenControllerTest {
     }
 
     @Test
-    void update_debeRetornar200() throws Exception {
+    void shouldReturn200_WhenOrderIsUpdatedSuccessfully() throws Exception {
         when(orderService.update(eq(1L), any(OrderRequestDTO.class))).thenReturn(responseDTO);
 
         mockMvc.perform(put("/orders/1")
@@ -140,7 +140,7 @@ class OrdenControllerTest {
     }
 
     @Test
-    void updateEstado_debeRetornar200() throws Exception {
+    void shouldReturn200_WhenOrderStateIsUpdatedSuccessfully() throws Exception {
         when(orderService.updateEstado(eq(1L), eq(EstadoOrden.EN_PROGRESO))).thenReturn(responseDTO);
 
         mockMvc.perform(patch("/orders/1/status")
@@ -149,7 +149,7 @@ class OrdenControllerTest {
     }
 
     @Test
-    void delete_debeRetornar204() throws Exception {
+    void shouldReturn204_WhenOrderIsDeletedSuccessfully() throws Exception {
         doNothing().when(orderService).delete(1L);
 
         mockMvc.perform(delete("/orders/1"))

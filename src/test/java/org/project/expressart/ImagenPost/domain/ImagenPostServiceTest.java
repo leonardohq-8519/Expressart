@@ -65,59 +65,51 @@ class ImagenPostServiceTest {
     }
 
     @Test
-    void getByPostId_DebeRetornarListaDeImagenesOrdenadas() throws ResourceNotFoundException {
-        // Arrange
+    void shouldReturnOrderedImagesList_WhenGetByPostIdIsCalled() throws ResourceNotFoundException {
         postPrueba.getImagenes().add(imagenPrueba);
         when(postRepository.findById(1L)).thenReturn(Optional.of(postPrueba));
         when(modelMapper.map(any(ImagenPost.class), eq(ImagenPostResponseDTO.class))).thenReturn(responseDTO);
 
-        // Act
         List<ImagenPostResponseDTO> resultado = postPictureService.getByPostId(1L);
 
-        // Assert
         assertThat(resultado).isNotEmpty().hasSize(1);
         assertThat(resultado.get(0).getUrl()).isEqualTo("/storage/posts/1/foto.jpg");
         verify(postRepository, times(1)).findById(1L);
     }
 
     @Test
-    void getByPostId_DebeLanzarExcepcion_CuandoPostNoExiste() {
-        // Arrange
+    void shouldThrowResourceNotFoundException_WhenPostDoesNotExistInGetByPostId() {
+
         when(postRepository.findById(1L)).thenReturn(Optional.empty());
 
-        // Act & Assert
         assertThatThrownBy(() -> postPictureService.getByPostId(1L))
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("No post pictures found for post id: 1");
     }
 
     @Test
-    void create_DebeGuardarImagenExitosamente() {
-        // Arrange
+    void shouldSaveImageSuccessfully_WhenCreateIsCalledWithValidData() {
+
         MockMultipartFile archivoMock = new MockMultipartFile("file", "test.jpg", "image/jpeg", "datos".getBytes());
         when(postRepository.findById(1L)).thenReturn(Optional.of(postPrueba));
         when(modelMapper.map(any(ImagenPost.class), eq(ImagenPostResponseDTO.class))).thenReturn(responseDTO);
 
-        // Act
         ImagenPostResponseDTO resultado = postPictureService.create(1L, archivoMock);
 
-        // Assert
         assertThat(resultado).isNotNull();
         verify(imagenPostRepository, times(1)).save(any(ImagenPost.class));
     }
 
     @Test
-    void create_DebeLanzarExcepcion_CuandoExcedeLimiteDeCuatroImagenes() {
-        // Arrange
+    void shouldThrowImageLimitException_WhenPostAlreadyHasFourImagesInCreate() {
+
         MockMultipartFile archivoMock = new MockMultipartFile("file", "test.jpg", "image/jpeg", "datos".getBytes());
 
-        // Simulamos que el post ya tiene 4 imágenes cargadas
         for (int i = 0; i < 4; i++) {
             postPrueba.getImagenes().add(new ImagenPost());
         }
         when(postRepository.findById(1L)).thenReturn(Optional.of(postPrueba));
 
-        // Act & Assert
         assertThatThrownBy(() -> postPictureService.create(1L, archivoMock))
                 .isInstanceOf(ImageLimitException.class)
                 .hasMessageContaining("A post cannot have more than 4 images");
@@ -126,8 +118,8 @@ class ImagenPostServiceTest {
     }
 
     @Test
-    void update_DebeModificarDataDeLaImagen() throws ResourceNotFoundException {
-        // Arrange
+    void shouldModifyImageData_WhenUpdateIsCalledWithValidDTO() throws ResourceNotFoundException {
+
         ImagenPostUpdateDTO updateDTO = new ImagenPostUpdateDTO();
         updateDTO.setUrl("/nuevo/path.jpg");
         updateDTO.setOrden(1);
@@ -140,25 +132,20 @@ class ImagenPostServiceTest {
         when(imagenPostRepository.findById(10L)).thenReturn(Optional.of(imagenPrueba));
         when(modelMapper.map(any(ImagenPost.class), eq(ImagenPostResponseDTO.class))).thenReturn(updatedResponse);
 
-        // Act
         ImagenPostResponseDTO resultado = postPictureService.update(10L, updateDTO);
 
-        // Assert
         assertThat(resultado.getUrl()).isEqualTo("/nuevo/path.jpg");
         assertThat(resultado.getOrden()).isEqualTo(1);
         verify(imagenPostRepository, times(1)).save(imagenPrueba);
     }
 
     @Test
-    void delete_DebeRemoverImagenYReordenarLasRestantes() {
-        // Arrange
+    void shouldRemoveImageAndReorderRemaining_WhenDeleteIsSuccessful() {
         postPrueba.getImagenes().add(imagenPrueba);
         when(postRepository.findById(1L)).thenReturn(Optional.of(postPrueba));
 
-        // Act
         postPictureService.delete(1L, 10L);
 
-        // Assert
         assertThat(postPrueba.getImagenes()).isEmpty();
         verify(postRepository, times(1)).save(postPrueba);
     }

@@ -38,7 +38,7 @@ class ImagenPostControllerTest {
     private PostPictureService postPictureService;
 
     @Test
-    void getImagenesByPost_DebeRetornarListaYStatus200() throws Exception {
+    void shouldReturnListOfImagesAndStatus200_WhenGetImagenesByPostIsCalled() throws Exception {
         ImagenPostResponseDTO imgDto = new ImagenPostResponseDTO();
         imgDto.setId(10L);
         imgDto.setUrl("/storage/posts/1/foto.jpg");
@@ -49,16 +49,14 @@ class ImagenPostControllerTest {
         mockMvc.perform(get("/api/imagen-posts/post/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-
     }
 
     @Test
-    void deleteImagen_DebeRetornarStatus204() throws Exception {
+    void shouldReturnStatus204_WhenDeleteImagenIsSuccessful() throws Exception {
         doNothing().when(postPictureService).deleteByPost(anyLong());
 
         mockMvc.perform(delete("/api/imagen-posts/10")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
-
     }
 }

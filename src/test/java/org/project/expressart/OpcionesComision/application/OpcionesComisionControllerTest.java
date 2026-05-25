@@ -69,7 +69,7 @@ class OpcionesComisionControllerTest {
     }
 
     @Test
-    void getAll_debeRetornar200YLista() throws Exception {
+    void shouldReturn200AndList_WhenGetAllIsCalled() throws Exception {
         when(commissionOptionsService.findAll()).thenReturn(List.of(responseDTO));
 
         mockMvc.perform(get("/commission-options"))
@@ -79,7 +79,7 @@ class OpcionesComisionControllerTest {
     }
 
     @Test
-    void getById_debeRetornar200_cuandoExiste() throws Exception {
+    void shouldReturn200_WhenGetByIdFindsExistingOption() throws Exception {
         when(commissionOptionsService.findById(1L)).thenReturn(responseDTO);
 
         mockMvc.perform(get("/commission-options/1"))
@@ -88,7 +88,7 @@ class OpcionesComisionControllerTest {
     }
 
     @Test
-    void getByComision_debeRetornarListaDeOpciones() throws Exception {
+    void shouldReturn200AndOptionsList_WhenGetByComisionIsCalled() throws Exception {
         when(commissionOptionsService.findByComisionId(1L)).thenReturn(List.of(responseDTO));
 
         mockMvc.perform(get("/commission-options/commission/1"))
@@ -97,7 +97,7 @@ class OpcionesComisionControllerTest {
     }
 
     @Test
-    void create_debeRetornar201() throws Exception {
+    void shouldReturn201_WhenOptionIsCreatedSuccessfully() throws Exception {
         when(commissionOptionsService.create(any(CommissionOptionsRequestDTO.class))).thenReturn(responseDTO);
 
         mockMvc.perform(post("/commission-options")
@@ -108,7 +108,7 @@ class OpcionesComisionControllerTest {
     }
 
     @Test
-    void update_debeRetornar200() throws Exception {
+    void shouldReturn200_WhenOptionIsUpdatedSuccessfully() throws Exception {
         when(commissionOptionsService.update(eq(1L), any(CommissionOptionsRequestDTO.class))).thenReturn(responseDTO);
 
         mockMvc.perform(put("/commission-options/1")
@@ -118,7 +118,7 @@ class OpcionesComisionControllerTest {
     }
 
     @Test
-    void delete_debeRetornar204() throws Exception {
+    void shouldReturn204_WhenOptionIsDeletedSuccessfully() throws Exception {
         doNothing().when(commissionOptionsService).delete(1L);
 
         mockMvc.perform(delete("/commission-options/1"))
