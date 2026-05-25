@@ -1,5 +1,11 @@
 package org.project.expressart.config;
 
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
+import org.project.expressart.ImagenComision.domain.ImagenComision;
+import org.project.expressart.ImagenComision.dto.ImagenComisionResponseDTO;
+import org.project.expressart.ImagenPost.domain.ImagenPost;
+import org.project.expressart.ImagenPost.dto.ImagenPostResponseDTO;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -24,15 +30,15 @@ public class ModelMapperConfig {
     }
 
     private void configMapping(ModelMapper mapper){
-        mapper.createTypeMap(ImagenPost.class, ImagenPostResponse.class)
+        mapper.createTypeMap(ImagenPost.class, ImagenPostResponseDTO.class)
                 .addMappings(m -> {
-                    m.map(src -> src.getPost().getId(), ImagenPostResponse::setPostId);
+                    m.map(src -> src.getPost().getId(), ImagenPostResponseDTO::setPostId);
                 });
 
-        mapper.createTypeMap(ImagenComision.class, ImagenComisionResponse.class)
+        mapper.createTypeMap(ImagenComision.class, ImagenComisionResponseDTO.class)
                 .addMappings(m -> {
                     m.map(src -> src.getComision().getId(),
-                            ImagenComisionResponse::setComisionId);
+                            ImagenComisionResponseDTO::setCommissionId);
                 });
     }
 }

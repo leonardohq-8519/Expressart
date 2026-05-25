@@ -54,7 +54,7 @@ public class Usuario {
     private Boolean isVerified = false;
 
     @Column(name = "token_version")
-    private Long token;
+    private Integer token;
 
     @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
     private PerfilCliente ArtistProfile;
