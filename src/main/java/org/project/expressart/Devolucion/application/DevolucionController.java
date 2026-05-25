@@ -4,7 +4,7 @@ import org.project.expressart.Devolucion.domain.DevolutionService;
 import org.project.expressart.Devolucion.dto.DevolutionRequestDTO;
 import org.project.expressart.Devolucion.dto.DevolutionResponseDTO;
 import org.project.expressart.Devolucion.domain.EstadoDevolucion;
-import org.project.expressart.exceptions.ResourceNotFoundException;
+import org.project.expressart.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

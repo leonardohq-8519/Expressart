@@ -8,7 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.project.expressart.Usuario.dto.UserRequestDTO;
 import org.project.expressart.Usuario.dto.UserResponseDTO;
 import org.project.expressart.Usuario.infrastructure.UsuarioRepository;
-import org.project.expressart.exceptions.ResourceNotFoundException;
+import org.project.expressart.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +30,11 @@ public class UserService{
 
     public List<UserResponseDTO> findAll() {
         Pageable pageable = PageRequest.of(0, 10);
-        return userRepository.findAllBy(pageable);
+        List<Usuario> usuarios = userRepository.findAllBy(pageable);
+
+        return usuarios.stream()
+                .map(usuario -> modelMapper.map(usuario, UserResponseDTO.class))
+                .toList();
     }
 
     public UserResponseDTO create(UserRequestDTO userdto) throws BadRequestException {

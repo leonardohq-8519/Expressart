@@ -7,9 +7,7 @@ import org.project.expressart.Chat.dto.ChatResponseDTO;
 import org.project.expressart.Chat.infrastructure.ChatRepository;
 import org.project.expressart.Orden.domain.Orden;
 import org.project.expressart.Orden.infrastructure.OrdenRepository;
-import org.project.expressart.Portafolio.domain.Portafolio;
-import org.project.expressart.Portafolio.dto.PortafolioResponseDTO;
-import org.project.expressart.exceptions.ResourceNotFoundException;
+import org.project.expressart.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +32,7 @@ public class ChatService{
         Chat chat = chatRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Chat not found"));
         return modelMapper.map(chat, ChatResponseDTO.class);
     }
-    public ChatResponseDTO findByOrderId (Long orderId)throws ResourceNotFoundException{
+    public ChatResponseDTO findByOrderId (Long orderId)throws ResourceNotFoundException {
         Chat chat = chatRepository.findByOrderId(orderId).orElseThrow(()-> new ResourceNotFoundException("Chat not found"));
         return modelMapper.map(chat, ChatResponseDTO.class);
     }
@@ -45,7 +43,7 @@ public class ChatService{
         chatRepository.save(chat);
         return modelMapper.map(chat, ChatResponseDTO.class);
     }
-    public ChatResponseDTO  update (Long id, ChatRequestDTO request)throws ResourceNotFoundException{
+    public ChatResponseDTO  update (Long id, ChatRequestDTO request)throws ResourceNotFoundException {
         Chat updatedChat = chatRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Chat not found"));
         Orden order = orderRepository.findById(request.getOrdenId()).orElseThrow(() -> new EntityNotFoundException("Order not found"));
         updatedChat.setOrden(order);

@@ -3,7 +3,7 @@ package org.project.expressart.PerfilArtista.application;
 import org.project.expressart.PerfilArtista.domain.ArtistProfileService;
 import org.project.expressart.PerfilArtista.dto.ArtistProfileRequestDTO;
 import org.project.expressart.PerfilArtista.dto.ArtistProfileResponseDTO;
-import org.project.expressart.exceptions.ResourceNotFoundException;
+import org.project.expressart.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

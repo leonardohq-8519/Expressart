@@ -3,7 +3,7 @@ package org.project.expressart.Chat.application;
 import org.project.expressart.Chat.domain.ChatService;
 import org.project.expressart.Chat.dto.ChatRequestDTO;
 import org.project.expressart.Chat.dto.ChatResponseDTO;
-import org.project.expressart.exceptions.ResourceNotFoundException;
+import org.project.expressart.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

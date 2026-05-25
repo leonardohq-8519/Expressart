@@ -3,7 +3,7 @@ package org.project.expressart.Mensaje.application;
 import org.project.expressart.Mensaje.domain.MessageService;
 import org.project.expressart.Mensaje.dto.MessageRequestDTO;
 import org.project.expressart.Mensaje.dto.MessageResponseDTO;
-import org.project.expressart.exceptions.ResourceNotFoundException;
+import org.project.expressart.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

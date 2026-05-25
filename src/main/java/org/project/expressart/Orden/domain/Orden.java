@@ -65,13 +65,13 @@ public class Orden {
     @OneToOne(mappedBy = "orden", cascade = CascadeType.ALL)
     private Pago pago;
 
-    @OneToOne(mappedBy = "orden", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
     private Devolucion devolucion;
 
     @OneToOne(mappedBy = "orden", cascade = CascadeType.ALL)
     private Chat chat;
 
-    @OneToOne(mappedBy = "orden", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
     private ResenaArtista resenaArtista;
 
     @OneToOne(mappedBy = "orden", cascade = CascadeType.ALL)

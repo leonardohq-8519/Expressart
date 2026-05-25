@@ -3,7 +3,7 @@ package org.project.expressart.Portafolio.application;
 import org.project.expressart.Portafolio.domain.PortafolioService;
 import org.project.expressart.Portafolio.dto.PortafolioRequestDTO;
 import org.project.expressart.Portafolio.dto.PortafolioResponseDTO;
-import org.project.expressart.exceptions.ResourceNotFoundException;
+import org.project.expressart.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +26,7 @@ public class PortafolioController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PortafolioResponseDTO> getById(@PathVariable Long id) {
+    public ResponseEntity<PortafolioResponseDTO> getById(@PathVariable Long id) throws Exception {
         return ResponseEntity.ok(portafolioService.findById(id));
     }
 
