@@ -9,6 +9,7 @@ import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -27,15 +28,15 @@ public class ImagenComisionController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ImagenComisionResponseDTO> getById(
-            @PathVariable Long id) throws ResourceNotFoundException{
-        return ResponseEntity.ok(commissionPictureService.getById(id));
+            @PathVariable Long commId, @PathVariable Long imageId) throws ResourceNotFoundException{
+        return ResponseEntity.ok(commissionPictureService.getById(commId, imageId));
     }
 
     @PostMapping
     public ResponseEntity<ImagenComisionResponseDTO> create(
-            @RequestBody ImagenComisionCreateDTO dto) {
+            @PathVariable Long commId, @RequestPart MultipartFile file) throws ResourceNotFoundException{
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(commissionPictureService.create(dto));
+                .body(commissionPictureService.create(commId, file));
     }
 
     @PatchMapping("/{id}")
@@ -46,13 +47,13 @@ public class ImagenComisionController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        commissionPictureService.delete(id);
+    public ResponseEntity<Void> delete(@PathVariable Long commissionId, @PathVariable Long imageId) throws ResourceNotFoundException{
+        commissionPictureService.delete(commissionId, imageId);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/commission/{comisionId}")
-    public ResponseEntity<Void> deleteByCommission(@PathVariable Long comisionId) {
+    public ResponseEntity<Void> deleteByCommission(@PathVariable Long comisionId) throws ResourceNotFoundException {
         commissionPictureService.deleteByCommission(comisionId);
         return ResponseEntity.noContent().build();
     }

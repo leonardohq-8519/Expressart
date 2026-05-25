@@ -9,6 +9,7 @@ import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -27,15 +28,15 @@ public class ImagenPostController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ImagenPostResponseDTO> getById(
-            @PathVariable Long id) throws ResourceNotFoundException{
-        return ResponseEntity.ok(postPictureService.getById(id));
+            @PathVariable Long postId, @PathVariable Long imageId) throws ResourceNotFoundException{
+        return ResponseEntity.ok(postPictureService.getById(postId,imageId));
     }
 
     @PostMapping
-    public ResponseEntity<ImagenPostResponseDTO> create(
-            @RequestBody ImagenPostCreateDTO dto) {
+    public ResponseEntity<ImagenPostResponseDTO> create(@PathVariable Long postId,
+            @RequestPart("file")MultipartFile file) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(postPictureService.create(dto));
+                .body(postPictureService.create(postId,file));
     }
 
     @PatchMapping("/{id}")
@@ -46,8 +47,8 @@ public class ImagenPostController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        postPictureService.delete(id);
+    public ResponseEntity<Void> delete(@PathVariable Long postId, @PathVariable Long imageId) {
+        postPictureService.delete(postId,imageId);
         return ResponseEntity.noContent().build();
     }
 
