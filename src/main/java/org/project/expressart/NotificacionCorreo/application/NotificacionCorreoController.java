@@ -51,7 +51,7 @@ public class NotificacionCorreoController {
     }
 
     @PatchMapping("/{id}/retry")
-    public ResponseEntity<Void> retry(@PathVariable Long id) {
+    public ResponseEntity<Void> retry(@PathVariable Long id) throws ResourceNotFoundException{
         emailNotificationService.retry(id);
         return ResponseEntity.noContent().build();
     }

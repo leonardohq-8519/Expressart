@@ -31,6 +31,9 @@ public class NotificacionCorreo {
     @Column(nullable = false, length = 255)
     private String asunto;
 
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String mensaje;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
     private TipoCorreo tipo;

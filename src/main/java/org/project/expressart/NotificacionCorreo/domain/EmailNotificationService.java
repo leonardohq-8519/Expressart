@@ -1,5 +1,6 @@
 package org.project.expressart.NotificacionCorreo.domain;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.project.expressart.NotificacionCorreo.dtos.NotificacionCorreoCreateDTO;
@@ -11,6 +12,8 @@ import org.project.expressart.Usuario.infrastructure.UsuarioRepository;
 import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,11 +23,13 @@ import java.util.stream.Collectors;
 public class EmailNotificationService {
     @Autowired
     private ModelMapper modelMapper;
+    private final JavaMailSender mailSender;
     @Autowired
     private final NotificacionCorreoRepository emailNotificationRepository;
     @Autowired
     private final UsuarioRepository userRepository;
-    public List<NotificacionCorreoResponseDTO> getByUser (Long userId) throws ResourceNotFoundException {
+
+    public List<NotificacionCorreoResponseDTO> getByUser(Long userId) throws ResourceNotFoundException {
         List<NotificacionCorreo> emailNotif = emailNotificationRepository.findByUserId(userId);
         if (emailNotif.isEmpty()) {
             throw new ResourceNotFoundException("No email notifications found for user id: " + userId);
@@ -45,6 +50,7 @@ public class EmailNotificationService {
                 .map(correo -> modelMapper.map(correo, NotificacionCorreoResponseDTO.class))
                 .collect(Collectors.toList());
     }
+
     public List<NotificacionCorreoResponseDTO> getPending() throws ResourceNotFoundException {
         List<NotificacionCorreo> emailNotif = emailNotificationRepository.findByEstado(EstadoCorreo.PENDIENTE);
 
@@ -57,12 +63,13 @@ public class EmailNotificationService {
                 .collect(Collectors.toList());
     }
 
-    public NotificacionCorreoResponseDTO create (NotificacionCorreoCreateDTO dto){
+    public NotificacionCorreoResponseDTO create(NotificacionCorreoCreateDTO dto) {
         NotificacionCorreo emailNotif = new NotificacionCorreo();
-        Usuario user = userRepository.findById(dto.getUsuarioId()).orElseThrow(()-> new EntityNotFoundException("User not found"));
+        Usuario user = userRepository.findById(dto.getUsuarioId()).orElseThrow(() -> new EntityNotFoundException("User not found"));
         emailNotif.setUsuario(user);
         emailNotif.setDestinatarioEmail(dto.getDestinatarioEmail());
         emailNotif.setAsunto(dto.getAsunto());
+        emailNotif.setMensaje(dto.getMensaje());
         emailNotif.setTipo(dto.getTipo());
         emailNotificationRepository.save(emailNotif);
         return modelMapper.map(emailNotif, NotificacionCorreoResponseDTO.class);
@@ -75,6 +82,27 @@ public class EmailNotificationService {
         emailNotificationRepository.save(emailNotif);
     }
 
-    public void retry(Long id){
 
+    @Transactional
+    public void retry(Long id) throws ResourceNotFoundException {
+        NotificacionCorreo emailNotif = emailNotificationRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Email notification not found with ID: " + id));
+
+        if (emailNotif.getEstado() != EstadoCorreo.FALLIDO) {
+            throw new IllegalStateException("Only failed email notifications can be retried.");
+        }
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setTo(emailNotif.getDestinatarioEmail());
+            message.setSubject(emailNotif.getAsunto());
+            message.setFrom("notifications@gmail.com");
+            message.setText(emailNotif.getMensaje());
+            mailSender.send(message);
+            emailNotif.setEstado(EstadoCorreo.ENVIADO);
+        } catch (Exception e) {
+            emailNotif.setIntentos(emailNotif.getIntentos()+1);
+            emailNotif.setEstado(EstadoCorreo.FALLIDO);
+            throw new RuntimeException("Retry failed: " + e.getMessage());
+        }
+        emailNotificationRepository.save(emailNotif);
     }
+}

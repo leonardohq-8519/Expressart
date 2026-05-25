@@ -1,5 +1,6 @@
 package org.project.expressart.NotificacionCorreo.dtos;
 
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,5 +15,6 @@ public class NotificacionCorreoCreateDTO {
     private Long usuarioId;
     private String destinatarioEmail;
     private String asunto;
+    private String mensaje;
     private TipoCorreo tipo;
 }
