@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.project.expressart.CuentaOAuth.domain.CuentaOAuth;
 import org.project.expressart.Notificacion.domain.Notificacion;
+import org.project.expressart.PerfilArtista.domain.PerfilArtista;
 import org.project.expressart.PerfilCliente.domain.PerfilCliente;
 
 import java.time.ZonedDateTime;
@@ -57,7 +58,7 @@ public class Usuario {
     private Integer token;
 
     @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
-    private PerfilCliente ArtistProfile;
+    private PerfilArtista ArtistProfile;
 
     @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
     private PerfilCliente ClientProfile;
