@@ -11,8 +11,7 @@ import org.project.expressart.TicketSoporte.dto.SupportTicketResponseDTO;
 import org.project.expressart.TicketSoporte.infrastructure.TicketSoporteRepository;
 import org.project.expressart.Usuario.domain.Usuario;
 import org.project.expressart.Usuario.infrastructure.UsuarioRepository;
-import org.project.expressart.exceptions.ResourceNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.project.expressart.exception.ResourceNotFoundException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,23 +22,22 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class SupportTicketService {
-    @Autowired
+
     private final TicketSoporteRepository supportTicketRepository;
-    @Autowired
     private final UsuarioRepository userRepository;
-    @Autowired
     private final OrdenRepository orderRepository;
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
     public List<SupportTicketResponseDTO> findAll(){
         Pageable pageable = PageRequest.of(0, 10);
         return supportTicketRepository.findAllBy(pageable);
     }
-    public SupportTicketResponseDTO  findById (Long id)throws ResourceNotFoundException{
-        TicketSoporte ticket = supportTicketRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Ticket not found"));
+
+    public SupportTicketResponseDTO findById (Long id) throws ResourceNotFoundException {
+        TicketSoporte ticket = supportTicketRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Ticket not found"));
         return modelMapper.map(ticket, SupportTicketResponseDTO.class);
     }
+
     public List<SupportTicketResponseDTO> findByUsuarioId (Long userId) throws ResourceNotFoundException {
         if (!userRepository.existsById(userId)) {
             throw new ResourceNotFoundException("User not found with ID: " + userId);
@@ -55,8 +53,10 @@ public class SupportTicketService {
                 .map(ticket -> modelMapper.map(ticket, SupportTicketResponseDTO.class))
                 .collect(Collectors.toList());
     }
+
     public List<SupportTicketResponseDTO> findByEstado (EstadoTicket status) throws ResourceNotFoundException {
-        List<TicketSoporte> tickets = supportTicketRepository.findByEstado(status);
+
+        List<TicketSoporte> tickets = supportTicketRepository.findByStatus(status);
         if (tickets.isEmpty()) {
             throw new ResourceNotFoundException("No tickets found for status: " + status);
         }
@@ -66,15 +66,17 @@ public class SupportTicketService {
     }
 
     public List<SupportTicketResponseDTO> findByEstadoAndCategoria (EstadoTicket status, CategoriaTicket category) throws ResourceNotFoundException {
-        List<TicketSoporte> tickets = supportTicketRepository.findByEstadoAndCategoria(status, category);
+
+        List<TicketSoporte> tickets = supportTicketRepository.findByStatusAndCategory(status, category);
         if (tickets.isEmpty()) {
-            throw new ResourceNotFoundException("No tickets found for status: " + status + "or category: " + category);
+            throw new ResourceNotFoundException("No tickets found for status: " + status + " or category: " + category);
         }
         return tickets.stream()
                 .map(ticket -> modelMapper.map(ticket, SupportTicketResponseDTO.class))
                 .collect(Collectors.toList());
     }
-    public SupportTicketResponseDTO create(SupportTicketRequestDTO request)throws BadRequestException {
+
+    public SupportTicketResponseDTO create(SupportTicketRequestDTO request) throws BadRequestException {
         TicketSoporte ticket = new TicketSoporte();
         Usuario user = userRepository.findById(request.getUsuarioId()).orElseThrow(() -> new EntityNotFoundException("User not found"));
         ticket.setUser(user);
@@ -83,21 +85,27 @@ public class SupportTicketService {
         ticket.setSubject(request.getAsunto());
         ticket.setCategory(request.getCategoria());
         ticket.setDescription(request.getDescripcion());
+
+        ticket.setStatus(EstadoTicket.values()[0]);
+
         supportTicketRepository.save(ticket);
         return modelMapper.map(ticket, SupportTicketResponseDTO.class);
     }
-    public SupportTicketResponseDTO updateStatus(Long id, EstadoTicket status)throws ResourceNotFoundException{
+
+    public SupportTicketResponseDTO updateStatus(Long id, EstadoTicket status) throws ResourceNotFoundException {
         TicketSoporte ticketSoporte = supportTicketRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Ticket not found"));
         ticketSoporte.setStatus(status);
         supportTicketRepository.save(ticketSoporte);
         return modelMapper.map(ticketSoporte, SupportTicketResponseDTO.class);
     }
-    public SupportTicketResponseDTO addResponse (Long id, String answer)throws ResourceNotFoundException{
+
+    public SupportTicketResponseDTO addResponse (Long id, String answer) throws ResourceNotFoundException {
         TicketSoporte ticketSoporte = supportTicketRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Ticket not found"));
         ticketSoporte.setAnswer(answer);
         supportTicketRepository.save(ticketSoporte);
         return modelMapper.map(ticketSoporte, SupportTicketResponseDTO.class);
     }
+
     public void delete (Long id){
         if (supportTicketRepository.existsById(id))
             supportTicketRepository.deleteById(id);

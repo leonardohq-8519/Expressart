@@ -20,7 +20,7 @@ class UsuarioRepositoryTest {
 
     @SpringBootApplication
     @EnableJpaAuditing
-    @EntityScan(basePackages = "org.project.expressart") // <- Cambiado aquí
+    @EntityScan(basePackages = "org.project.expressart")
     static class TestContextConfiguration {}
 
     @Autowired

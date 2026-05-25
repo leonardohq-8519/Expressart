@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.project.expressart.ArchivoPost.application.dto.ArchivoPostCreateDTO;
 import org.project.expressart.ArchivoPost.application.dto.ArchivoPostResponseDTO;
 import org.project.expressart.ArchivoPost.application.dto.ArchivoPostUpdateDTO;
+import org.project.expressart.ArchivoPost.domain.ArchivePostService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ArchivoPostController {
 
-    private final ArchivoPostService archivoPostService;
+    private final ArchivePostService archivoPostService;
 
     @GetMapping("/post/{postId}")
     public ResponseEntity<List<ArchivoPostResponseDTO>> getByPost(

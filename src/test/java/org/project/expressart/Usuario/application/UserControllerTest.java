@@ -7,10 +7,14 @@ import org.project.expressart.Usuario.domain.UserService;
 import org.project.expressart.Usuario.dto.UserRequestDTO;
 import org.project.expressart.Usuario.dto.UserResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -18,12 +22,22 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(UserController.class)
-@WithMockUser
+@WebMvcTest(
+        controllers = UserController.class,
+        excludeAutoConfiguration = {
+                SecurityAutoConfiguration.class,
+                SecurityFilterAutoConfiguration.class,
+                OAuth2ClientAutoConfiguration.class
+        },
+        // ESTO LE DICE A SPRING: "No cargues mi JwtAuthFilter personalizado en este test"
+        excludeFilters = @ComponentScan.Filter(
+                type = FilterType.ASSIGNABLE_TYPE,
+                classes = org.project.expressart.config.JwtAuthFilter.class
+        )
+)
 class UserControllerTest {
 
     @Autowired
@@ -87,7 +101,6 @@ class UserControllerTest {
         when(userService.create(any(UserRequestDTO.class))).thenReturn(responseDTO);
 
         mockMvc.perform(post("/usuarios")
-                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDTO)))
                 .andExpect(status().isCreated())
@@ -100,7 +113,6 @@ class UserControllerTest {
         when(userService.update(eq(1L), any(UserRequestDTO.class))).thenReturn(responseDTO);
 
         mockMvc.perform(put("/usuarios/1")
-                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDTO)))
                 .andExpect(status().isOk())
@@ -111,8 +123,7 @@ class UserControllerTest {
     void delete_debeRetornar204_cuandoEliminaCorrectamente() throws Exception {
         doNothing().when(userService).delete(1L);
 
-        mockMvc.perform(delete("/usuarios/1")
-                        .with(csrf()))
+        mockMvc.perform(delete("/usuarios/1"))
                 .andExpect(status().isNoContent());
 
         verify(userService, times(1)).delete(1L);

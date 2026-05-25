@@ -2,7 +2,7 @@ package org.project.expressart.PerfilCliente.application;
 
 import org.project.expressart.PerfilCliente.domain.ClientProfileService;
 import org.project.expressart.PerfilCliente.dto.ClientProfileResponseDTO;
-import org.project.expressart.exceptions.ResourceNotFoundException;
+import org.project.expressart.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

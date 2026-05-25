@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class NotificationService {
+public class NotificationServiceTest {
 
     private final ModelMapper modelMapper;
     private final NotificacionRepository notificationRepository;

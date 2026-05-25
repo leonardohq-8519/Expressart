@@ -73,7 +73,7 @@ public class Usuario {
     )
     private List<Usuario> favorites = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Notificacion> notifications = new ArrayList<>();
 
     @PrePersist

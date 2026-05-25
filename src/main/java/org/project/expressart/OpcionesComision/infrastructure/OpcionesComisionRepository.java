@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface OpcionesComisionRepository extends JpaRepository<OpcionesComision, Long> {
-    List<CommissionOptionsResponseDTO> findAllBy(Pageable pageable);
+    List<OpcionesComision> findAllBy(Pageable pageable);
     List<OpcionesComision> findByComisionId(Long commissionId);
 
 }

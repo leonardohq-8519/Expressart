@@ -2,21 +2,26 @@ package org.project.expressart.ResenaArtista.infrastructure;
 
 import org.project.expressart.ResenaArtista.domain.ResenaArtista;
 import org.project.expressart.ResenaArtista.dto.ArtistReviewResponseDTO;
-import org.project.expressart.TicketSoporte.dto.SupportTicketResponseDTO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface ResenaArtistaRepository extends JpaRepository<ResenaArtista, Long> {
 
-    List<ResenaArtista> findByArtistaId(Long artistaId);
+    @Query("SELECT r FROM ResenaArtista r WHERE r.artist.id = :artistaId")
+    List<ResenaArtista> findByArtistaId(@Param("artistaId") Long artistaId);
 
-    List<ResenaArtista> findByClienteId(Long clienteId);
+
+    @Query("SELECT r FROM ResenaArtista r WHERE r.client.id = :clienteId")
+    List<ResenaArtista> findByClienteId(@Param("clienteId") Long clienteId);
+
     List<ArtistReviewResponseDTO> findAllBy(Pageable pageable);
 
-    boolean existsByOrderId(Long orderId);
+    @Query("SELECT COUNT(r) > 0 FROM ResenaArtista r WHERE r.order.id = :orderId")
+    boolean existsByOrderId(@Param("orderId") Long orderId);
 }

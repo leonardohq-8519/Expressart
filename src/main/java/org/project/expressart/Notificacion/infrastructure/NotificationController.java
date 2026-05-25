@@ -6,6 +6,7 @@ import org.project.expressart.Notificacion.application.dto.MarcarLeidaDTO;
 import org.project.expressart.Notificacion.application.dto.NotificacionCountDTO;
 import org.project.expressart.Notificacion.application.dto.NotificacionCreateDTO;
 import org.project.expressart.Notificacion.application.dto.NotificacionResponseDTO;
+import org.project.expressart.Notificacion.domain.NotificationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,9 +16,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/notificaciones")
 @RequiredArgsConstructor
-public class NotificacionController {
+public class NotificationController {
 
-    private final NotificacionService notificacionService;
+    private final NotificationService notificacionService;
 
     @GetMapping("/usuario/{usuarioId}")
     public ResponseEntity<List<NotificacionResponseDTO>> getByUsuario(

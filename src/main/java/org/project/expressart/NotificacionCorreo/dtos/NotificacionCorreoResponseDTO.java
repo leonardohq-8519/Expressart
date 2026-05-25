@@ -4,10 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.project.expressart.NotifiacionCorreo.domain.EstadoCorreo;
-import org.project.expressart.NotifiacionCorreo.domain.TipoCorreo;
-
-import java.time.ZonedDateTime;
+import org.project.expressart.NotificacionCorreo.domain.EstadoCorreo;
+import org.project.expressart.NotificacionCorreo.domain.TipoCorreo;
 
 @Getter
 @Setter
@@ -20,7 +18,4 @@ public class NotificacionCorreoResponseDTO {
     private TipoCorreo tipo;
     private EstadoCorreo estado;
     private Integer intentos;
-    private String error;
-    private ZonedDateTime fechaCreacion;
-    private ZonedDateTime fechaEnvio;
 }

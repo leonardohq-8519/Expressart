@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.project.expressart.NotifiacionCorreo.domain.TipoCorreo;
+import org.project.expressart.NotificacionCorreo.domain.TipoCorreo;
 
 @Getter
 @Setter
@@ -14,5 +14,6 @@ public class NotificacionCorreoCreateDTO {
     private Long usuarioId;
     private String destinatarioEmail;
     private String asunto;
+    private String cuerpo;
     private TipoCorreo tipo;
 }

@@ -1,4 +1,5 @@
 package org.project.expressart.Orden.domain;
+
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -9,8 +10,7 @@ import org.project.expressart.Orden.dto.OrderResponseDTO;
 import org.project.expressart.Orden.infrastructure.OrdenRepository;
 import org.project.expressart.Usuario.domain.Usuario;
 import org.project.expressart.Usuario.infrastructure.UsuarioRepository;
-import org.project.expressart.exceptions.ResourceNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.project.expressart.exception.ResourceNotFoundException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,59 +21,62 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class OrderService {
-    @Autowired
-    private ModelMapper modelMapper;
-    @Autowired
+
+    private final ModelMapper modelMapper;
     private final OrdenRepository orderRepository;
-    @Autowired
     private final UsuarioRepository userRepository;
-    @Autowired
     private final OpcionesComisionRepository commissionOptionsRepository;
+
     public List<OrderResponseDTO> findAll(){
         Pageable pageable = PageRequest.of(0, 10);
         return orderRepository.findAllBy(pageable);
     }
-    public OrderResponseDTO  findById (Long id)throws ResourceNotFoundException{
+
+    public OrderResponseDTO findById (Long id) throws ResourceNotFoundException {
         Orden order = orderRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Order not found"));
         return modelMapper.map(order, OrderResponseDTO.class);
     }
 
-    public List<OrderResponseDTO> findByClienteId (Long clientId)throws ResourceNotFoundException{
-        List<Orden>order = orderRepository.findByClienteId(clientId);
-        if (order.isEmpty()) {
+    public List<OrderResponseDTO> findByClienteId (Long clientId) throws ResourceNotFoundException {
+        List<Orden> orders = orderRepository.findByClienteId(clientId);
+        if (orders.isEmpty()) {
             throw new ResourceNotFoundException("No orders found for client id: " + clientId);
         }
-        return order.stream()
-                .map(ticket -> modelMapper.map(order, OrderResponseDTO.class))
+        return orders.stream()
+                .map(ticket -> modelMapper.map(ticket, OrderResponseDTO.class))
                 .collect(Collectors.toList());
     }
-    public List<OrderResponseDTO> findByArtistaId (Long artistId)throws ResourceNotFoundException{
-        List<Orden>order = orderRepository.findByArtistaId(artistId);
-        if (order.isEmpty()) {
+
+    public List<OrderResponseDTO> findByArtistaId (Long artistId) throws ResourceNotFoundException {
+        List<Orden> orders = orderRepository.findByArtistaId(artistId);
+        if (orders.isEmpty()) {
             throw new ResourceNotFoundException("No orders found for artist id: " + artistId);
         }
-        return order.stream()
-                .map(ticket -> modelMapper.map(order, OrderResponseDTO.class))
+        return orders.stream()
+                .map(ticket -> modelMapper.map(ticket, OrderResponseDTO.class))
                 .collect(Collectors.toList());
     }
-    public List<OrderResponseDTO> findByClienteIdAndEstado (Long clientId, EstadoOrden status)throws ResourceNotFoundException{
-        List<Orden>order = orderRepository.findByClienteIdAndEstado(clientId, status);
-        if (order.isEmpty()) {
+
+    public List<OrderResponseDTO> findByClienteIdAndEstado (Long clientId, EstadoOrden status) throws ResourceNotFoundException {
+        List<Orden> orders = orderRepository.findByClienteIdAndEstado(clientId, status);
+        if (orders.isEmpty()) {
             throw new ResourceNotFoundException("No orders found for client id: " + clientId + " with status: " + status);
         }
-        return order.stream()
-                .map(ticket -> modelMapper.map(order, OrderResponseDTO.class))
+        return orders.stream()
+                .map(ticket -> modelMapper.map(ticket, OrderResponseDTO.class))
                 .collect(Collectors.toList());
     }
-    public List<OrderResponseDTO> findByArtistaIdAndEstado (Long artistId, EstadoOrden status)throws ResourceNotFoundException{
-        List<Orden>order = orderRepository.findByArtistaIdAndEstado(artistId, status);
-        if (order.isEmpty()) {
-            throw new ResourceNotFoundException("No orders found for artist id: " + artistId + " with status: "+  status);
+
+    public List<OrderResponseDTO> findByArtistaIdAndEstado (Long artistId, EstadoOrden status) throws ResourceNotFoundException {
+        List<Orden> orders = orderRepository.findByArtistaIdAndEstado(artistId, status);
+        if (orders.isEmpty()) {
+            throw new ResourceNotFoundException("No orders found for artist id: " + artistId + " with status: " + status);
         }
-        return order.stream()
-                .map(ticket -> modelMapper.map(order, OrderResponseDTO.class))
+        return orders.stream()
+                .map(ticket -> modelMapper.map(ticket, OrderResponseDTO.class))
                 .collect(Collectors.toList());
     }
+
     public OrderResponseDTO create(OrderRequestDTO request){
         Orden order = new Orden();
         Usuario artista = userRepository.findById(request.getArtistaId())
@@ -90,8 +93,9 @@ public class OrderService {
         orderRepository.save(order);
         return modelMapper.map(order, OrderResponseDTO.class);
     }
-    public OrderResponseDTO  update (Long id, OrderRequestDTO request)throws ResourceNotFoundException{
-        Orden updatedOrder = orderRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Order not found"));;
+
+    public OrderResponseDTO update (Long id, OrderRequestDTO request) throws ResourceNotFoundException {
+        Orden updatedOrder = orderRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Order not found"));
         Usuario artista = userRepository.findById(request.getArtistaId())
                 .orElseThrow(() -> new EntityNotFoundException("Artist not found"));
         updatedOrder.setArtista(artista);
@@ -106,17 +110,18 @@ public class OrderService {
         orderRepository.save(updatedOrder);
         return modelMapper.map(updatedOrder, OrderResponseDTO.class);
     }
-    public OrderResponseDTO  updateEstado (Long id, EstadoOrden status)throws ResourceNotFoundException{
+
+    public OrderResponseDTO updateEstado (Long id, EstadoOrden status) throws ResourceNotFoundException {
         Orden updatedOrder = orderRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Order not found"));
         updatedOrder.setEstado(status);
         orderRepository.save(updatedOrder);
         return modelMapper.map(updatedOrder, OrderResponseDTO.class);
     }
+
     public void delete (Long id){
         if (orderRepository.existsById(id))
             orderRepository.deleteById(id);
         else
             throw new EntityNotFoundException("Order with ID " + id + " doesn't exist");
     }
-
 }

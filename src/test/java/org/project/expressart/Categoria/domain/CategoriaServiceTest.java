@@ -10,9 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.project.expressart.Categoria.dto.CategoryRequestDTO;
 import org.project.expressart.Categoria.dto.CategoryResponseDTO;
 import org.project.expressart.Categoria.infrastructure.CategoriaRepository;
-import org.project.expressart.exception.ResourceNotFoundEXception;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+import org.project.expressart.exception.ResourceNotFoundException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -29,10 +27,7 @@ class CategoryServiceTest {
     @Mock
     private CategoriaRepository categoryRepository;
 
-    // 1. Usamos una instancia REAL de ModelMapper para evitar mocks nulos
     private final ModelMapper modelMapper = new ModelMapper();
-
-    // Quitamos @InjectMocks para inicializar con seguridad quirúrjica
     private CategoryService categoryService;
 
     private Categoria categoria;
@@ -41,11 +36,7 @@ class CategoryServiceTest {
 
     @BeforeEach
     void setUp() {
-        // 2. Creamos la instancia del servicio pasándole el repositorio mockeado
         categoryService = new CategoryService(categoryRepository);
-
-        // 3. Forzamos la inyección del ModelMapper real directo al atributo del servicio
-        // Esto soluciona el problema aunque falte el "final" o el constructor correcto en el Service
         ReflectionTestUtils.setField(categoryService, "modelMapper", modelMapper);
 
         categoria = new Categoria();
@@ -62,8 +53,13 @@ class CategoryServiceTest {
 
     @Test
     void findAll_debeRetornarListaDeDtos() {
-        Page<Categoria> page = new PageImpl<>(List.of(categoria));
-        when(categoryRepository.findAllBy(any(Pageable.class))).thenReturn(page);
+
+        CategoryResponseDTO mockDto = new CategoryResponseDTO();
+        mockDto.setId(1L);
+        mockDto.setNombre("Pintura");
+        List<CategoryResponseDTO> listaMock = List.of(mockDto);
+
+        doReturn(listaMock).when(categoryRepository).findAllBy(any(Pageable.class));
 
         List<CategoryResponseDTO> resultado = categoryService.findAll();
 
@@ -74,7 +70,7 @@ class CategoryServiceTest {
     }
 
     @Test
-    void findById_cuandoExiste_debeRetornarDto() {
+    void findById_cuandoExiste_debeRetornarDto() throws Exception {
         when(categoryRepository.findById(1L)).thenReturn(Optional.of(categoria));
 
         CategoryResponseDTO resultado = categoryService.findById(1L);
@@ -87,11 +83,11 @@ class CategoryServiceTest {
     void findById_cuandoNoExiste_debeLanzarExcepcion() {
         when(categoryRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundEXception.class, () -> categoryService.findById(1L));
+        assertThrows(ResourceNotFoundException.class, () -> categoryService.findById(1L));
     }
 
     @Test
-    void findByNombre_cuandoExiste_debeRetornarDto() {
+    void findByNombre_cuandoExiste_debeRetornarDto() throws Exception {
         when(categoryRepository.findByNombre("Pintura")).thenReturn(Optional.of(categoria));
 
         CategoryResponseDTO resultado = categoryService.findByNombre("Pintura");
@@ -121,7 +117,7 @@ class CategoryServiceTest {
     }
 
     @Test
-    void update_cuandoExiste_debeModificarYGuardar() {
+    void update_cuandoExiste_debeModificarYGuardar() throws Exception {
         when(categoryRepository.findById(1L)).thenReturn(Optional.of(categoria));
         when(categoryRepository.save(any(Categoria.class))).thenReturn(categoria);
 
