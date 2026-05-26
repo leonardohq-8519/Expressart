@@ -1,18 +1,19 @@
 package org.project.expressart.ResenaArtista.application;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.project.expressart.RedSocialArtista.application.RedSocialArtistaController;
-import org.project.expressart.RedSocialArtista.domain.ArtistSocialMediaService;
-import org.project.expressart.RedSocialArtista.domain.RedSocialArtista;
+import org.project.expressart.ResenaArtista.domain.ArtistReviewService;
+import org.project.expressart.ResenaArtista.dto.ArtistReviewRequestDTO;
+import org.project.expressart.ResenaArtista.dto.ArtistReviewResponseDTO;
+import org.project.expressart.CuentaOAuth.domain.OAuthSuccessHandler;
+import org.project.expressart.Usuario.infrastructure.UsuarioRepository;
+import org.project.expressart.config.JwtService;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -23,56 +24,96 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(
-        controllers = RedSocialArtistaController.class,
-        excludeAutoConfiguration = {
-                SecurityAutoConfiguration.class,
-                SecurityFilterAutoConfiguration.class,
-                OAuth2ClientAutoConfiguration.class
-        },
-        excludeFilters = @ComponentScan.Filter(
-                type = FilterType.ASSIGNABLE_TYPE,
-                classes = org.project.expressart.config.JwtAuthFilter.class
-        )
-)
+@WebMvcTest(controllers = ResenaArtistaController.class)
+@WithMockUser
 class ResenaArtistaControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     @MockitoBean
-    private ArtistSocialMediaService artistSocialMediaService;
+    private ArtistReviewService artistReviewService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @MockitoBean
+    private JwtService jwtService;
 
-    @Test
-    void getByArtista_debeRetornar200() throws Exception {
-        when(artistSocialMediaService.findByArtistaId(1L)).thenReturn(List.of(new RedSocialArtista()));
+    @MockitoBean
+    private UsuarioRepository usuarioRepository;
 
-        mockMvc.perform(get("/api/red-social-artista/artista/1"))
-                .andExpect(status().isOk());
+    @MockitoBean
+    private OAuthSuccessHandler oAuthSuccessHandler;
+
+    private ArtistReviewResponseDTO responseDTO;
+    private ArtistReviewRequestDTO requestDTO;
+
+    @BeforeEach
+    void setUp() {
+        responseDTO = new ArtistReviewResponseDTO();
+        responseDTO.setId(1L);
+        responseDTO.setPuntuacion((short) 5);
+        responseDTO.setComentario("Excelente artista");
+
+        requestDTO = new ArtistReviewRequestDTO();
+        requestDTO.setOrdenId(1L);
+        requestDTO.setClienteId(2L);
+        requestDTO.setArtistaId(3L);
+        requestDTO.setPuntuacion((short) 5);
+        requestDTO.setComentario("Excelente artista");
     }
 
     @Test
-    void create_debeRetornar200_cuandoEsValido() throws Exception {
-        RedSocialArtista mockRed = new RedSocialArtista();
-        mockRed.setPlataforma("Instagram");
-        mockRed.setUrl("https://instagram.com/user");
+    void shouldReturnAllReviewsWhenGetAll() throws Exception {
+        when(artistReviewService.findAll()).thenReturn(List.of(responseDTO));
 
-        when(artistSocialMediaService.create(any(RedSocialArtista.class))).thenReturn(mockRed);
+        mockMvc.perform(get("/artist-reviews"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1));
+    }
 
-        mockMvc.perform(post("/api/red-social-artista")
+    @Test
+    void shouldReturnReviewWhenGetByIdAndExists() throws Exception {
+        when(artistReviewService.findById(1L)).thenReturn(responseDTO);
+
+        mockMvc.perform(get("/artist-reviews/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1));
+    }
+
+    @Test
+    void shouldReturn404WhenGetByIdAndReviewNotFound() throws Exception {
+        when(artistReviewService.findById(99L)).thenThrow(new ResourceNotFoundException("Not found"));
+
+        mockMvc.perform(get("/artist-reviews/99"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void shouldReturnReviewsByArtistaWhenGetByArtista() throws Exception {
+        when(artistReviewService.findByArtistaId(3L)).thenReturn(List.of(responseDTO));
+
+        mockMvc.perform(get("/artist-reviews/artist/3"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1));
+    }
+
+    @Test
+    void shouldReturn201WhenCreateWithValidData() throws Exception {
+        when(artistReviewService.create(any(ArtistReviewRequestDTO.class))).thenReturn(responseDTO);
+
+        mockMvc.perform(post("/artist-reviews")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(mockRed)))
-                .andExpect(status().isOk());
+                        .content(objectMapper.writeValueAsString(requestDTO)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(1));
     }
 
     @Test
-    void delete_debeRetornar204() throws Exception {
-        doNothing().when(artistSocialMediaService).delete(1L);
+    void shouldReturn204WhenDeleteIsSuccessful() throws Exception {
+        doNothing().when(artistReviewService).delete(1L);
 
-        mockMvc.perform(delete("/api/red-social-artista/1"))
+        mockMvc.perform(delete("/artist-reviews/1"))
                 .andExpect(status().isNoContent());
     }
 }

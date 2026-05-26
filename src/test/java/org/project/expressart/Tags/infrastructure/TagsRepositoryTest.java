@@ -3,8 +3,7 @@ package org.project.expressart.Tags.infrastructure;
 import org.junit.jupiter.api.Test;
 import org.project.expressart.Tags.domain.Tags;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 
 import java.util.Optional;
 
@@ -14,32 +13,75 @@ import static org.assertj.core.api.Assertions.assertThat;
 class TagsRepositoryTest {
 
     @Autowired
-    private TestEntityManager entityManager;
-
-    @Autowired
     private TagsRepository tagsRepository;
 
     @Test
-    void save_debePersistirTagCorrectamente() {
-        Tags nuevoTag = new Tags();
-        nuevoTag.setNombre("Escultura");
+    void shouldPersistTagWhenSave() {
+        Tags tag = new Tags();
+        tag.setNombre("Escultura");
 
-        Tags tagGuardado = tagsRepository.save(nuevoTag);
+        Tags saved = tagsRepository.save(tag);
 
-        assertThat(tagGuardado).isNotNull();
-        assertThat(tagGuardado.getId()).isNotNull();
-        assertThat(tagGuardado.getNombre()).isEqualTo("Escultura");
+        assertThat(saved.getId()).isNotNull();
+        assertThat(saved.getNombre()).isEqualTo("Escultura");
     }
 
     @Test
-    void findById_debeRetornarTagPersistido() {
-        Tags tagDummy = new Tags();
-        tagDummy.setNombre("Fotografia");
-        tagDummy = entityManager.persistAndFlush(tagDummy);
+    void shouldReturnTagWhenFindByIdAndExists() {
+        Tags tag = new Tags();
+        tag.setNombre("Fotografia");
+        tag = tagsRepository.save(tag);
 
-        Optional<Tags> encontrado = tagsRepository.findById(tagDummy.getId());
+        Optional<Tags> found = tagsRepository.findById(tag.getId());
 
-        assertThat(encontrado).isPresent();
-        assertThat(encontrado.get().getNombre()).isEqualTo("Fotografia");
+        assertThat(found).isPresent();
+        assertThat(found.get().getNombre()).isEqualTo("Fotografia");
+    }
+
+    @Test
+    void shouldReturnTagWhenFindByNombreAndExists() {
+        Tags tag = new Tags();
+        tag.setNombre("Acuarela");
+        tagsRepository.save(tag);
+
+        Optional<Tags> found = tagsRepository.findByNombre("Acuarela");
+
+        assertThat(found).isPresent();
+        assertThat(found.get().getNombre()).isEqualTo("Acuarela");
+    }
+
+    @Test
+    void shouldReturnEmptyWhenFindByNombreAndNotExists() {
+        Optional<Tags> found = tagsRepository.findByNombre("NoExiste");
+        assertThat(found).isEmpty();
+    }
+
+    @Test
+    void shouldReturnTrueWhenExistsByNombreAndExists() {
+        Tags tag = new Tags();
+        tag.setNombre("Pintura");
+        tagsRepository.save(tag);
+
+        boolean exists = tagsRepository.existsByNombre("Pintura");
+
+        assertThat(exists).isTrue();
+    }
+
+    @Test
+    void shouldReturnFalseWhenExistsByNombreAndNotExists() {
+        boolean exists = tagsRepository.existsByNombre("TagInexistente");
+        assertThat(exists).isFalse();
+    }
+
+    @Test
+    void shouldDeleteTagWhenDeleteById() {
+        Tags tag = new Tags();
+        tag.setNombre("Grabado");
+        tag = tagsRepository.save(tag);
+        Long id = tag.getId();
+
+        tagsRepository.deleteById(id);
+
+        assertThat(tagsRepository.findById(id)).isEmpty();
     }
 }

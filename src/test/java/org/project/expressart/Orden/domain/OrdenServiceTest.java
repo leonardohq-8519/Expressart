@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.project.expressart.OpcionesComision.domain.OpcionesComision;
 import org.project.expressart.OpcionesComision.infrastructure.OpcionesComisionRepository;
 import org.project.expressart.Orden.dto.OrderRequestDTO;
@@ -48,6 +49,7 @@ class OrdenServiceTest {
 
     @BeforeEach
     void setUp() {
+        ReflectionTestUtils.setField(orderService, "modelMapper", modelMapper);
         orden = new Orden();
         orden.setId(1L);
         orden.setEstado(EstadoOrden.PENDIENTE);

@@ -1,13 +1,13 @@
 package org.project.expressart.Notificacion.infrastructure;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.project.expressart.Notificacion.domain.Notificacion;
 import org.project.expressart.Notificacion.domain.TipoNotificacion;
 import org.project.expressart.Usuario.domain.Usuario;
+import org.project.expressart.Usuario.infrastructure.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -15,72 +15,76 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-@ActiveProfiles("local")
 class NotificacionRepositoryTest {
 
     @Autowired
     private NotificacionRepository notificacionRepository;
 
     @Autowired
-    private TestEntityManager entityManager;
+    private UsuarioRepository usuarioRepository;
 
-    private Usuario crearUsuarioDePrueba() {
-        Usuario usuario = new Usuario();
-        usuario.setEmail("test@expressart.com");
-        usuario.setFullName("Luciano Matias"); // Corregido a setFullName (con 'N' mayúscula)
-        usuario.setUsername("lucianoma");
-        usuario.setActive(true);              // Lombok mapea boolean "isActive" como setActive()
-        usuario.setVerified(true);            // Lombok mapea boolean "isVerified" como setVerified()
-        usuario.setRegisterDate(ZonedDateTime.now());
-        return entityManager.persistAndFlush(usuario);
+    private Usuario savedUser;
+
+    @BeforeEach
+    void setUp() {
+        Usuario user = new Usuario();
+        user.setUsername("notif_user");
+        user.setEmail("notif@test.com");
+        user.setName("Notif User");
+        user.setPassword("password");
+        user.setRegisterDate(ZonedDateTime.now());
+        user.setIsActive(true);
+        user.setIsVerified(false);
+        savedUser = usuarioRepository.save(user);
     }
 
     @Test
-    void findByUsuarioIdAndLeida_DebeRetornarSoloRegistrosCorrespondientes() {
-        Usuario usuarioGuardado = crearUsuarioDePrueba();
+    void shouldReturnUnreadNotificationsWhenFindByUsuarioIdAndLeida() {
+        Notificacion n1 = buildNotificacion(savedUser, "Notificacion 1", false);
+        Notificacion n2 = buildNotificacion(savedUser, "Notificacion 2", true);
+        notificacionRepository.save(n1);
+        notificacionRepository.save(n2);
 
-        Notificacion n1 = new Notificacion();
-        n1.setUsuario(usuarioGuardado);
-        n1.setTipo(TipoNotificacion.SISTEMA);
-        n1.setTitulo("Notificacion 1");
-        n1.setMensaje("Contenido");
-        n1.setLeida(false);
-        n1.setFechaCreacion(ZonedDateTime.now());
-        entityManager.persist(n1);
-
-        Notificacion n2 = new Notificacion();
-        n2.setUsuario(usuarioGuardado);
-        n2.setTipo(TipoNotificacion.ORDEN);
-        n2.setTitulo("Notificacion 2");
-        n2.setMensaje("Contenido 2");
-        n2.setLeida(true);
-        n2.setFechaCreacion(ZonedDateTime.now());
-        entityManager.persist(n2);
-
-        entityManager.flush();
-
-        // Se asume que en Usuario el identificador es 'usuarioId'
-        List<Notificacion> noLeidas = notificacionRepository.findByUsuarioIdAndLeida(usuarioGuardado.getId(), false);
+        List<Notificacion> noLeidas = notificacionRepository.findByUsuarioIdAndLeida(savedUser.getId(), false);
 
         assertThat(noLeidas).hasSize(1);
-        assertThat(noLeidas.getFirst().getTitulo()).isEqualTo("Notificacion 1");
+        assertThat(noLeidas.get(0).getTitulo()).isEqualTo("Notificacion 1");
     }
 
     @Test
-    void countByUsuarioUsuarioIdAndLeida_DebeContarSoloNoLeidas() {
-        Usuario usuarioGuardado = crearUsuarioDePrueba();
+    void shouldReturnAllNotificationsWhenFindByUsuarioId() {
+        notificacionRepository.save(buildNotificacion(savedUser, "N1", false));
+        notificacionRepository.save(buildNotificacion(savedUser, "N2", true));
 
-        Notificacion n1 = new Notificacion();
-        n1.setUsuario(usuarioGuardado);
-        n1.setTipo(TipoNotificacion.PAGO);
-        n1.setTitulo("Pago realizado");
-        n1.setMensaje("Ok");
-        n1.setLeida(false);
-        n1.setFechaCreacion(ZonedDateTime.now());
-        entityManager.persistAndFlush(n1);
+        List<Notificacion> all = notificacionRepository.findByUsuarioId(savedUser.getId());
 
-        long totalNoLeidas = notificacionRepository.countByUsuarioIdAndLeida(usuarioGuardado.getId(), false);
+        assertThat(all).hasSize(2);
+    }
 
-        assertThat(totalNoLeidas).isEqualTo(1L);
+    @Test
+    void shouldCountUnreadNotificationsWhenCountByUsuarioIdAndLeida() {
+        notificacionRepository.save(buildNotificacion(savedUser, "N1", false));
+        notificacionRepository.save(buildNotificacion(savedUser, "N2", false));
+        notificacionRepository.save(buildNotificacion(savedUser, "N3", true));
+
+        long count = notificacionRepository.countByUsuarioIdAndLeida(savedUser.getId(), false);
+
+        assertThat(count).isEqualTo(2L);
+    }
+
+    @Test
+    void shouldReturnEmptyWhenFindByUsuarioIdAndNoNotificationsExist() {
+        List<Notificacion> result = notificacionRepository.findByUsuarioId(999L);
+        assertThat(result).isEmpty();
+    }
+
+    private Notificacion buildNotificacion(Usuario user, String titulo, boolean leida) {
+        Notificacion n = new Notificacion();
+        n.setUsuario(user);
+        n.setTipo(TipoNotificacion.SISTEMA);
+        n.setTitulo(titulo);
+        n.setMensaje("Contenido de " + titulo);
+        n.setLeida(leida);
+        return n;
     }
 }

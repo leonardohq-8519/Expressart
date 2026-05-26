@@ -19,6 +19,6 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
     @Query("SELECT c FROM Chat c WHERE c.orden.id = :orderId")
     Optional<Chat> findByOrderId(@Param("orderId") Long orderId);
 
-    @Query(value = "SELECT * FROM chat WHERE redis_channel = :redisChannel", nativeQuery = true)
+    @Query(value = "SELECT * FROM chats WHERE canal_redis = :redisChannel", nativeQuery = true)
     Optional<Chat> findByRedisChannel(@Param("redisChannel") String redisChannel);
 }

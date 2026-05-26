@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.project.expressart.Comision.domain.Comision;
 import org.project.expressart.Comision.infrastructure.ComisionRepository;
 import org.project.expressart.OpcionesComision.dto.CommissionOptionsRequestDTO;
@@ -43,6 +44,7 @@ class OpcionesComisionServiceTest {
 
     @BeforeEach
     void setUp() {
+        ReflectionTestUtils.setField(commissionOptionsService, "modelMapper", modelMapper);
         opcionesComision = new OpcionesComision();
         opcionesComision.setId(1L);
         opcionesComision.setNombre("Básico");
@@ -58,9 +60,7 @@ class OpcionesComisionServiceTest {
 
     @Test
     void findAll_debeRetornarListaPaginada() {
-        when(commissionOptionsRepository.findAllBy(any(Pageable.class))).thenReturn(List.of(opcionesComision));
-
-        when(modelMapper.map(opcionesComision, CommissionOptionsResponseDTO.class)).thenReturn(responseDTO);
+        when(commissionOptionsRepository.findAllBy(any(Pageable.class))).thenReturn(List.of(responseDTO));
 
         List<CommissionOptionsResponseDTO> resultado = commissionOptionsService.findAll();
 

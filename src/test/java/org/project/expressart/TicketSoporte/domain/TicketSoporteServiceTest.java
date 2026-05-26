@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.project.expressart.TicketSoporte.infrastructure.TicketSoporteRepository;
 import org.project.expressart.TicketSoporte.dto.SupportTicketRequestDTO;
 import org.project.expressart.TicketSoporte.dto.SupportTicketResponseDTO;
@@ -36,6 +37,7 @@ class TicketSoporteServiceTest {
 
     @BeforeEach
     void setUp() {
+        ReflectionTestUtils.setField(supportTicketService, "modelMapper", modelMapper);
         ticket = new TicketSoporte();
         ticket.setId(1L);
         ticket.setSubject("Fallo de carga");

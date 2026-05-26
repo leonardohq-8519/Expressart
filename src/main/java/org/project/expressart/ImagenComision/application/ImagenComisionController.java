@@ -25,13 +25,13 @@ public class ImagenComisionController {
         return ResponseEntity.ok(commissionPictureService.getByCommission(comisionId));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{commId}/images/{imageId}")
     public ResponseEntity<ImagenComisionResponseDTO> getById(
             @PathVariable Long commId, @PathVariable Long imageId) throws ResourceNotFoundException{
         return ResponseEntity.ok(commissionPictureService.getById(commId, imageId));
     }
 
-    @PostMapping
+    @PostMapping("/{commId}")
     public ResponseEntity<ImagenComisionResponseDTO> create(
             @PathVariable Long commId, @RequestPart MultipartFile file) throws ResourceNotFoundException{
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -45,7 +45,7 @@ public class ImagenComisionController {
         return ResponseEntity.ok(commissionPictureService.update(id, dto));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{commissionId}/images/{imageId}")
     public ResponseEntity<Void> delete(@PathVariable Long commissionId, @PathVariable Long imageId) throws ResourceNotFoundException{
         commissionPictureService.delete(commissionId, imageId);
         return ResponseEntity.noContent().build();

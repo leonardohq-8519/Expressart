@@ -3,17 +3,17 @@ package org.project.expressart.Usuario.application;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.project.expressart.CuentaOAuth.domain.OAuthSuccessHandler;
 import org.project.expressart.Usuario.domain.UserService;
 import org.project.expressart.Usuario.dto.UserRequestDTO;
 import org.project.expressart.Usuario.dto.UserResponseDTO;
+import org.project.expressart.Usuario.infrastructure.UsuarioRepository;
+import org.project.expressart.config.JwtService;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -25,29 +25,26 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(
-        controllers = UserController.class,
-        excludeAutoConfiguration = {
-                SecurityAutoConfiguration.class,
-                SecurityFilterAutoConfiguration.class,
-                OAuth2ClientAutoConfiguration.class
-        },
-        // ESTO LE DICE A SPRING: "No cargues mi JwtAuthFilter personalizado en este test"
-        excludeFilters = @ComponentScan.Filter(
-                type = FilterType.ASSIGNABLE_TYPE,
-                classes = org.project.expressart.config.JwtAuthFilter.class
-        )
-)
+@WebMvcTest(controllers = UserController.class)
+@WithMockUser
 class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     @MockitoBean
     private UserService userService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @MockitoBean
+    private JwtService jwtService;
+
+    @MockitoBean
+    private UsuarioRepository usuarioRepository;
+
+    @MockitoBean
+    private OAuthSuccessHandler oAuthSuccessHandler;
 
     private UserRequestDTO requestDTO;
     private UserResponseDTO responseDTO;
@@ -68,7 +65,7 @@ class UserControllerTest {
     }
 
     @Test
-    void getAll_debeRetornar200_conListaDeUsuarios() throws Exception {
+    void shouldReturnAllUsersWhenGetAll() throws Exception {
         when(userService.findAll()).thenReturn(List.of(responseDTO));
 
         mockMvc.perform(get("/usuarios"))
@@ -78,7 +75,7 @@ class UserControllerTest {
     }
 
     @Test
-    void getById_debeRetornar200_cuandoExisteUsuario() throws Exception {
+    void shouldReturnUserWhenGetByIdAndExists() throws Exception {
         when(userService.findById(1L)).thenReturn(responseDTO);
 
         mockMvc.perform(get("/usuarios/1"))
@@ -88,7 +85,15 @@ class UserControllerTest {
     }
 
     @Test
-    void getByEmail_debeRetornar200_cuandoExisteEmail() throws Exception {
+    void shouldReturn404WhenGetByIdAndUserNotFound() throws Exception {
+        when(userService.findById(99L)).thenThrow(new ResourceNotFoundException("User not found"));
+
+        mockMvc.perform(get("/usuarios/99"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void shouldReturnUserWhenGetByEmailAndExists() throws Exception {
         when(userService.findByEmail("test@email.com")).thenReturn(responseDTO);
 
         mockMvc.perform(get("/usuarios/email/test@email.com"))
@@ -97,7 +102,7 @@ class UserControllerTest {
     }
 
     @Test
-    void create_debeRetornar201_cuandoDatosValidos() throws Exception {
+    void shouldReturn201WhenCreateWithValidData() throws Exception {
         when(userService.create(any(UserRequestDTO.class))).thenReturn(responseDTO);
 
         mockMvc.perform(post("/usuarios")
@@ -109,7 +114,7 @@ class UserControllerTest {
     }
 
     @Test
-    void update_debeRetornar200_cuandoActualizaCorrectamente() throws Exception {
+    void shouldReturn200WhenUpdateIsSuccessful() throws Exception {
         when(userService.update(eq(1L), any(UserRequestDTO.class))).thenReturn(responseDTO);
 
         mockMvc.perform(put("/usuarios/1")
@@ -120,7 +125,7 @@ class UserControllerTest {
     }
 
     @Test
-    void delete_debeRetornar204_cuandoEliminaCorrectamente() throws Exception {
+    void shouldReturn204WhenDeleteIsSuccessful() throws Exception {
         doNothing().when(userService).delete(1L);
 
         mockMvc.perform(delete("/usuarios/1"))
@@ -130,7 +135,7 @@ class UserControllerTest {
     }
 
     @Test
-    void getSeguidores_debeRetornar200_conListaDeSeguidores() throws Exception {
+    void shouldReturnSeguidoresWhenGetSeguidoresByArtistaId() throws Exception {
         when(userService.findSeguidoresByArtistaId(1L)).thenReturn(List.of(responseDTO));
 
         mockMvc.perform(get("/usuarios/seguidores/1"))

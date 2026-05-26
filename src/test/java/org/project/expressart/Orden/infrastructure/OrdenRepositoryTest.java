@@ -5,7 +5,7 @@ import org.project.expressart.Orden.domain.EstadoOrden;
 import org.project.expressart.Orden.domain.Orden;
 import org.project.expressart.Orden.dto.OrderResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.ZonedDateTime;

@@ -5,13 +5,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.project.expressart.PerfilCliente.domain.ClientProfileService;
 import org.project.expressart.PerfilCliente.dto.ClientProfileResponseDTO;
+import org.project.expressart.CuentaOAuth.domain.OAuthSuccessHandler;
+import org.project.expressart.Usuario.infrastructure.UsuarioRepository;
+import org.project.expressart.config.JwtService;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -21,18 +20,8 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(
-        controllers = PerfilClienteController.class,
-        excludeAutoConfiguration = {
-                SecurityAutoConfiguration.class,
-                SecurityFilterAutoConfiguration.class,
-                OAuth2ClientAutoConfiguration.class
-        },
-        excludeFilters = @ComponentScan.Filter(
-                type = FilterType.ASSIGNABLE_TYPE,
-                classes = org.project.expressart.config.JwtAuthFilter.class
-        )
-)
+@WebMvcTest(controllers = PerfilClienteController.class)
+@WithMockUser
 class PerfilClienteControllerTest {
 
     @Autowired
@@ -40,6 +29,15 @@ class PerfilClienteControllerTest {
 
     @MockitoBean
     private ClientProfileService clientProfileService;
+
+    @MockitoBean
+    private JwtService jwtService;
+
+    @MockitoBean
+    private UsuarioRepository usuarioRepository;
+
+    @MockitoBean
+    private OAuthSuccessHandler oAuthSuccessHandler;
 
     private ClientProfileResponseDTO responseDTO;
 

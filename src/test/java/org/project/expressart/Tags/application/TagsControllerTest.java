@@ -6,46 +6,45 @@ import org.junit.jupiter.api.Test;
 import org.project.expressart.Tags.domain.TagsService;
 import org.project.expressart.Tags.dto.TagsRequestDTO;
 import org.project.expressart.Tags.dto.TagsResponseDTO;
+import org.project.expressart.CuentaOAuth.domain.OAuthSuccessHandler;
+import org.project.expressart.Usuario.infrastructure.UsuarioRepository;
+import org.project.expressart.config.JwtService;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(
-        controllers = TagsController.class,
-        excludeAutoConfiguration = {
-                SecurityAutoConfiguration.class,
-                SecurityFilterAutoConfiguration.class,
-                OAuth2ClientAutoConfiguration.class
-        },
-        excludeFilters = @ComponentScan.Filter(
-                type = FilterType.ASSIGNABLE_TYPE,
-                classes = org.project.expressart.config.JwtAuthFilter.class
-        )
-)
+@WebMvcTest(controllers = TagsController.class)
+@WithMockUser
 class TagsControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     @MockitoBean
     private TagsService tagsService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @MockitoBean
+    private JwtService jwtService;
+
+    @MockitoBean
+    private UsuarioRepository usuarioRepository;
+
+    @MockitoBean
+    private OAuthSuccessHandler oAuthSuccessHandler;
 
     private TagsRequestDTO requestDTO;
     private TagsResponseDTO responseDTO;
@@ -93,7 +92,35 @@ class TagsControllerTest {
     }
 
     @Test
-    void delete_debeRetornar204_cuandoSeElimina() throws Exception {
+    void shouldReturnTagWhenGetByNameAndExists() throws Exception {
+        when(tagsService.findByNombre("Oleo")).thenReturn(responseDTO);
+
+        mockMvc.perform(get("/tags/name/Oleo"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.nombre").value("Oleo"));
+    }
+
+    @Test
+    void shouldReturn404WhenGetByIdAndTagNotFound() throws Exception {
+        when(tagsService.findById(99L)).thenThrow(new ResourceNotFoundException("Tag not found"));
+
+        mockMvc.perform(get("/tags/99"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void shouldReturn200WhenUpdateIsSuccessful() throws Exception {
+        when(tagsService.update(eq(1L), any(TagsRequestDTO.class))).thenReturn(responseDTO);
+
+        mockMvc.perform(put("/tags/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1));
+    }
+
+    @Test
+    void shouldReturn204WhenDeleteIsSuccessful() throws Exception {
         doNothing().when(tagsService).delete(1L);
 
         mockMvc.perform(delete("/tags/1"))

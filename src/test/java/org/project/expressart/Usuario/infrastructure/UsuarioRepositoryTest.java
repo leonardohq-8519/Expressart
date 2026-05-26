@@ -4,11 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.project.expressart.Usuario.domain.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,11 +14,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 class UsuarioRepositoryTest {
-
-    @SpringBootApplication
-    @EnableJpaAuditing
-    @EntityScan(basePackages = "org.project.expressart")
-    static class TestContextConfiguration {}
 
     @Autowired
     private UsuarioRepository usuarioRepository;

@@ -6,14 +6,14 @@ import org.junit.jupiter.api.Test;
 import org.project.expressart.Post.domain.PostService;
 import org.project.expressart.Post.dto.PostRequestDTO;
 import org.project.expressart.Post.dto.PostResponseDTO;
+import org.project.expressart.CuentaOAuth.domain.OAuthSuccessHandler;
+import org.project.expressart.Usuario.infrastructure.UsuarioRepository;
+import org.project.expressart.config.JwtService;
+import org.project.expressart.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -25,28 +25,26 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(
-        controllers = PostController.class,
-        excludeAutoConfiguration = {
-                SecurityAutoConfiguration.class,
-                SecurityFilterAutoConfiguration.class,
-                OAuth2ClientAutoConfiguration.class
-        },
-        excludeFilters = @ComponentScan.Filter(
-                type = FilterType.ASSIGNABLE_TYPE,
-                classes = org.project.expressart.config.JwtAuthFilter.class
-        )
-)
+@WebMvcTest(controllers = PostController.class)
+@WithMockUser
 class PostControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     @MockitoBean
     private PostService postService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @MockitoBean
+    private JwtService jwtService;
+
+    @MockitoBean
+    private UsuarioRepository usuarioRepository;
+
+    @MockitoBean
+    private OAuthSuccessHandler oAuthSuccessHandler;
 
     private PostResponseDTO responseDTO;
     private PostRequestDTO requestDTO;
@@ -109,7 +107,32 @@ class PostControllerTest {
     }
 
     @Test
-    void delete_debeRetornar204() throws Exception {
+    void shouldReturn404WhenGetByIdAndPostNotFound() throws Exception {
+        when(postService.findById(99L)).thenThrow(new ResourceNotFoundException("Post not found"));
+
+        mockMvc.perform(get("/posts/99"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void shouldReturnPostsByPortafolioWhenGetByPortafolioId() throws Exception {
+        when(postService.findByPortafolioId(1L)).thenReturn(List.of(responseDTO));
+
+        mockMvc.perform(get("/posts/portafolio/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1));
+    }
+
+    @Test
+    void shouldReturnPublicPostsWhenGetPublicosByPortafolio() throws Exception {
+        when(postService.findByPortafolioIdAndEsPublico(1L, true)).thenReturn(List.of(responseDTO));
+
+        mockMvc.perform(get("/posts/portafolio/1/publicos"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldReturn204WhenDeleteIsSuccessful() throws Exception {
         doNothing().when(postService).delete(1L);
 
         mockMvc.perform(delete("/posts/1"))

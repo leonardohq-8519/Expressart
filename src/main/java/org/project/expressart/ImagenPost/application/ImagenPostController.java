@@ -25,13 +25,13 @@ public class ImagenPostController {
         return ResponseEntity.ok(postPictureService.getByPostId(postId));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{postId}/images/{imageId}")
     public ResponseEntity<ImagenPostResponseDTO> getById(
             @PathVariable Long postId, @PathVariable Long imageId) throws ResourceNotFoundException{
         return ResponseEntity.ok(postPictureService.getById(postId,imageId));
     }
 
-    @PostMapping
+    @PostMapping("/{postId}")
     public ResponseEntity<ImagenPostResponseDTO> create(@PathVariable Long postId,
             @RequestPart("file")MultipartFile file) {
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -45,7 +45,7 @@ public class ImagenPostController {
         return ResponseEntity.ok(postPictureService.update(id, dto));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{postId}/images/{imageId}")
     public ResponseEntity<Void> delete(@PathVariable Long postId, @PathVariable Long imageId) {
         postPictureService.delete(postId,imageId);
         return ResponseEntity.noContent().build();

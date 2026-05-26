@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.modelmapper.ModelMapper;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.project.expressart.Tags.dto.TagsRequestDTO;
 import org.project.expressart.Tags.dto.TagsResponseDTO;
 import org.project.expressart.Tags.infrastructure.TagsRepository;
@@ -42,6 +43,7 @@ class TagsServiceTest {
 
     @BeforeEach
     void setUp() {
+        ReflectionTestUtils.setField(tagsService, "modelMapper", modelMapper);
         tagEntity = new Tags();
         tagEntity.setId(1L);
         tagEntity.setNombre("Acuarela");

@@ -1,14 +1,16 @@
 package org.project.expressart.TicketSoporte.infrastructure;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.project.expressart.TicketSoporte.domain.TicketSoporte;
-import org.project.expressart.TicketSoporte.domain.EstadoTicket;
 import org.project.expressart.TicketSoporte.domain.CategoriaTicket;
+import org.project.expressart.TicketSoporte.domain.EstadoTicket;
+import org.project.expressart.TicketSoporte.domain.TicketSoporte;
 import org.project.expressart.Usuario.domain.Usuario;
+import org.project.expressart.Usuario.infrastructure.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,59 +23,68 @@ class TicketSoporteRepositoryTest {
     private TicketSoporteRepository ticketRepository;
 
     @Autowired
-    private TestEntityManager entityManager;
+    private UsuarioRepository usuarioRepository;
 
-    @Test
-    void save_debePersistirTicketCorrectamente() {
+    private Usuario savedUser;
 
-        Usuario dummyUser = new Usuario();
-        dummyUser.setUsername("soporte_user");
-        dummyUser.setEmail("soporte@test.com");
-        dummyUser.setName("Soporte User");
-        dummyUser.setPassword("123456");
-        dummyUser = entityManager.persistAndFlush(dummyUser);
-
-        TicketSoporte nuevoTicket = new TicketSoporte();
-        nuevoTicket.setUser(dummyUser);
-        nuevoTicket.setSubject("Duda sobre cuenta");
-        nuevoTicket.setDescription("No puedo cambiar mi contraseña");
-
-        nuevoTicket.setStatus(EstadoTicket.values()[0]);
-        nuevoTicket.setCategory(CategoriaTicket.values()[0]);
-
-        TicketSoporte guardado = ticketRepository.save(nuevoTicket);
-
-        assertThat(guardado.getId()).isNotNull();
-
-        Optional<TicketSoporte> encontrado = ticketRepository.findById(guardado.getId());
-        assertThat(encontrado).isPresent();
-        assertThat(encontrado.get().getSubject()).isEqualTo("Duda sobre cuenta");
+    @BeforeEach
+    void setUp() {
+        Usuario user = new Usuario();
+        user.setUsername("soporte_user");
+        user.setEmail("soporte@test.com");
+        user.setName("Soporte User");
+        user.setPassword("123456");
+        user.setRegisterDate(ZonedDateTime.now());
+        user.setIsActive(true);
+        user.setIsVerified(false);
+        savedUser = usuarioRepository.save(user);
     }
 
     @Test
-    void findByStatusAndCategory_debeRetornarTicketsFiltrados() {
+    void shouldPersistTicketWhenSave() {
+        TicketSoporte ticket = new TicketSoporte();
+        ticket.setUser(savedUser);
+        ticket.setSubject("Duda sobre cuenta");
+        ticket.setDescription("No puedo cambiar mi contraseña");
+        ticket.setStatus(EstadoTicket.values()[0]);
+        ticket.setCategory(CategoriaTicket.values()[0]);
 
-        Usuario dummyUser = new Usuario();
-        dummyUser.setUsername("soporte_user_2");
-        dummyUser.setEmail("soporte2@test.com");
-        dummyUser.setName("Soporte User 2");
-        dummyUser.setPassword("123456");
-        dummyUser = entityManager.persistAndFlush(dummyUser);
+        TicketSoporte saved = ticketRepository.save(ticket);
 
-        EstadoTicket estadoBuscado = EstadoTicket.values()[0];
-        CategoriaTicket categoriaBuscada = CategoriaTicket.values()[0];
+        assertThat(saved.getId()).isNotNull();
+        Optional<TicketSoporte> found = ticketRepository.findById(saved.getId());
+        assertThat(found).isPresent();
+        assertThat(found.get().getSubject()).isEqualTo("Duda sobre cuenta");
+    }
+
+    @Test
+    void shouldReturnEmptyWhenFindByIdAndNotExists() {
+        Optional<TicketSoporte> result = ticketRepository.findById(999L);
+        assertThat(result).isEmpty();
+    }
+
+    @Test
+    void shouldReturnTicketsWhenFindByStatusAndCategory() {
+        EstadoTicket estado = EstadoTicket.values()[0];
+        CategoriaTicket categoria = CategoriaTicket.values()[0];
 
         TicketSoporte ticket = new TicketSoporte();
-        ticket.setUser(dummyUser);
+        ticket.setUser(savedUser);
         ticket.setSubject("Error en pasarela");
         ticket.setDescription("No procesa el pago correctamente");
-        ticket.setStatus(estadoBuscado);
-        ticket.setCategory(categoriaBuscada);
-        entityManager.persistAndFlush(ticket);
+        ticket.setStatus(estado);
+        ticket.setCategory(categoria);
+        ticketRepository.save(ticket);
 
-        List<TicketSoporte> resultados = ticketRepository.findByStatusAndCategory(estadoBuscado, categoriaBuscada);
+        List<TicketSoporte> results = ticketRepository.findByStatusAndCategory(estado, categoria);
 
-        assertThat(resultados).isNotEmpty();
-        assertThat(resultados.get(0).getSubject()).isEqualTo("Error en pasarela");
+        assertThat(results).isNotEmpty();
+        assertThat(results.get(0).getSubject()).isEqualTo("Error en pasarela");
+    }
+
+    @Test
+    void shouldReturnEmptyListWhenFindByStatusAndNoTicketsExist() {
+        List<TicketSoporte> results = ticketRepository.findByStatus(EstadoTicket.values()[0]);
+        assertThat(results).isEmpty();
     }
 }

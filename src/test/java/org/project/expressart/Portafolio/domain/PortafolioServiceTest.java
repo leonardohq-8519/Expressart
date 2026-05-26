@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.project.expressart.Portafolio.dto.PortafolioRequestDTO;
 import org.project.expressart.Portafolio.dto.PortafolioResponseDTO;
 import org.project.expressart.Portafolio.infrastructure.PortafolioRepository;
@@ -37,6 +38,7 @@ class PortafolioServiceTest {
 
     @BeforeEach
     void setUp() {
+        ReflectionTestUtils.setField(portafolioService, "modelMapper", modelMapper);
         portafolio = new Portafolio();
         portafolio.setId(1L);
         portafolio.setTitulo("Portafolio Inicial");

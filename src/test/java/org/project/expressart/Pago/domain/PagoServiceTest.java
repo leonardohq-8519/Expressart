@@ -6,9 +6,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.modelmapper.ModelMapper;
 import org.project.expressart.Orden.domain.Orden;
 import org.project.expressart.Orden.infrastructure.OrdenRepository;
+import org.project.expressart.Usuario.domain.Usuario;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.project.expressart.Pago.dto.PaymentRequestDTO;
 import org.project.expressart.Pago.dto.PaymentResponseDTO;
 import org.project.expressart.Pago.infrastructure.PagoRepository;
@@ -23,6 +28,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class PagoServiceTest {
 
     @Mock
@@ -30,6 +36,9 @@ class PagoServiceTest {
 
     @Mock
     private OrdenRepository orderRepository;
+
+    @Mock
+    private ApplicationEventPublisher eventPublisher;
 
     @Mock
     private ModelMapper modelMapper;
@@ -43,6 +52,7 @@ class PagoServiceTest {
 
     @BeforeEach
     void setUp() {
+        ReflectionTestUtils.setField(paymentService, "modelMapper", modelMapper);
         pago = new Pago();
         pago.setId(1L);
         pago.setEstado(EstadoPago.PENDIENTE);
@@ -81,9 +91,18 @@ class PagoServiceTest {
 
     @Test
     void create_debeGuardarPagoExitosamente() {
-        when(orderRepository.findById(1L)).thenReturn(Optional.of(new Orden()));
+        Usuario cliente = new Usuario();
+        cliente.setId(10L);
+        cliente.setEmail("cliente@test.com");
+
+        Orden orden = new Orden();
+        orden.setId(1L);
+        orden.setCliente(cliente);
+
+        when(orderRepository.findById(1L)).thenReturn(Optional.of(orden));
         when(paymentRepository.save(any(Pago.class))).thenReturn(pago);
         when(modelMapper.map(any(Pago.class), eq(PaymentResponseDTO.class))).thenReturn(responseDTO);
+        doNothing().when(eventPublisher).publishEvent(any());
 
         PaymentResponseDTO resultado = paymentService.create(requestDTO);
 

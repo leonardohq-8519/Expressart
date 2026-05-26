@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.project.expressart.Categoria.infrastructure.CategoriaRepository;
 import org.project.expressart.PerfilArtista.dto.ArtistProfileRequestDTO;
 import org.project.expressart.PerfilArtista.dto.ArtistProfileResponseDTO;
@@ -46,6 +47,7 @@ class PerfilArtistaServiceTest {
 
     @BeforeEach
     void setUp() {
+        ReflectionTestUtils.setField(artistProfileService, "modelMapper", modelMapper);
         perfilArtista = new PerfilArtista();
         perfilArtista.setId(1L);
 
